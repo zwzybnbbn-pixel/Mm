@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+
+body{
+  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  padding:20px;
+}
+
+.login-box{
+  width:100%;
+  max-width:380px;
+  background:rgba(255,255,255,0.06);
+  padding:30px;
+  border-radius:18px;
+  backdrop-filter:blur(5px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+  text-align:center;
+  animation:fadeIn .7s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+h2{
+  font-size:28px;
+  margin-bottom:18px;
+  font-weight:800;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border:none;
+  border-radius:12px;
+  font-size:17px;
+  outline:none;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  background:#ffffff33;
+  color:white;
+  border:none;
+  font-size:20px;
+  font-weight:800;
+  border-radius:14px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:white;
+  color:#000;
+}
+
+.msg{
+  margin-top:12px;
+  font-size:16px;
+}
+
+.error{color:#ff6b6b;}
+.success{color:#4cd964;}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+  <h2>🔐 تسجيل الدخول</h2>
+
+  <input type="email" id="email" placeholder="البريد الإلكتروني">
+  <input type="password" id="password" placeholder="كلمة المرور">
+
+  <button onclick="login()">تسجيل الدخول</button>
+
+  <div id="message" class="msg"></div>
+
+</div>
+
+<!-- Firebase + Auth -->
+<script type="module">
+import { auth } from "./firebase.js";
+import { signInWithEmailAndPassword }
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+const msg = document.getElementById("message");
+
+window.login = async function() {
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+
+  msg.textContent = "";
+  msg.className = "msg";
+
+  if(!email || !password){
+    msg.textContent = "⚠️ يرجى تعبئة جميع الحقول";
+    msg.classList.add("error");
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+
+    msg.textContent = "✔️ تم تسجيل الدخول بنجاح!";
+    msg.classList.add("success");
+
+    setTimeout(() => {
+      window.location.href = "dashboard2.html";
+    }, 800);
+
+  } catch (error) {
+    msg.textContent = "❌ بيانات الدخول غير صحيحة";
+    msg.classList.add("error");
+  }
+};
+</script>
+
+</body>
+</html>

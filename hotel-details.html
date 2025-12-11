@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تفاصيل الفندق</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{
+    margin:0; padding:0; box-sizing:border-box;
+    font-family:'Cairo', sans-serif;
+  }
+
+  body {
+    background:#eef6ff;
+    display:flex;
+    justify-content:center;
+  }
+
+  .container {
+    width:100%;
+    max-width:380px;
+    padding:12px;
+  }
+
+  .back-btn{
+    display:inline-block;
+    background:#0d4d91;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:15px;
+    margin-bottom:12px;
+  }
+
+  .title {
+    text-align:center;
+    font-size:23px;
+    font-weight:800;
+    color:#0d4d91;
+    margin-bottom:12px;
+  }
+
+  .card {
+    background:white;
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.10);
+  }
+
+  .hotel-img {
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:10px;
+    border:3px solid #0d4d91;
+  }
+
+  .section-title {
+    font-size:17px;
+    font-weight:700;
+    margin-top:12px;
+    color:#0d4d91;
+  }
+
+  p { font-size:15px; color:#333; margin:4px 0; }
+
+  .btn {
+    display:block;
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#0d4d91;
+    color:white;
+    text-align:center;
+    font-size:15px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+  }
+
+  /* ⭐ التقييمات */
+  .stars {
+    margin:6px 0;
+  }
+
+  .star {
+    font-size:26px;
+    cursor:pointer;
+    color:#ccc;
+  }
+  .star.active {
+    color:#ffb400;
+  }
+
+  .review {
+    background:#fff;
+    padding:12px;
+    margin-top:10px;
+    border-radius:10px;
+    border-right:4px solid #0d4d91;
+  }
+
+  .avg-box {
+    background:#ffffff;
+    padding:12px;
+    border-radius:12px;
+    margin:10px 0;
+    text-align:center;
+    font-size:17px;
+    font-weight:700;
+    color:#0d4d91;
+    box-shadow:0 2px 8px rgba(0,0,0,0.10);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="hotels.html" class="back-btn">⬅ رجوع</a>
+
+  <h1 class="title">تفاصيل الفندق</h1>
+
+  <div class="card">
+    <img id="hotelImg" class="hotel-img">
+
+    <div class="section-title">اسم الفندق</div>
+    <p id="hotelName">—</p>
+
+    <div class="section-title">السعر</div>
+    <p id="hotelPrice">—</p>
+
+    <div class="section-title">الخدمات</div>
+    <p id="hotelServices">—</p>
+
+    <div class="section-title">رقم التواصل</div>
+    <p id="hotelPhone">—</p>
+
+    <a id="mapBtn" class="btn" target="_blank">📍 عرض على الخريطة</a>
+  </div>
+
+  <div id="avgRatingBox" class="avg-box">جاري الحساب…</div>
+
+  <h2 class="section-title">التقييمات</h2>
+
+  <div id="reviewsList"></div>
+
+  <div class="card">
+    <h3 style="font-size:18px;margin-bottom:8px;color:#0d4d91;">أضف تقييمك</h3>
+
+    <div id="stars">
+      <span class="star" data-v="1">★</span>
+      <span class="star" data-v="2">★</span>
+      <span class="star" data-v="3">★</span>
+      <span class="star" data-v="4">★</span>
+      <span class="star" data-v="5">★</span>
+    </div>
+
+    <textarea id="reviewText" placeholder="اكتب رأيك…" 
+      style="width:100%;height:80px;margin-top:10px;padding:10px;border-radius:10px;border:1px solid #ccc;"></textarea>
+
+    <button id="sendReview" class="btn" style="margin-top:10px;">إرسال التقييم</button>
+  </div>
+
+</div>
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+  import { 
+    doc, getDoc, collection, addDoc, getDocs 
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  // ------------------ جلب ID ------------------
+  const id = new URL(window.location.href).searchParams.get("id");
+
+  // ------------------ تحميل بيانات الفندق ------------------
+  async function loadHotel() {
+    const snap = await getDoc(doc(db, "tourism_hotels", id));
+    const d = snap.data();
+
+    hotelImg.src = d.image;
+    hotelName.textContent = d.name;
+    hotelPrice.textContent = d.price;
+    hotelServices.textContent = d.services;
+    hotelPhone.textContent = d.phone;
+    mapBtn.href = d.map_link;
+  }
+  loadHotel();
+
+  // ------------------ تحميل التقييمات + المتوسط ------------------
+  async function loadReviews() {
+    const list = document.getElementById("reviewsList");
+    const avgBox = document.getElementById("avgRatingBox");
+
+    const q = await getDocs(collection(db, "tourism_hotels", id, "reviews"));
+
+    list.innerHTML = "";
+    let total = 0, count = 0;
+
+    q.forEach(s => {
+      const r = s.data();
+      count++;
+      total += r.rating;
+
+      list.innerHTML += `
+        <div class="review">
+          <p>⭐ ${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</p>
+          <p>${r.text}</p>
+        </div>
+      `;
+    });
+
+    if (count === 0) {
+      avgBox.textContent = "لا توجد تقييمات بعد";
+      return;
+    }
+
+    const avg = (total / count).toFixed(1);
+
+    avgBox.textContent = `متوسط التقييم: ${avg} ⭐`;
+  }
+  loadReviews();
+
+  // ------------------ إضافة تقييم ------------------
+  let selectedStars = 0;
+
+  document.querySelectorAll(".star").forEach(star => {
+    star.addEventListener("click", () => {
+      selectedStars = Number(star.dataset.v);
+
+      document.querySelectorAll(".star").forEach(s => s.classList.remove("active"));
+      for (let i = 1; i <= selectedStars; i++) {
+        document.querySelector(`.star[data-v="${i}"]`).classList.add("active");
+      }
+    });
+  });
+
+  sendReview.onclick = async () => {
+    const text = reviewText.value.trim();
+
+    if (!selectedStars) return alert("اختر عدد النجوم");
+    if (!text) return alert("اكتب نص التقييم");
+
+    await addDoc(collection(db, "tourism_hotels", id, "reviews"), {
+      rating: selectedStars,
+      text,
+      time: Date.now()
+    });
+
+    alert("✔ تم إضافة التقييم");
+    reviewText.value = "";
+    selectedStars = 0;
+    document.querySelectorAll(".star").forEach(s => s.classList.remove("active"));
+
+    loadReviews();
+  };
+
+</script>
+
+</body>
+</html>

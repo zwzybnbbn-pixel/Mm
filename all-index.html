@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل شبوة (عتق) الشامل — واجهة تكنولوجية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo',sans-serif;
+}
+
+/* خلفية تكنولوجية مع خطوط */
+body{
+  background:#0c0f17;
+  background-image:
+    url('https://i.imgur.com/lPfadkE.png'), /* خطوط تكنولوجية */
+    linear-gradient(135deg,#0c0f17,#0f1625);
+  background-size:cover;
+  background-position:center;
+  min-height:100vh;
+  color:white;
+  padding:50px 10px;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+/* تأثير توهج عام */
+.glow{
+  text-shadow:0 0 12px #00eaff;
+}
+
+/* العنوان الرئيسي */
+.main-title{
+  font-size:42px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:#e0e9ff;
+}
+
+.sub-title{
+  font-size:20px;
+  opacity:.8;
+  margin-bottom:45px;
+}
+
+/* مربعات تكنولوجية */
+.grid{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:30px;
+  max-width:1100px;
+  margin:auto;
+}
+
+/* كرت تكنولوجي */
+.card{
+  width:250px;
+  padding:30px;
+  background:rgba(255,255,255,0.03);
+  border-radius:22px;
+  border:1.8px solid rgba(0,255,255,0.45);
+  backdrop-filter:blur(7px);
+  cursor:pointer;
+  transition:0.25s;
+  box-shadow:0 0 20px #00ffff33;
+  position:relative;
+  overflow:hidden;
+  text-decoration:none;
+  color:white;
+  display:block;
+}
+
+/* توهج داخلي */
+.card::before{
+  content:'';
+  position:absolute;
+  top:-60%;
+  left:-60%;
+  width:220%;
+  height:220%;
+  background:conic-gradient(#00eaff,transparent,transparent,#ba68ff,#00eaff);
+  opacity:0.15;
+  animation:rotate 6s linear infinite;
+}
+
+/* الحركة */
+@keyframes rotate{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+/* الأيقونات */
+.card-icon{
+  font-size:55px;
+  margin-bottom:10px;
+  color:#00eaff;
+}
+
+/* النص */
+.card-title{
+  font-size:26px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.card-desc{
+  font-size:16px;
+  opacity:.85;
+}
+
+/* حركة عند اللمس */
+.card:hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 0 30px #00eaff66;
+}
+
+.footer{
+  margin-top:60px;
+  opacity:.7;
+  font-size:17px;
+}
+</style>
+</head>
+<body>
+
+<div class="main-title glow">دليل شبوة (عتق) الشامل</div>
+<div class="sub-title">منصة الخدمات — تصميم تكنولوجي حديث</div>
+
+<div class="grid">
+
+  <!-- من نحن -->
+  <a class="card" href="about1.html">
+    <div class="card-icon">🌐</div>
+    <div class="card-title">من نحن</div>
+    <div class="card-desc">نبذة – أهداف – رؤية</div>
+  </a>
+
+  <!-- الصحة -->
+  <a class="card" href="index.html">
+    <div class="card-icon">🏥</div>
+    <div class="card-title">الخدمات الصحية</div>
+    <div class="card-desc">المستشفيات – المختبرات – الأطباء</div>
+  </a>
+
+  <!-- الكهرباء -->
+  <a class="card" href="index2.html">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">الكهرباء</div>
+    <div class="card-desc">البلاغات – الجداول – الأسباب</div>
+  </a>
+
+  <!-- السياحة -->
+  <a class="card" href="index1.html">
+    <div class="card-icon">🏔️</div>
+    <div class="card-title">أستكشف المدينة</div>
+    <div class="card-desc">المطاعم – الفنادق – الفعاليات</div>
+  </a>
+
+</div>
+
+<div class="footer">© 2025 — دليل شبوة (عتق) الشامل</div>
+
+</body>
+</html>

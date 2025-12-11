@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 لوحة التحكم — البلاغات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+
+body{
+  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
+  min-height:100vh;
+  color:white;
+  padding:15px;
+}
+
+/* ===== العنوان ===== */
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:28px;
+  font-weight:800;
+}
+
+/* ===== الكروت ===== */
+.card{
+  background:rgba(255,255,255,0.08);
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.45);
+  backdrop-filter:blur(5px);
+  transition:.25s;
+}
+
+.card:hover{
+  background:rgba(255,255,255,0.12);
+  transform:scale(1.02);
+}
+
+.card strong{
+  color:#4db8ff;
+  font-size:17px;
+}
+
+/* ===== الإدخال ===== */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#ffffff22;
+  color:white;
+  margin-top:8px;
+  margin-bottom:10px;
+  font-size:16px;
+}
+
+/* ===== الأزرار ===== */
+.btn{
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  width:100%;
+  font-size:17px;
+  font-weight:700;
+  margin-top:4px;
+  transition:.2s;
+}
+
+.save{background:#28a745;}
+.save:hover{background:#42c85a;}
+
+.delete{background:#dc3545;}
+.delete:hover{background:#ff5566;}
+</style>
+</head>
+
+<body>
+
+<h2>📋 لوحة التحكم — إدارة البلاغات</h2>
+<div id="list">جارِ التحميل...</div>
+
+<script type="module">
+import { db, auth } from "./firebase.js";
+import { 
+  collection, doc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+import { 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+/* ===============================
+      🔐 حماية لوحة التحكم
+  =============================== */
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    alert("يجب تسجيل الدخول أولاً");
+    window.location.href = "login.html";
+  }
+});
+
+/* ===============================
+      📌 عرض البلاغات مباشرة
+  =============================== */
+const list = document.getElementById("list");
+const q = query(collection(db, "reports"), orderBy("created_at", "desc"));
+
+onSnapshot(q, (snap) => {
+  if (snap.empty) {
+    list.innerHTML = "<p style='text-align:center;'>لا توجد بلاغات.</p>";
+    return;
+  }
+
+  let html = "";
+
+  snap.forEach(docSnap => {
+    const r = docSnap.data();
+    const id = docSnap.id;
+
+    html += `
+      <div class="card">
+        <strong>نوع البلاغ:</strong> ${r.type ?? ""}<br>
+        <strong>الاسم:</strong> ${r.name ?? ""}<br>
+        <strong>الحي:</strong> ${r.location ?? ""}<br>
+        <strong>التفاصيل:</strong> ${r.details ?? ""}<br>
+        <strong>الحالة:</strong> ${r.status ?? "قيد المراجعة"}<br>
+
+        <hr style="opacity:0.2; margin:10px 0;">
+
+        <label>✏ الرد على البلاغ:</label>
+        <textarea id="reply-${id}" class="input" rows="3">${r.reply ?? ""}</textarea>
+
+        <label>⚙ تغيير الحالة:</label>
+        <select id="status-${id}" class="input">
+          <option ${r.status=="قيد المراجعة"?"selected":""}>قيد المراجعة</option>
+          <option ${r.status=="جارِ الحل"?"selected":""}>جارِ الحل</option>
+          <option ${r.status=="تم الحل"?"selected":""}>تم الحل</option>
+        </select>
+
+        <button class="btn save" onclick="saveUpdate('${id}')">💾 حفظ</button>
+        <button class="btn delete" onclick="removeReport('${id}')">🗑 حذف</button>
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
+});
+
+/* ===============================
+      💾 حفظ التعديل
+  =============================== */
+window.saveUpdate = async (id) => {
+  const reply = document.getElementById(`reply-${id}`).value;
+  const status = document.getElementById(`status-${id}`).value;
+
+  await updateDoc(doc(db, "reports", id), { reply, status });
+  alert("✔ تم تحديث البلاغ");
+};
+
+/* ===============================
+      🗑 حذف البلاغ
+  =============================== */
+window.removeReport = async (id) => {
+  if (confirm("هل أنت متأكد من الحذف؟")) {
+    await deleteDoc(doc(db, "reports", id));
+    alert("✔ تم الحذف");
+  }
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل الفعالية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';}
+body{background:#f3e9ff;padding:12px;}
+
+/* زر الرجوع */
+.back-btn{
+  display:inline-block;
+  background:#6a1b9a;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  margin-bottom:15px;
+  font-size:16px;
+}
+
+/* البطاقات */
+.card{
+  width:100%;
+  background:white;
+  padding:18px;
+  border-radius:15px;
+  box-shadow:0 3px 12px #00000022;
+  margin-bottom:15px;
+}
+
+/* العنوان */
+h2{
+  font-size:22px;
+  color:#6a1b9a;
+  text-align:center;
+  margin-bottom:15px;
+  font-weight:800;
+}
+
+/* الصورة */
+.event-imgcircle{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 10px auto;
+  border: 3px solid #8e24aa;
+}
+
+/* صناديق المعلومات */
+.info{
+  background:#fbf3ff;
+  padding:12px;
+  border-left:5px solid #8e24aa;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+
+.label{font-size:15px;font-weight:700;color:#6a1b9a;}
+.value{font-size:16px;color:#333;margin-top:4px;}
+
+/* زر الخريطة */
+.map-btn{
+  display:block;
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  background:#6a1b9a;
+  color:white;
+  font-size:17px;
+  border-radius:10px;
+  text-align:center;
+  text-decoration:none;
+  font-weight:700;
+}
+.map-btn:hover{background:#8e24aa;}
+</style>
+</head>
+
+<body>
+
+<a href="events.html" class="back-btn">⬅ العودة</a>
+
+<img id="eventImg" class="event-imgcircle" alt="event">
+
+<div class="card">
+  <h2 id="eTitle">جاري التحميل...</h2>
+
+  <div class="info">
+    <div class="label">📅 التاريخ:</div>
+    <div class="value" id="eDate"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📍 الموقع:</div>
+    <div class="value" id="eLocation"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📌 الحالة:</div>
+    <div class="value" id="eStatus"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">🌍 رابط الموقع:</div>
+    <a id="mapBtn" href="#" target="_blank" class="value" style="color:#6a1b9a;font-weight:700;">
+      اضغط هنا
+    </a>
+  </div>
+</div>
+
+<script type="module">
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+const id = new URLSearchParams(location.search).get("id");
+
+if(!id){
+  alert("خطأ: لم يتم تحديد الفعالية.");
+}
+
+async function loadEvent(){
+  // ⬅ تصحيح الكولكشن هنا
+  const ref = doc(db, "tourism_events", id);
+  const snap = await getDoc(ref);
+  
+  if(!snap.exists()){
+    alert("خطأ: الفعالية غير موجودة");
+    return;
+  }
+
+  const e = snap.data();
+
+  document.getElementById("eTitle").textContent = e.title || "غير محدد";
+  document.getElementById("eDate").textContent = e.date || "غير محدد";
+  document.getElementById("eLocation").textContent = e.location || "غير محدد";
+  document.getElementById("eStatus").textContent = e.status || "غير محدد";
+  document.getElementById("eventImg").src = e.image || "images/default.jpg";
+  document.getElementById("mapBtn").href = e.map_link || "#";
+}
+
+loadEvent();
+</script>
+
+</body>
+</html>

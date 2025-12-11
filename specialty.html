@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أطباء التخصص</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+ .doctor-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 10px;
+  border: 3px solid #00796B;
+ }
+
+ * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+ body {
+   background: #f1f1f1;
+   padding: 15px;
+ }
+
+ h1 {
+   text-align: center;
+   color: #00695C;
+   margin-bottom: 20px;
+   font-size: 28px;
+   font-weight: 800;
+ }
+
+ .top-links {
+   text-align: center;
+   margin-bottom: 15px;
+ }
+
+ .top-links a {
+   display: inline-block;
+   padding: 12px 18px;
+   background: #004D40;
+   color: white;
+   text-decoration: none;
+   font-size: 17px;
+   border-radius: 10px;
+   transition: .25s;
+   margin: 5px;
+ }
+
+ .top-links a:hover {
+   background: #00695C;
+ }
+
+ .grid {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 18px;
+ }
+
+ @media (min-width: 600px) {
+   .grid {
+     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+   }
+ }
+
+ .card {
+   background: white;
+   border-radius: 14px;
+   box-shadow: 0 3px 12px #00000020;
+   padding: 18px;
+   transition: .25s;
+ }
+
+ .card:hover {
+   transform: translateY(-6px);
+   box-shadow: 0 10px 25px #00000030;
+ }
+
+ .card h3 {
+   margin-bottom: 8px;
+   font-size: 22px;
+   color: #004D40;
+   font-weight: 700;
+ }
+
+ .card p {
+   margin: 6px 0;
+   font-size: 16px;
+   color: #444;
+ }
+
+ .btn {
+   display: block;
+   margin-top: 12px;
+   text-decoration: none;
+   padding: 12px;
+   text-align: center;
+   background: #00796B;
+   color: white;
+   border-radius: 10px;
+   font-size: 16px;
+ }
+</style>
+</head>
+
+<body>
+
+<h1 id="title">الأطباء</h1>
+
+<div class="top-links">
+  <a href="index.html">🏠 الصفحة الرئيسية</a>
+  <a href="specialties.html">📋 التخصصات</a>
+</div>
+
+<div id="doctorsList" class="grid"></div>
+
+<script type="module">
+ import { db } from "./firebase-config.js";
+ import { collection, getDocs }
+ from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+ const params = new URLSearchParams(location.search);
+ const specName = params.get("name");
+
+ document.getElementById("title").textContent = "تخصص: " + specName;
+
+ let doctors = [];
+
+ async function loadDoctors() {
+   const snap = await getDocs(collection(db, "doctors"));
+
+   snap.forEach(doc => {
+     doctors.push({ id: doc.id, ...doc.data() });
+   });
+
+   showDoctors();
+ }
+
+ function showDoctors() {
+   const box = document.getElementById("doctorsList");
+   box.innerHTML = "";
+
+   const filtered = doctors.filter(d => d.specialty === specName);
+
+   if (filtered.length === 0) {
+     box.innerHTML = `
+       <p style="text-align:center;color:#777;font-size:18px;">
+       لا يوجد أطباء داخل هذا التخصص
+       </p>
+     `;
+     return;
+   }
+
+   filtered.forEach(d => {
+     box.innerHTML += `
+       <div class="card">
+         <img class="doctor-img" src="${d.img || 'images/default.jpg'}">
+         <h3>${d.name}</h3>
+         <p><strong>التخصص:</strong> ${d.specialty}</p>
+         <p><strong>الأيام:</strong> ${d.days || ''}</p>
+         <p><strong>الوقت:</strong> ${d.times || ''}</p>
+
+         <a class="btn" href="doctor.html?id=${d.id}">
+           عرض التفاصيل
+         </a>
+       </div>
+     `;
+   });
+ }
+
+ loadDoctors();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+
+/* نفس خلفية الرئيسية */
+body{
+  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  color:white;
+  padding:10px;
+}
+
+/* MAIN */
+.main-wrapper{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:30px 10px;
+}
+
+header h1{
+  font-size:38px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+header p{
+  font-size:20px;
+  opacity:.9;
+  margin-bottom:25px;
+}
+
+/* Cards – نسخة أصلية من الرئيسية */
+.cards{
+  width:100%;
+  max-width:600px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.card{
+  background:rgba(255,255,255,0.07);
+  padding:20px;
+  border-radius:16px;
+  text-align:center;
+  backdrop-filter:blur(5px);
+  box-shadow:0 6px 18px rgba(0,0,0,0.45);
+  transition:0.25s;
+}
+
+.card:hover{
+  background:rgba(255,255,255,0.12);
+  transform:scale(1.03);
+}
+
+.card-title{
+  font-size:24px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.card-value{
+  font-size:18px;
+  margin-bottom:14px;
+  opacity:.95;
+}
+
+/* زر تسجيل الخروج */
+.logout-btn{
+  background:#ff4c4c;
+  padding:12px 20px;
+  border-radius:12px;
+  text-align:center;
+  color:white;
+  font-weight:800;
+  width:100%;
+  max-width:600px;
+  margin-top:20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.logout-btn:hover{
+  background:#ff6b6b;
+}
+
+/* Footer */
+footer{
+  text-align:center;
+  opacity:.9;
+  font-size:18px;
+  padding:15px 10px;
+  margin-top:25px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+<header>
+  <h1>⚙ لوحة التحكم</h1>
+  <p>إدارة التنبيهات – الأسباب – الجدول – البلاغات</p>
+</header>
+
+<!-- CARDS -->
+<div class="cards">
+
+  <div class="card" onclick="go('dashboard-alerts.html')" style="cursor:pointer;">
+    <div class="card-title">🔔 إدارة التنبيهات</div>
+    <div class="card-value">إضافة – تعديل – حذف</div>
+  </div>
+
+  <div class="card" onclick="go('dashboard-reasons.html')" style="cursor:pointer;">
+    <div class="card-title">⚡ إدارة أسباب الانقطاع</div>
+    <div class="card-value">عرض – تعديل – حذف</div>
+  </div>
+
+  <div class="card" onclick="go('dashboard-schedule.html')" style="cursor:pointer;">
+    <div class="card-title">📅 إدارة جدول التشغيل</div>
+    <div class="card-value">تشغيل – انطفاء – تحديث</div>
+  </div>
+
+  <div class="card" onclick="go('dashboard-reports.html')" style="cursor:pointer;">
+    <div class="card-title">📢 إدارة البلاغات</div>
+    <div class="card-value">الرد – تغيير الحالة – حذف</div>
+  </div>
+
+</div>
+
+<!-- Logout -->
+<div class="logout-btn" id="logoutBtn">🚪 تسجيل الخروج</div>
+
+<footer>
+  <p>م/ماجد قاسم حسن مبارك بن عمرو</p>
+© 2025 – منصة كهرباء عتق
+</footer>
+
+</div>
+
+<script type="module">
+import { auth } from "./firebase.js";
+import { onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+// حماية dashboard
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = "login1.html";
+});
+
+// خروج
+document.getElementById("logoutBtn").onclick = () => {
+  signOut(auth);
+};
+
+// انتقال
+window.go = (page) => {
+  window.location.href = page;
+};
+</script>
+
+</body>
+</html>

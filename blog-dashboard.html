@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة تحكم المقالات — المدونة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f3f6f7; --card:#fff; --accent:#009688; --muted:#767676; --danger:#e53935;
+    }
+    *{box-sizing:border-box;font-family:"Cairo",sans-serif}
+    body{background:var(--bg);padding:18px}
+    .wrap{max-width:980px;margin:0 auto}
+    h1{color:var(--accent);font-size:20px;margin-bottom:10px;text-align:center}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-bottom:12px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+    .controls .search{flex:1;padding:10px;border-radius:10px;border:1px solid #e6e6e6}
+    .btn{background:var(--accent);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:10px;border-bottom:1px solid #f0f0f0;text-align:right;vertical-align:middle}
+    th{color:#666;font-weight:800}
+    .muted{color:var(--muted)}
+    .actions-row{display:flex;gap:8px;justify-content:flex-start}
+    .action-btn{padding:6px 8px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+    .action-btn.view{background:#e3f2fd;color:#0d47a1}
+    .action-btn.edit{background:#fff3cd;color:#8a6d02}
+    .action-btn.delete{background:#f8d7da;color:#721c24}
+    .empty{padding:24px;text-align:center;color:var(--muted)}
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:999}
+    .overlay.show{display:flex}
+    .modal{width:100%;max-width:760px;background:var(--card);border-radius:12px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,0.2)}
+    label.small{display:block;margin-bottom:6px;color:#444;font-size:13px}
+    input[type=text],input[type=url],textarea{width:100%;padding:10px;border:1px solid #e6e6e6;border-radius:8px;margin-bottom:8px}
+    textarea{min-height:140px;resize:vertical}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    @media(max-width:560px){ .controls {flex-direction:column} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>لوحة تحكم — مقالات المدونة</h1>
+
+    <div class="card">
+      <div class="controls">
+        <input id="searchInput" class="search" placeholder="ابحث بالعنوان أو المقتطف..." />
+        <button id="btnAdd" class="btn">+ إضافة مقال</button>
+        <button id="btnReload" class="btn ghost">تحديث</button>
+      </div>
+
+      <div class="table-wrap">
+        <table aria-label="قائمة المقالات">
+          <thead>
+            <tr>
+              <th style="width:28%">العنوان</th>
+              <th style="width:42%">المقتطف</th>
+              <th style="width:14%">التاريخ</th>
+              <th style="width:16%">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="blogTbody"></tbody>
+        </table>
+
+        <div id="emptyNotice" class="empty" style="display:none">لا توجد مقالات حالياً</div>
+      </div>
+
+      <div class="note">
+        ملاحظة: رابط الصورة **اختياري** — إن لم تضف صورة سيعرض الموقع بطاقة بدون صورة. (التعديلات والحذف يتمان مباشرة إلى مجموعة <code>blog</code> في Firestore)
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">إضافة / تعديل مقال</h3>
+      <form id="form">
+        <label class="small">عنوان المقال</label>
+        <input type="text" name="title" id="fieldTitle" required placeholder="عنوان قصير">
+
+        <label class="small">مقتطف</label>
+        <input type="text" name="excerpt" id="fieldExcerpt" placeholder="مقتطف يظهر في القوائم">
+
+        <label class="small">رابط صورة (URL) — اختياري</label>
+        <input type="url" name="img" id="fieldImg" placeholder="https://...">
+
+        <label class="small">المحتوى</label>
+        <textarea name="content" id="fieldContent" placeholder="نص المقال الكامل"></textarea>
+
+        <div class="modal-actions">
+          <button type="button" id="btnCancel" class="btn ghost">إلغاء</button>
+          <button type="submit" id="btnSave" class="btn">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from "./firebase-config.js";
+    import {
+      collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, query, orderBy
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    // DOM refs
+    const blogTbody = document.getElementById('blogTbody');
+    const emptyNotice = document.getElementById('emptyNotice');
+    const searchInput = document.getElementById('searchInput');
+    const btnAdd = document.getElementById('btnAdd');
+    const btnReload = document.getElementById('btnReload');
+
+    const overlay = document.getElementById('overlay');
+    const form = document.getElementById('form');
+    const modalTitle = document.getElementById('modalTitle');
+    const btnCancel = document.getElementById('btnCancel');
+    const btnSave = document.getElementById('btnSave');
+
+    const fTitle = document.getElementById('fieldTitle');
+    const fExcerpt = document.getElementById('fieldExcerpt');
+    const fImg = document.getElementById('fieldImg');
+    const fContent = document.getElementById('fieldContent');
+
+    let articles = []; // cache
+    let editingId = null; // id when editing
+
+    // Utilities
+    function esc(s){ return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    function formatDate(val){
+      if(!val) return '';
+      // support numeric timestamp or Firestore Timestamp-like
+      try {
+        if(typeof val === 'number') return new Date(val).toLocaleDateString('ar');
+        if(val.toDate) return val.toDate().toLocaleDateString('ar');
+        return new Date(val).toLocaleDateString('ar');
+      } catch(e){ return ''; }
+    }
+
+    // Load articles
+    async function loadArticles(){
+      blogTbody.innerHTML = `<tr><td colspan="4" class="muted">جاري التحميل...</td></tr>`;
+      try {
+        // order by createdAt desc — collection is 'blog'
+        const q = query(collection(db, 'blog'), orderBy('createdAt','desc'));
+        const snap = await getDocs(q);
+        articles = [];
+        snap.forEach(d=> articles.push({ id: d.id, ...d.data() }) );
+
+        renderTable();
+      } catch(err){
+        console.error(err);
+        blogTbody.innerHTML = `<tr><td colspan="4" class="muted">خطأ في التحميل</td></tr>`;
+      }
+    }
+
+    function renderTable(){
+      if(!articles || articles.length === 0){
+        blogTbody.innerHTML = '';
+        emptyNotice.style.display = 'block';
+        return;
+      }
+      emptyNotice.style.display = 'none';
+      const rows = articles.map(a=>{
+        const dateStr = formatDate(a.createdAt || a.date || a.createdAt);
+        const excerpt = esc(a.excerpt || a.short || '');
+        return `
+          <tr data-id="${a.id}">
+            <td style="font-weight:800">${esc(a.title || '-')}</td>
+            <td class="muted" style="max-width:480px">${excerpt}</td>
+            <td>${esc(dateStr)}</td>
+            <td>
+              <div class="actions-row">
+                <button class="action-btn view" data-action="view" data-id="${a.id}">عرض</button>
+                <button class="action-btn edit" data-action="edit" data-id="${a.id}">تعديل</button>
+                <button class="action-btn delete" data-action="delete" data-id="${a.id}">حذف</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      blogTbody.innerHTML = rows.join('');
+    }
+
+    // Open modal for add/edit
+    function openModalAdd(){
+      editingId = null;
+      modalTitle.textContent = 'إضافة مقال جديد';
+      fTitle.value = '';
+      fExcerpt.value = '';
+      fImg.value = '';
+      fContent.value = '';
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+      fTitle.focus();
+    }
+
+    async function openModalEdit(id){
+      editingId = id;
+      modalTitle.textContent = 'تعديل المقال';
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+      // fetch doc
+      try {
+        const snap = await getDoc(doc(db, 'blog', id));
+        if(!snap.exists()){
+          alert('المقال غير موجود');
+          closeModal();
+          return;
+        }
+        const d = snap.data();
+        fTitle.value = d.title || '';
+        fExcerpt.value = d.excerpt || d.short || '';
+        fImg.value = d.img || '';
+        fContent.value = d.content || '';
+        fTitle.focus();
+      } catch(err){
+        console.error(err);
+        alert('خطأ أثناء جلب المقال');
+        closeModal();
+      }
+    }
+
+    function closeModal(){
+      overlay.classList.remove('show');
+      overlay.setAttribute('aria-hidden','true');
+      editingId = null;
+    }
+
+    // Save (add or update)
+    form.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const title = (fTitle.value||'').trim();
+      const excerpt = (fExcerpt.value||'').trim();
+      const img = (fImg.value||'').trim();
+      const content = (fContent.value||'').trim();
+
+      if(!title){
+        alert('أدخل عنواناً للمقال');
+        return;
+      }
+
+      btnSave.disabled = true;
+      try {
+        if(editingId){
+          // update
+          await updateDoc(doc(db, 'blog', editingId), {
+            title, excerpt, img, content
+          });
+        } else {
+          // add — set createdAt as number (millis) to simplify ordering/display
+          await addDoc(collection(db, 'blog'), {
+            title, excerpt, img, content, createdAt: Date.now()
+          });
+        }
+        await loadArticles();
+        closeModal();
+      } catch(err){
+        console.error(err);
+        alert('حدث خطأ أثناء الحفظ: ' + (err.message || 'خطأ'));
+      } finally {
+        btnSave.disabled = false;
+      }
+    });
+
+    // Click handlers (view/edit/delete)
+    document.addEventListener('click', async (ev)=>{
+      const btn = ev.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+
+      if(action === 'view'){
+        // افتح صفحة العرض في نافذة جديدة (يمكن تعديل المسار حسب مشروعك)
+        window.open(`blog-view.html?id=${id}`, '_blank');
+        return;
+      }
+      if(action === 'edit'){
+        await openModalEdit(id);
+        return;
+      }
+      if(action === 'delete'){
+        if(!confirm('هل تريد حذف المقال؟')) return;
+        try {
+          await deleteDoc(doc(db, 'blog', id));
+          await loadArticles();
+        } catch(err){
+          console.error(err);
+          alert('خطأ أثناء الحذف: ' + (err.message || 'خطأ'));
+        }
+        return;
+      }
+    });
+
+    // Search filter (client-side)
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      Array.from(blogTbody.querySelectorAll('tr')).forEach(r=>{
+        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    // Buttons
+    btnAdd.addEventListener('click', openModalAdd);
+    btnCancel.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+    btnReload.addEventListener('click', loadArticles);
+
+    // initial load
+    loadArticles();
+  </script>
+</body>
+</html>

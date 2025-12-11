@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تفاصيل المختبر</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';}
+body{background:#eef3f3;padding:12px;}
+
+.back-btn{
+  display:inline-block;background:#444;color:#fff;
+  padding:10px 16px;border-radius:10px;text-decoration:none;
+  margin-bottom:15px;font-size:16px;
+}
+
+.card{
+  width:100%;background:white;padding:18px;
+  border-radius:15px;box-shadow:0 3px 12px #00000022;
+  margin-bottom:15px;
+}
+
+h2{
+  font-size:22px;color:#00695C;text-align:center;
+  margin-bottom:15px;font-weight:800;
+}
+
+.info{
+  background:#f9ffff;padding:12px;border-left:5px solid #00796B;
+  border-radius:12px;margin-bottom:12px;
+}
+
+.label{font-size:15px;font-weight:700;color:#00695C;}
+.value{font-size:16px;color:#333;margin-top:4px;}
+
+.review-like{
+  margin-top:8px;font-size:15px;color:#00695C;
+  cursor:pointer;
+}
+.review-like span{font-weight:bold;color:#00796B;}
+
+.avg-box{text-align:center;margin-bottom:10px;}
+.avg-rating{font-size:40px;font-weight:900;color:#ffb300;}
+.rating-stars{font-size:22px;color:#ffb300;}
+
+.reviews .review{
+  background:#fff;padding:12px;border-radius:12px;
+  margin-bottom:12px;box-shadow:0 2px 10px #00000015;
+}
+
+.review .stars{
+  color:#ffb300;font-size:18px;
+}
+
+.add-review textarea{
+  width:100%;min-height:100px;padding:10px;
+  border-radius:10px;border:1px solid #ccc;
+}
+
+.stars-input span{
+  font-size:30px;color:#ccc;cursor:pointer;
+}
+.stars-input .active{color:#ffb300;}
+
+.btn{
+  background:#009688;color:white;padding:10px;border:0;
+  border-radius:10px;font-size:16px;cursor:pointer;margin-top:10px;
+}
+
+.hospital-imgcircle{
+  width:120px;height:120px;border-radius:50%;
+  object-fit:cover;display:block;margin:10px auto;
+  border:3px solid #009688;
+}
+
+.map-btn{
+  display:block;width:100%;padding:14px;margin-top:12px;
+  background:#00796B;color:white;font-size:17px;
+  border-radius:10px;text-align:center;text-decoration:none;
+  font-weight:700;
+}
+.map-btn:hover{background:#009688;}
+</style>
+</head>
+
+<body>
+
+<a href="labs.html" class="back-btn">⬅ العودة</a>
+<img id="labImg" class="hospital-imgcircle" alt="lab">
+
+<div class="card">
+
+  <h2 id="lName">جاري التحميل...</h2>
+
+  <div class="info">
+    <div class="label">📍 المدينة:</div>
+    <div class="value" id="lCity"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📞 الهاتف:</div>
+    <div class="value" id="lPhone"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">🧪 الأقسام:</div>
+    <div class="value" id="lDepartments"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📝 الوصف:</div>
+    <div class="value" id="lDescription"></div>
+  </div>
+
+  <a id="mapBtn" class="map-btn" target="_blank">📍 عرض الموقع على الخريطة</a>
+
+</div>
+
+<div class="card">
+  <div class="avg-box">
+    <div class="avg-rating" id="avgRating">0.0</div>
+    <div class="rating-stars" id="ratingStars">★★★★★</div>
+    <div id="ratingCount">0 تقييم</div>
+  </div>
+
+  <div class="reviews" id="reviewsList">لا توجد تقييمات بعد.</div>
+</div>
+
+<div class="card add-review">
+  <h3>اكتب تقييمك</h3>
+
+  <div id="starsInput" class="stars-input"></div>
+
+  <textarea id="reviewText" placeholder="اكتب تعليقك هنا..."></textarea>
+
+  <button id="sendReview" class="btn">إرسال التقييم</button>
+</div>
+
+
+<script type="module">
+import { db } from "./firebase-config.js";
+import {
+  doc, getDoc,
+  collection, addDoc, getDocs, updateDoc,
+  query, orderBy, serverTimestamp, increment
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+const id = new URLSearchParams(location.search).get("id");
+
+/* تحميل بيانات المختبر */
+async function loadLab(){
+  const ref = doc(db, "labs", id);
+  const snap = await getDoc(ref);
+
+  if(!snap.exists()) return;
+
+  const l = snap.data();
+
+  lName.textContent = l.name;
+  lCity.textContent = l.city || "غير محدد";
+  lPhone.textContent = l.phone || "غير محدد";
+  lDepartments.textContent = l.department || "غير محدد";
+  lDescription.textContent = l.description || "لا يوجد وصف";
+  labImg.src = l.img || "images/default.jpg";
+
+  mapBtn.href = l.map || "#";
+}
+
+/* النجوم */
+let selected = 5;
+function drawStarsInput(){
+  let html="";
+  for(let i=1;i<=5;i++){
+    html+=`<span data-id="${i}" class="${i<=selected?'active':''}">★</span>`;
+  }
+  starsInput.innerHTML=html;
+}
+drawStarsInput();
+
+starsInput.addEventListener("click", e=>{
+  const s=e.target.closest("span");
+  if(!s) return;
+  selected = Number(s.dataset.id);
+  drawStarsInput();
+});
+
+/* التقييمات */
+async function loadReviews(){
+  const ref = collection(db, "labs", id, "reviews");
+  const q = query(ref, orderBy("date","desc"));
+  const snap = await getDocs(q);
+
+  let sum=0, count=0, html="";
+
+  snap.forEach(r=>{
+    count++;
+    const d=r.data();
+    sum+=d.rating;
+
+    const rid = r.id;
+    const likes = d.likes || 0;
+
+    html+=`
+      <div class="review">
+        <div class="stars">${"★".repeat(d.rating)}${"☆".repeat(5-d.rating)}</div>
+        <p>${d.text}</p>
+
+        <div class="review-like" onclick="likeReview('${rid}')">
+          ❤️ أعجبني <span>(${likes})</span>
+        </div>
+      </div>
+    `;
+  });
+
+  avgRating.textContent = count ? (sum/count).toFixed(1) : "0.0";
+  ratingCount.textContent = count+" تقييم";
+  ratingStars.textContent =
+    "★".repeat(Math.round(sum/count)) +
+    "☆".repeat(5 - Math.round(sum/count));
+
+  reviewsList.innerHTML = html || "لا توجد تقييمات بعد.";
+}
+
+/* إعجاب */
+window.likeReview = async function(rid){
+  if(localStorage.getItem("liked_l"+rid)) return alert("لقد أعجبت بهذا التعليق مسبقاً");
+
+  const ref = doc(db, "labs", id, "reviews", rid);
+  await updateDoc(ref,{ likes: increment(1) });
+
+  localStorage.setItem("liked_l"+rid,"yes");
+  loadReviews();
+};
+
+/* إرسال التقييم */
+sendReview.addEventListener("click", async ()=>{
+  const text = reviewText.value.trim();
+  if(!text) return alert("اكتب تعليقاً");
+
+  await addDoc(collection(db,"labs",id,"reviews"),{
+    rating:selected,
+    text,
+    likes:0,
+    date:serverTimestamp()
+  });
+
+  reviewText.value="";
+  selected=5;
+  drawStarsInput();
+  loadReviews();
+});
+
+loadLab();
+loadReviews();
+</script>
+
+</body>
+</html>

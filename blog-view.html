@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عرض المقال</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+}
+
+body {
+  background: #f4f8f9;
+  padding-bottom: 40px;
+}
+
+/* Header */
+header {
+  background: #009688;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Back Button */
+.back-btn {
+  display: block;
+  width: fit-content;
+  margin: 15px auto;
+  padding: 12px 20px;
+  background: #00695c;
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.back-btn:hover {
+  background: #004d40;
+}
+
+main {
+  max-width: 900px;
+  margin: 20px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+h1 {
+  font-size: 28px;
+  color: #009688;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.date {
+  color: #777;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* IMAGE */
+.post-img {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.content {
+  font-size: 20px;
+  color: #333;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+
+<header>📘 عرض المقال</header>
+
+<a class="back-btn" href="blog.html">العودة للمدونة</a>
+
+<main>
+  <h1 id="title">جاري التحميل...</h1>
+  <div class="date" id="date"></div>
+  <img id="img" class="post-img" style="display:none;">
+  <div class="content" id="content"></div>
+</main>
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+/* استخراج ID */
+const params = new URLSearchParams(window.location.search);
+const blogId = params.get("id");
+
+if (!blogId) {
+  document.getElementById("title").textContent = "خطأ: لم يتم العثور على المقال.";
+} else {
+  loadBlog();
+}
+
+async function loadBlog() {
+  const ref = doc(db, "blog", blogId);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    document.getElementById("title").textContent = "المقال غير موجود.";
+    return;
+  }
+
+  const b = snap.data();
+
+  document.getElementById("title").textContent = b.title || "بدون عنوان";
+
+  document.getElementById("date").textContent =
+    b.createdAt ? new Date(b.createdAt).toLocaleDateString("ar-EG") : "";
+
+  const imgEl = document.getElementById("img");
+  if (b.img && b.img.trim() !== "") {
+    imgEl.src = b.img;
+    imgEl.style.display = "block";
+  }
+
+  document.getElementById("content").textContent = b.content || "لا يوجد محتوى.";
+}
+</script>
+
+</body>
+</html>

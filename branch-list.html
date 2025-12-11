@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>قائمة الفروع</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+  body{background:#eef3f3;display:flex;justify-content:center;}
+  .container{width:100%;max-width:380px;padding:15px;}
+
+  .back-btn{
+    display:inline-block;background:#444;color:#fff;
+    padding:8px 14px;border-radius:10px;text-decoration:none;
+    font-size:15px;margin-bottom:12px;
+  }
+
+  h1{text-align:center;color:#00695C;margin-bottom:20px;font-size:22px;font-weight:800;}
+
+  .card{
+    background:white;padding:16px;border-radius:14px;margin-bottom:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  }
+
+  .img-circle{
+    width:90px;height:90px;border-radius:50%;object-fit:cover;
+    display:block;margin:0 auto 10px;border:3px solid #009688;
+  }
+
+  .name{
+    font-size:18px;font-weight:800;text-align:center;color:#00695C;margin-bottom:8px;
+  }
+
+  .info{font-size:14px;color:#444;margin-bottom:4px;text-align:center;}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+  <a class="back-btn" href="branches.html">⬅ الفروع</a>
+
+  <h1 id="title">...</h1>
+
+  <div id="list">جار التحميل...</div>
+
+</div>
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+  import { collection, getDocs }
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  // الحصول على نوع الفرع من الرابط
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get("type");
+
+  const names = {
+    hospitals : "المستشفيات",
+    clinics   : "العيادات",
+    labs      : "المختبرات",
+    emergency : "الطوارئ"
+  };
+
+  document.getElementById("title").textContent = names[type] || "القائمة";
+
+  async function loadList() {
+    const ref = collection(db, type);
+    const snap = await getDocs(ref);
+
+    const box = document.getElementById("list");
+    box.innerHTML = "";
+
+    if (snap.empty) {
+      box.innerHTML = `<p style='text-align:center;color:#777;'>لا توجد بيانات</p>`;
+      return;
+    }
+
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+
+      box.innerHTML += `
+        <div class="card">
+          <img class="img-circle"
+               src="${d.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}">
+
+          <div class="name">${d.name || "غير معروف"}</div>
+
+          <p class="info">${d.city || ""}</p>
+          <p class="info">${d.phone || ""}</p>
+        </div>
+      `;
+    });
+  }
+
+  loadList();
+
+</script>
+
+</body>
+</html>

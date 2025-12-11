@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>البلاغات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================
+   🌙 Dark Mode – BACKGROUND
+=========================== */
+body {
+  background: linear-gradient(to bottom, #0a0a0a, #111, #1a1a1a, #222);
+  font-family: 'Cairo', sans-serif;
+  margin: 0;
+  padding: 12px;
+  color: #e6edf3;
+}
+
+/* ===========================
+   📦 MAIN BOX (Responsive)
+=========================== */
+.section {
+  background: rgba(255,255,255,0.06);
+  padding: 22px;
+  border-radius: 18px;
+  max-width: 650px;
+  margin: 15px auto;
+  backdrop-filter: blur(7px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.45);
+}
+
+/* Title */
+.section h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1f6feb;
+}
+
+/* ===========================
+   📝 FORM
+=========================== */
+.report-form {
+  background: rgba(0,0,0,0.35);
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #30363d;
+  box-shadow: 0 4px 12px #0007;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 17px;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 14px;
+  font-size: 17px;
+  border-radius: 12px;
+  border: 1px solid #30363d;
+  background: #161b22;
+  color: #e6edf3;
+}
+
+.input-group textarea {
+  height: 110px;
+  resize: none;
+}
+
+.btn-submit {
+  width: 100%;
+  background: #1f6feb;
+  padding: 15px;
+  border-radius: 14px;
+  color: white;
+  font-size: 19px;
+  font-weight: 800;
+  border: none;
+  margin-top: 8px;
+}
+
+.separator {
+  margin: 30px 0;
+  border: 0;
+  border-top: 2px solid #30363d;
+}
+
+/* ===========================
+   📋 REPORT ITEM
+=========================== */
+.item {
+  background: rgba(255,255,255,0.07);
+  padding: 18px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  border: 1px solid #30363d;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px #0007;
+  font-size: 17px;
+}
+
+.item strong {
+  color: #1f6feb;
+  font-weight: 700;
+}
+
+.reply-box {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #112542;
+  border-right: 5px solid #1f6feb;
+  font-size: 17px;
+}
+
+/* ===========================
+   📱 Mobile Tweaks
+=========================== */
+@media (max-width: 480px) {
+  body { padding: 8px; }
+  .section { padding: 18px; }
+  .report-form { padding: 16px; }
+  .section h2 { font-size: 24px; }
+  .item { padding: 16px; font-size: 16px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="section">
+
+  <h2>📝 إرسال بلاغ</h2>
+
+  <form id="reportForm" class="report-form">
+    <div class="input-group">
+      <label>نوع البلاغ</label>
+      <input type="text" id="type" required placeholder="مثال: انطفاء كامل">
+    </div>
+
+    <div class="input-group">
+      <label>الاسم</label>
+      <input type="text" id="name" required placeholder="اسم المواطن">
+    </div>
+
+    <div class="input-group">
+      <label>الحي</label>
+      <input type="text" id="location" required placeholder="مثال: حي الشباب">
+    </div>
+
+    <div class="input-group">
+      <label>تفاصيل البلاغ</label>
+      <textarea id="details" required placeholder="اكتب تفاصيل المشكلة"></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">📨 إرسال البلاغ</button>
+  </form>
+
+  <hr class="separator">
+
+  <h2>📋 جميع البلاغات</h2>
+  <div id="list">جارِ التحميل...</div>
+
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, addDoc, onSnapshot, query, orderBy } 
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+const form = document.getElementById("reportForm");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const data = {
+    type: document.getElementById("type").value,
+    name: document.getElementById("name").value,
+    location: document.getElementById("location").value,
+    details: document.getElementById("details").value,
+    status: "قيد المراجعة",
+    reply: "",
+    created_at: new Date()
+  };
+
+  try {
+    await addDoc(collection(db, "reports"), data);
+    alert("✔ تم إرسال البلاغ بنجاح");
+    form.reset();
+  } catch (err) {
+    alert("⚠ خطأ أثناء إرسال البلاغ");
+  }
+});
+
+const list = document.getElementById("list");
+const q = query(collection(db, "reports"), orderBy("created_at", "desc"));
+
+onSnapshot(q, (snap) => {
+  if (snap.empty) {
+    list.innerHTML = "<p>لا توجد بلاغات.</p>";
+    return;
+  }
+
+  let html = "";
+
+  snap.forEach(doc => {
+    const r = doc.data();
+
+    html += `
+      <div class="item">
+        <strong>نوع البلاغ:</strong> ${r.type}<br>
+        <strong>الاسم:</strong> ${r.name}<br>
+        <strong>الحي:</strong> ${r.location}<br>
+        <strong>تفاصيل:</strong> ${r.details}<br><br>
+
+        <strong>الحالة:</strong>
+        <span style="color:${r.status === 'تم الحل' ? '#2ecc71' : '#d29922'};">
+          ${r.status}
+        </span>
+    `;
+
+    if (r.reply && r.reply.trim() !== "") {
+      html += `
+        <div class="reply-box">
+          <strong>رد الإدارة:</strong><br>
+          ${r.reply}
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+  });
+
+  list.innerHTML = html;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>لوحة التحكم — Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg1:#004D40; --bg2:#00695C; --accent:#009688; --white:#fff;
+    --card-bg: #fff; --muted:#7a7a7a;
+    --danger:#E53935; --primary:#00796B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+  html,body{height:100%}
+  body{
+    background: linear-gradient(180deg,var(--bg1),var(--bg2) 60%,var(--accent));
+    color:var(--white);
+    -webkit-font-smoothing:antialiased;
+    padding:20px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .wrap{ width:100%; max-width:920px; margin:0 auto; }
+
+  header.top{ text-align:center; margin-bottom:14px; }
+  header.top h1{ font-size:20px; font-weight:800; color:var(--white); letter-spacing:0.2px; }
+
+  .tabs{ display:flex; gap:8px; justify-content:center; margin:14px 0; flex-wrap:wrap; }
+  .tab {
+    background: rgba(255,255,255,0.08);
+    color:var(--white);
+    padding:8px 12px;
+    border-radius:12px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:14px;
+    min-width:110px;
+    text-align:center;
+  }
+  .tab.active{
+    background:var(--card-bg);
+    color:var(--primary);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  .card { background: var(--card-bg); color:#222; border-radius:16px; padding:14px; margin:12px 0; box-shadow:0 8px 22px rgba(0,0,0,0.22); }
+
+  .controls{ display:flex; gap:8px; margin-bottom:10px; align-items:center; }
+  .controls .search{ flex:1; padding:10px 12px; border-radius:10px; border:1px solid #eee; font-size:14px; }
+  .controls .btn { background:var(--primary); color:var(--card-bg); border:none; padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700; font-size:14px; }
+  .controls .btn.ghost{ background:transparent; color:var(--primary); border:1px solid var(--primary); }
+
+  .table-wrap{ overflow:auto }
+  table.table{ width:100%; border-collapse:collapse; font-size:14px; min-width:640px; }
+  table th, table td{ padding:10px 8px; text-align:right; vertical-align:middle; border-bottom:1px solid #eee; color:#333; background:transparent; }
+  table th{ background:transparent; color:#555; text-align:right; font-weight:700; font-size:13px; }
+  .actions-row{ display:flex; gap:6px; justify-content:flex-start }
+  .action-btn{ border:none; padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px; }
+  .action-btn.edit{ background:#FFF3CD; color:#8A6D02 }
+  .action-btn.delete{ background:#F8D7DA; color:#721C24 }
+  .action-btn.view{ background:#E3F2FD; color:#0D47A1 }
+
+  .td-doctor{ display:flex; align-items:center; gap:10px; justify-content:flex-end; }
+  .td-doctor img{ width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid #eee; }
+  .muted{ color:var(--muted); font-size:13px }
+
+  .overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:80; padding:18px; }
+  .overlay.show{ display:flex }
+  .modal{ width:100%; max-width:720px; background:var(--card-bg); color:#222; border-radius:14px; padding:16px; box-shadow:0 18px 40px rgba(0,0,0,0.4); max-height:92vh; overflow:auto; }
+  .modal h3{ font-size:18px; margin-bottom:10px; color:var(--primary) }
+  .form-row{ display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap }
+  .form-row .field{ flex:1; min-width:160px }
+  input[type=text], input[type=url], textarea, select{ width:100%; padding:10px; border:1px solid #e6e6e6; border-radius:10px; font-size:14px; }
+  textarea{ min-height:80px; resize:vertical; padding-top:10px }
+  label.small{ display:block; margin-bottom:6px; font-size:13px; color:#444 }
+
+  .days-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:8px }
+  .day-field{ background:#f7f7f7; padding:8px; border-radius:8px }
+  .day-field input{ background:transparent; border:none; padding:6px; width:100% }
+
+  .modal-actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:6px }
+  .modal .btn{ padding:10px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:700 }
+  .btn.save{ background:var(--primary); color:#fff }
+  .btn.cancel{ background:#eee; color:#444 }
+
+  @media(max-width:420px){
+    .tabs{ flex-wrap:wrap }
+    table.table{ min-width:360px }
+    .days-grid{ grid-template-columns:repeat(1,1fr) }
+  }
+</style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="top">
+      <h1>لوحة تحكم — دليل الأطباء والمرافق</h1>
+    </header>
+
+    <div class="tabs" role="tablist">
+      <div id="tabDashboard" class="tab">الملخص</div>
+      <div id="tabDoctors" class="tab">الأطباء</div>
+      <div id="tabHospitals" class="tab">المستشفيات</div>
+      <div id="tabClinics" class="tab">العيادات</div>
+      <div id="tabLabs" class="tab">المختبرات</div>
+      <div id="tabEmergency" class="tab">الطوارئ</div>
+      <div id="tabBlog" class="tab">المدونة</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="pageDashboard" class="card" style="display:block">
+      <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:800;font-size:18px;color:var(--primary)">مرحبًا، إدارة الموقع</div>
+          <div class="muted" style="margin-top:6px">اضغط على أي تبويب لإدارة البيانات</div>
+        </div>
+
+        <div style="display:flex;gap:18px;align-items:center">
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statDoctors">0</div>
+            <div class="muted">أطباء</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statHospitals">0</div>
+            <div class="muted">مستشفيات</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statClinics">0</div>
+            <div class="muted">عيادات</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statLabs">0</div>
+            <div class="muted">مختبرات</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statEmergency">0</div>
+            <div class="muted">طوارئ</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#222" id="statBlog">0</div>
+            <div class="muted">مقالات</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCTORS -->
+    <div id="pageDoctors" class="card" style="display:none">
+      <div class="controls">
+        <input id="searchDoctors" class="search" placeholder="ابحث باسم أو تخصص أو مستشفى..." />
+        <button id="btnAddDoctor" class="btn">+ إضافة</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" aria-label="قائمة الأطباء">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>التخصص</th>
+              <th>المستشفى</th>
+              <th>رقم</th>
+              <th>الأيام</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="doctorsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- HOSPITALS -->
+    <div id="pageHospitals" class="card" style="display:none">
+      <div class="controls">
+        <input id="searchHospitals" class="search" placeholder="ابحث باسم المستشفى أو المدينة..." />
+        <button id="btnAddHospital" class="btn">+ إضافة</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" aria-label="قائمة المستشفيات">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>المدينة</th>
+              <th>هاتف</th>
+              <th>أقسام</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="hospitalsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CLINICS -->
+    <div id="pageClinics" class="card" style="display:none">
+      <div class="controls">
+        <input id="searchClinics" class="search" placeholder="ابحث باسم العيادة أو المدينة..." />
+        <button id="btnAddClinic" class="btn">+ إضافة</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" aria-label="قائمة العيادات">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>المدينة</th>
+              <th>هاتف</th>
+              <th>أقسام</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="clinicsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LABS -->
+    <div id="pageLabs" class="card" style="display:none">
+      <div class="controls">
+        <input id="searchLabs" class="search" placeholder="ابحث باسم المختبر أو المدينة..." />
+        <button id="btnAddLab" class="btn">+ إضافة</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" aria-label="قائمة المختبرات">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>المدينة</th>
+              <th>هاتف</th>
+              <th>أقسام</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="labsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EMERGENCY -->
+    <div id="pageEmergency" class="card" style="display:none">
+
+  <div class="controls">
+    <input id="searchEmergency" class="search" placeholder="ابحث باسم المركز أو المدينة..." />
+    <button id="btnAddEmergency" class="btn">+ إضافة</button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="table" aria-label="قائمة الطوارئ">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>المدينة</th>
+          <th>الهاتف</th>
+          <th>الوصف</th>
+          <th>الخريطة</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody id="emergencyTbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+
+    <!-- BLOG -->
+    <div id="pageBlog" class="card" style="display:none">
+      <div class="controls">
+        <input id="searchBlog" class="search" placeholder="ابحث بعنوان أو مقتطف..." />
+        <button id="btnAddBlog" class="btn">+ إضافة مقال</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" aria-label="قائمة المقالات">
+          <thead>
+            <tr>
+              <th>العنوان</th>
+              <th>مقتطف</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="blogTbody"></tbody>
+
+
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Overlay modal for Add/Edit -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">إضافة / تعديل</h3>
+
+      <form id="modalForm">
+        <div id="formFields"></div>
+        <div class="modal-actions">
+          <button type="button" id="btnCancel" class="btn cancel">إلغاء</button>
+          <button type="submit" id="btnSave" class="btn save">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script type="module">
+/* dashboard.html — unified CRUD for doctors/hospitals/clinics/labs/emergency/blogs
+   Requires: ./firebase-config.js exporting { auth, db }
+*/
+
+import { auth, db } from "./firebase-config.js";
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+import {
+  collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, query, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+/* DOM refs */
+const tabs = {
+  dashboard: document.getElementById('tabDashboard'),
+  doctors: document.getElementById('tabDoctors'),
+  hospitals: document.getElementById('tabHospitals'),
+  clinics: document.getElementById('tabClinics'),
+  labs: document.getElementById('tabLabs'),
+  emergency: document.getElementById('tabEmergency'),
+  blog: document.getElementById('tabBlog')
+};
+
+const pages = {
+  dashboard: document.getElementById('pageDashboard'),
+  doctors: document.getElementById('pageDoctors'),
+  hospitals: document.getElementById('pageHospitals'),
+  clinics: document.getElementById('pageClinics'),
+  labs: document.getElementById('pageLabs'),
+  emergency: document.getElementById('pageEmergency'),
+  blog: document.getElementById('pageBlog')
+};
+
+const tbodies = {
+  doctors: document.getElementById('doctorsTbody'),
+  hospitals: document.getElementById('hospitalsTbody'),
+  clinics: document.getElementById('clinicsTbody'),
+  labs: document.getElementById('labsTbody'),
+  emergency: document.getElementById('emergencyTbody'),
+  blog: document.getElementById('blogTbody') // ✔️ صح 100%
+
+};
+
+const controls = {
+  btnAddDoctor: document.getElementById('btnAddDoctor'),
+  btnAddHospital: document.getElementById('btnAddHospital'),
+  btnAddClinic: document.getElementById('btnAddClinic'),
+  btnAddLab: document.getElementById('btnAddLab'),
+  btnAddEmergency: document.getElementById('btnAddEmergency'),
+  btnAddBlog: document.getElementById('btnAddBlog'),
+  searchDoctors: document.getElementById('searchDoctors'),
+  searchHospitals: document.getElementById('searchHospitals'),
+  searchClinics: document.getElementById('searchClinics'),
+  searchLabs: document.getElementById('searchLabs'),
+  searchEmergency: document.getElementById('searchEmergency'),
+  searchBlog: document.getElementById('searchBlog')
+};
+
+const overlay = document.getElementById('overlay');
+const formFields = document.getElementById('formFields');
+const modalTitle = document.getElementById('modalTitle');
+const modalForm = document.getElementById('modalForm');
+const btnCancel = document.getElementById('btnCancel');
+const statDoctors = document.getElementById('statDoctors');
+const statHospitals = document.getElementById('statHospitals');
+const statClinics = document.getElementById('statClinics');
+const statLabs = document.getElementById('statLabs');
+const statEmergency = document.getElementById('statEmergency');
+const statBlog = document.getElementById('statBlog');
+
+let activePage = 'dashboard';
+let editing = null; // { collection, id, viewOnly? }
+
+/* Auth guard */
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = 'login.html';
+  else updateCounts();
+});
+
+/* Tab navigation */
+function setActiveTab(key){
+  Object.values(tabs).forEach(t=>t.classList.remove('active'));
+  Object.values(pages).forEach(p=>p.style.display = 'none');
+
+  tabs[key].classList.add('active');
+  pages[key].style.display = 'block';
+  activePage = key;
+
+  // lazy load tables
+  if(key === 'doctors') loadDoctors();
+  if(key === 'hospitals') loadHospitals();
+  if(key === 'clinics') loadClinics();
+  if(key === 'labs') loadLabs();
+  if(key === 'emergency') loadEmergency();
+  if(key === 'blog') loadBlogs();
+}
+
+Object.entries(tabs).forEach(([k,el])=>el.addEventListener('click', ()=>setActiveTab(k)));
+
+function esc(s){ return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* ---------- LOAD functions ---------- */
+
+async function loadDoctors(){
+  tbodies.doctors.innerHTML = `<tr><td colspan="6" class="muted">جاري التحميل...</td></tr>`;
+  try {
+    const snap = await getDocs(collection(db,'doctors'));
+    statDoctors.textContent = snap.size;
+    if(snap.empty){ tbodies.doctors.innerHTML = `<tr><td colspan="6" class="muted">لا يوجد أطباء</td></tr>`; return; }
+    const html = [];
+    snap.forEach(docu=>{
+      const d = docu.data(); const id = docu.id;
+      const hasSchedule = d.schedule ? Object.values(d.schedule).some(s=>s && s.time && s.time.trim().length>0) : false;
+      const daysLabel = hasSchedule ? 'موجود' : '-';
+      html.push(`
+        <tr data-id="${id}">
+          <td class="td-doctor">
+            <img src="${esc(d.img || 'https://via.placeholder.com/120')}" alt="">
+            <div style="text-align:right">
+              <div style="font-weight:800">${esc(d.name)}</div>
+              <div class="muted">${esc(d.specialty||'')}</div>
+            </div>
+          </td>
+          <td>${esc(d.specialty||'-')}</td>
+          <td>${esc(d.hospital||'-')}</td>
+          <td>${esc(d.phone||'-')}</td>
+          <td class="muted">${daysLabel}</td>
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-doctor" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-doctor" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-doctor" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+    tbodies.doctors.innerHTML = html.join('');
+  } catch(err){ console.error(err); tbodies.doctors.innerHTML = `<tr><td colspan="6" class="muted">خطأ في التحميل</td></tr>`; }
+}
+
+async function loadHospitals(){
+  tbodies.hospitals.innerHTML = `<tr><td colspan="5" class="muted">جاري التحميل...</td></tr>`;
+  try {
+    const snap = await getDocs(collection(db,'hospitals'));
+    statHospitals.textContent = snap.size;
+    if(snap.empty){ tbodies.hospitals.innerHTML = `<tr><td colspan="5" class="muted">لا يوجد مستشفيات</td></tr>`; return; }
+    const rows=[]; snap.forEach(docu=>{
+      const h=docu.data(), id=docu.id;
+      rows.push(`
+        <tr data-id="${id}">
+          <td style="font-weight:800">${esc(h.name)}</td>
+          <td>${esc(h.city||'-')}</td>
+          <td>${esc(h.phone||'-')}</td>
+          <td class="muted" style="max-width:180px">${esc(h.department||'-')}</td>
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-hospital" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-hospital" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-hospital" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+    tbodies.hospitals.innerHTML = rows.join('');
+  } catch(err){ console.error(err); tbodies.hospitals.innerHTML = `<tr><td colspan="5" class="muted">خطأ في التحميل</td></tr>`; }
+}
+
+async function loadClinics(){
+  tbodies.clinics.innerHTML = `<tr><td colspan="5" class="muted">جاري التحميل...</td></tr>`;
+  try {
+    const snap = await getDocs(collection(db,'clinics'));
+    statClinics.textContent = snap.size;
+    if(snap.empty){ tbodies.clinics.innerHTML = `<tr><td colspan="5" class="muted">لا يوجد عيادات</td></tr>`; return; }
+    const rows=[]; snap.forEach(docu=>{
+      const c=docu.data(), id=docu.id;
+      rows.push(`
+        <tr data-id="${id}">
+          <td style="font-weight:800">${esc(c.name)}</td>
+          <td>${esc(c.city||'-')}</td>
+          <td>${esc(c.phone||'-')}</td>
+          <td class="muted" style="max-width:180px">${esc(c.department||'-')}</td>
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-clinic" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-clinic" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-clinic" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+    tbodies.clinics.innerHTML = rows.join('');
+  } catch(err){ console.error(err); tbodies.clinics.innerHTML = `<tr><td colspan="5" class="muted">خطأ في التحميل</td></tr>`; }
+}
+
+async function loadLabs(){
+  tbodies.labs.innerHTML = `<tr><td colspan="5" class="muted">جاري التحميل...</td></tr>`;
+  try {
+    const snap = await getDocs(collection(db,'labs'));
+    statLabs.textContent = snap.size;
+    if(snap.empty){ tbodies.labs.innerHTML = `<tr><td colspan="5" class="muted">لا يوجد مختبرات</td></tr>`; return; }
+    const rows=[]; snap.forEach(docu=>{
+      const l=docu.data(), id=docu.id;
+      rows.push(`
+        <tr data-id="${id}">
+          <td style="font-weight:800">${esc(l.name)}</td>
+          <td>${esc(l.city||'-')}</td>
+          <td>${esc(l.phone||'-')}</td>
+          <td class="muted" style="max-width:180px">${esc(l.department||'-')}</td>
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-lab" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-lab" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-lab" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+    tbodies.labs.innerHTML = rows.join('');
+  } catch(err){ console.error(err); tbodies.labs.innerHTML = `<tr><td colspan="5" class="muted">خطأ في التحميل</td></tr>`; }
+}
+
+async function loadEmergency(){
+  tbodies.emergency.innerHTML = `<tr><td colspan="5" class="muted">جاري التحميل...</td></tr>`;
+  try {
+    const snap = await getDocs(collection(db,'emergency'));
+    statEmergency.textContent = snap.size;
+    if(snap.empty){ tbodies.emergency.innerHTML = `<tr><td colspan="5" class="muted">لا توجد مراكز طوارئ</td></tr>`; return; }
+    const rows=[]; snap.forEach(docu=>{
+      const e=docu.data(), id=docu.id;
+      rows.push(`
+        <tr data-id="${id}">
+          <td style="font-weight:800">${esc(e.name)}</td>
+          <td>${esc(e.city||'-')}</td>
+          <td>${esc(e.phone||'-')}</td>
+          <td class="muted" style="max-width:180px">${esc(e.department||'-')}</td>
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-emergency" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-emergency" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-emergency" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+    tbodies.emergency.innerHTML = rows.join('');
+  } catch(err){ console.error(err); tbodies.emergency.innerHTML = `<tr><td colspan="5" class="muted">خطأ في التحميل</td></tr>`; }
+}
+
+/* BLOG: simple articles (title, short, content, img, createdAt) */
+async function loadBlogs() {
+  tbodies.blog.innerHTML = `
+    <tr><td colspan="4" class="muted">جاري التحميل...</td></tr>
+  `;
+
+  try {
+    // نرتب حسب createdAt لأنه رقم
+    const q = query(collection(db, 'blog'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+
+    statBlog.textContent = snap.size;
+
+    if (snap.empty) {
+      tbodies.blog.innerHTML = `
+        <tr><td colspan="4" class="muted">لا توجد مقالات</td></tr>
+      `;
+      return;
+    }
+
+    const rows = [];
+
+    snap.forEach(docu => {
+      const b = docu.data();
+      const id = docu.id;
+
+      // تحويل createdAt رقم → تاريخ عربي
+      let dateStr = "";
+      if (b.createdAt) {
+        dateStr = new Date(b.createdAt).toLocaleDateString("ar");
+      }
+
+      rows.push(`
+        <tr data-id="${id}">
+          <td style="font-weight:800">${esc(b.title || "-")}</td>
+          <td class="muted" style="max-width:300px">${esc(b.short || "-")}</td>
+          <td>${esc(dateStr)}</td>
+
+          <td>
+            <div class="actions-row">
+              <button class="action-btn view" data-action="view-blog" data-id="${id}">عرض</button>
+              <button class="action-btn edit" data-action="edit-blog" data-id="${id}">تعديل</button>
+              <button class="action-btn delete" data-action="delete-blog" data-id="${id}">حذف</button>
+            </div>
+          </td>
+        </tr>
+      `);
+    });
+
+    tbodies.blog.innerHTML = rows.join('');
+
+  } catch (err) {
+    console.error(err);
+    tbodies.blog.innerHTML = `
+      <tr><td colspan="4" class="muted">خطأ في التحميل</td></tr>
+    `;
+  }
+}
+
+
+/* Update counts (dashboard) */
+async function updateCounts(){
+  try { statDoctors.textContent = (await getDocs(collection(db,'doctors'))).size } catch(e){ console.warn(e); }
+  try { statHospitals.textContent = (await getDocs(collection(db,'hospitals'))).size } catch(e){ }
+  try { statClinics.textContent = (await getDocs(collection(db,'clinics'))).size } catch(e){ }
+  try { statLabs.textContent = (await getDocs(collection(db,'labs'))).size } catch(e){ }
+  try { statEmergency.textContent = (await getDocs(collection(db,'emergency'))).size } catch(e){ }
+  try { statBlog.textContent = (await getDocs(collection(db,'blog'))).size } catch(e){ }
+}
+
+/* Event delegation for table action buttons */
+document.addEventListener('click', async (ev)=>{
+  const btn = ev.target.closest('button[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+
+  // DELETE handlers
+  if(action === 'delete-doctor'){ if(!confirm('هل تريد حذف الطبيب؟')) return; await deleteDoc(doc(db,'doctors',id)); await loadDoctors(); updateCounts(); return; }
+  if(action === 'delete-hospital'){ if(!confirm('هل تريد حذف المستشفى؟')) return; await deleteDoc(doc(db,'hospitals',id)); await loadHospitals(); updateCounts(); return; }
+  if(action === 'delete-clinic'){ if(!confirm('هل تريد حذف العيادة؟')) return; await deleteDoc(doc(db,'clinics',id)); await loadClinics(); updateCounts(); return; }
+  if(action === 'delete-lab'){ if(!confirm('هل تريد حذف المختبر؟')) return; await deleteDoc(doc(db,'labs',id)); await loadLabs(); updateCounts(); return; }
+  if(action === 'delete-emergency'){ if(!confirm('هل تريد حذف المركز؟')) return; await deleteDoc(doc(db,'emergency',id)); await loadEmergency(); updateCounts(); return; }
+  if(action === 'delete-blog'){ if(!confirm('هل تريد حذف المقال؟')) return; await deleteDoc(doc(db,'blog',id)); await loadBlogs(); updateCounts(); return; }
+
+  // EDIT handlers
+  if(action === 'edit-doctor'){ editing = { collection:'doctors', id }; await openDoctorForm(id); return; }
+  if(action === 'edit-hospital'){ editing = { collection:'hospitals', id }; await openHospitalForm(id); return; }
+  if(action === 'edit-clinic'){ editing = { collection:'clinics', id }; await openClinicForm(id); return; }
+  if(action === 'edit-lab'){ editing = { collection:'labs', id }; await openLabForm(id); return; }
+  if(action === 'edit-emergency'){ editing = { collection:'emergency', id }; await openEmergencyForm(id); return; }
+  if(action === 'edit-blog'){ editing = { collection:'blog', id }; await openBlogForm(id); return; }
+
+  // VIEW handlers (viewOnly)
+  if(action === 'view-doctor'){ editing = { collection:'doctors', id, viewOnly:true }; await openDoctorForm(id, {viewOnly:true}); return; }
+  if(action === 'view-hospital'){ editing = { collection:'hospitals', id, viewOnly:true }; await openHospitalForm(id, {viewOnly:true}); return; }
+  if(action === 'view-clinic'){ editing = { collection:'clinics', id, viewOnly:true }; await openClinicForm(id, {viewOnly:true}); return; }
+  if(action === 'view-lab'){ editing = { collection:'labs', id, viewOnly:true }; await openLabForm(id, {viewOnly:true}); return; }
+  if(action === 'view-emergency'){ editing = { collection:'emergency', id, viewOnly:true }; await openEmergencyForm(id, {viewOnly:true}); return; }
+  if(action === 'view-blog'){ editing = { collection:'blog', id, viewOnly:true }; await openBlogForm(id, {viewOnly:true}); return; }
+});
+
+/* Add buttons */
+controls.btnAddDoctor.addEventListener('click', ()=>{ editing = { collection:'doctors', id:null }; openDoctorForm(null); });
+controls.btnAddHospital.addEventListener('click', ()=>{ editing = { collection:'hospitals', id:null }; openHospitalForm(null); });
+controls.btnAddClinic.addEventListener('click', ()=>{ editing = { collection:'clinics', id:null }; openClinicForm(null); });
+controls.btnAddLab.addEventListener('click', ()=>{ editing = { collection:'labs', id:null }; openLabForm(null); });
+controls.btnAddEmergency.addEventListener('click', ()=>{ editing = { collection:'emergency', id:null }; openEmergencyForm(null); });
+controls.btnAddBlog.addEventListener('click', ()=>{ editing = { collection:'blog', id:null }; openBlogForm(null); });
+
+/* ---------- FORM HTML builders ---------- */
+
+function doctorFormHtml(data = {}){
+  return `
+    <label class="small">اسم الطبيب</label>
+    <input type="text" name="name" value="${esc(data.name||'')}" placeholder="اسم الطبيب" required>
+
+    <div class="form-row">
+      <div class="field">
+        <label class="small">التخصص</label>
+        <input type="text" name="specialty" value="${esc(data.specialty||'')}" placeholder="مثال: باطني">
+      </div>
+      <div class="field">
+        <label class="small">المستشفى</label>
+        <input type="text" name="hospital" value="${esc(data.hospital||'')}" placeholder="اسم المستشفى">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label class="small">الهاتف</label>
+        <input type="text" name="phone" value="${esc(data.phone||'')}" placeholder="مثال: 77xxxxxx">
+      </div>
+      <div class="field">
+        <label class="small">رابط الصورة (URL)</label>
+        <input type="url" name="img" value="${esc(data.img||'')}" placeholder="https://...">
+      </div>
+    </div>
+
+    <label class="small" style="margin-top:8px">جدول الدوام — املأ كل يوم (سطر منفصل)</label>
+    <div class="days-grid">
+      ${['saturday','sunday','monday','tuesday','wednesday','thursday','friday'].map((d,i)=>`
+        <div class="day-field">
+          <div style="font-weight:700;margin-bottom:6px">${['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'][i]}</div>
+          <input type="text" name="day_${d}" value="${esc((data.schedule && data.schedule[d] && data.schedule[d].time) || '')}" placeholder="مثال: 8 ص - 2 م">
+        </div>
+      `).join('')}
+    </div>
+
+    <label class="small">ملاحظات / وصف</label>
+    <textarea name="notes" placeholder="ملاحظات إضافية">${esc(data.notes||'')}</textarea>
+  `;
+}
+
+function hospitalFormHtml(data={}) {
+  return `
+    <label class="small">اسم المستشفى</label>
+    <input type="text" name="name" value="${esc(data.name||'')}" placeholder="اسم المستشفى" required>
+
+    <div class="form-row">
+      <div class="field">
+        <label class="small">المدينة</label>
+        <input type="text" name="city" value="${esc(data.city||'')}" placeholder="مثال: عدن">
+      </div>
+      <div class="field">
+        <label class="small">الهاتف</label>
+        <input type="text" name="phone" value="${esc(data.phone||'')}" placeholder="غير متوفر">
+      </div>
+    </div>
+
+    <label class="small">الأقسام (افصل بين الأقسام بفاصلة)</label>
+    <input type="text" name="department" value="${esc(data.department||'')}" placeholder="باطني, عيون,...">
+
+    <label class="small">رابط صورة</label>
+    <input type="url" name="img" value="${esc(data.img||'')}" placeholder="https://...">
+
+    <label class="small">رابط الخريطة</label>
+    <input type="url" name="map" value="${esc(data.map||'')}" placeholder="https://maps...">
+
+    <label class="small">وصف</label>
+    <textarea name="description" placeholder="وصف المستشفى">${esc(data.description||'')}</textarea>
+  `;
+}
+
+function genericPlaceFormHtml(data={}, title='المكان', opts={}) {
+  return `
+    <label class="small">اسم ${title}</label>
+    <input type="text" name="name" value="${esc(data.name||'')}" placeholder="الاسم" required>
+
+    <div class="form-row">
+      <div class="field">
+        <label class="small">المدينة</label>
+        <input type="text" name="city" value="${esc(data.city||'')}" placeholder="مثال: صنعاء">
+      </div>
+      <div class="field">
+        <label class="small">الهاتف</label>
+        <input type="text" name="phone" value="${esc(data.phone||'')}" placeholder="غير متوفر">
+      </div>
+    </div>
+
+    <label class="small">الأقسام (افصل بفاصلة)</label>
+    <input type="text" name="department" value="${esc(data.department||'')}" placeholder="قسم1, قسم2">
+
+    <label class="small">رابط صورة</label>
+    <input type="url" name="img" value="${esc(data.img||'')}" placeholder="https://...">
+
+    <label class="small">رابط الخريطة</label>
+    <input type="url" name="map" value="${esc(data.map||'')}" placeholder="https://maps...">
+
+    ${opts.includeTests ? `
+      <label class="small">الفحوصات (افصل بفاصلة)</label>
+      <input type="text" name="tests" value="${esc(data.tests || '')}" placeholder="CBC, Glucose, ...">
+    ` : ''}
+
+    ${opts.includeOpen24 ? `
+      <div style="margin:8px 0">
+        <label class="small">يعمل 24 ساعة؟</label>
+        <label><input type="checkbox" name="open24" ${data.open24 ? 'checked' : ''}> نعم</label>
+      </div>
+    ` : ''}
+
+    <label class="small">وصف</label>
+    <textarea name="description" placeholder="وصف">${esc(data.description||'')}</textarea>
+  `;
+}
+
+/* BLOG form (simple) */
+function blogFormHtml(data={}) {
+  return `
+    <label class="small">عنوان المقال</label>
+    <input type="text" name="title" value="${esc(data.title||'')}" placeholder="عنوان قصير" required>
+
+    <label class="small">مقتطف / وصف قصير</label>
+    <input type="text" name="excerpt" value="${esc(data.excerpt||'')}" placeholder="مقتطف يظهر في القوائم">
+
+    <label class="small">رابط صورة (URL)</label>
+    <input type="url" name="img" value="${esc(data.img||'')}" placeholder="https://...">
+
+    <label class="small">المحتوى</label>
+    <textarea name="content" placeholder="النص الكامل للمقال">${esc(data.content||'')}</textarea>
+  `;
+}
+
+/* ---------- open forms (fetch data if edit) ---------- */
+
+async function openDoctorForm(id=null, opts={}) {
+  modalTitle.textContent = id ? (opts.viewOnly ? 'عرض الطبيب' : 'تعديل الطبيب') : 'إضافة طبيب';
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  if(!id){ formFields.innerHTML = doctorFormHtml({}); if(opts.viewOnly) disableFormFields(true); return; }
+  try {
+    const snap = await getDoc(doc(db,'doctors',id));
+    if(!snap.exists()) { formFields.innerHTML = `<div class="muted">الطبيب غير موجود</div>`; return; }
+    formFields.innerHTML = doctorFormHtml(snap.data());
+    if(opts.viewOnly) disableFormFields(true);
+  } catch(err){ console.error(err); formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`; }
+}
+
+async function openHospitalForm(id=null, opts={}) {
+  modalTitle.textContent = id ? (opts.viewOnly ? 'عرض المستشفى' : 'تعديل المستشفى') : 'إضافة مستشفى';
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  if(!id){ formFields.innerHTML = hospitalFormHtml({}); if(opts.viewOnly) disableFormFields(true); return; }
+  try {
+    const snap = await getDoc(doc(db,'hospitals',id));
+    if(!snap.exists()) { formFields.innerHTML = `<div class="muted">المستشفى غير موجود</div>`; return; }
+    formFields.innerHTML = hospitalFormHtml(snap.data());
+    if(opts.viewOnly) disableFormFields(true);
+  } catch(err){ console.error(err); formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`; }
+}
+
+async function openClinicForm(id=null, opts={}) {
+  modalTitle.textContent = id ? (opts.viewOnly ? 'عرض العيادة' : 'تعديل العيادة') : 'إضافة عيادة';
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  if(!id){ formFields.innerHTML = genericPlaceFormHtml({},"العيادة", {}); if(opts.viewOnly) disableFormFields(true); return; }
+  try {
+    const snap = await getDoc(doc(db,'clinics',id));
+    if(!snap.exists()){ formFields.innerHTML = `<div class="muted">العيادة غير موجودة</div>`; return; }
+    formFields.innerHTML = genericPlaceFormHtml(snap.data(),"العيادة", {});
+    if(opts.viewOnly) disableFormFields(true);
+  } catch(err){ console.error(err); formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`; }
+}
+
+async function openLabForm(id=null, opts={}) {
+  modalTitle.textContent = id ? (opts.viewOnly ? 'عرض المختبر' : 'تعديل المختبر') : 'إضافة مختبر';
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  if(!id){ formFields.innerHTML = genericPlaceFormHtml({},"المختبر", { includeTests:true }); if(opts.viewOnly) disableFormFields(true); return; }
+  try {
+    const snap = await getDoc(doc(db,'labs',id));
+    if(!snap.exists()){ formFields.innerHTML = `<div class="muted">المختبر غير موجود</div>`; return; }
+    formFields.innerHTML = genericPlaceFormHtml(snap.data(),"المختبر", { includeTests:true });
+    if(opts.viewOnly) disableFormFields(true);
+  } catch(err){ console.error(err); formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`; }
+}
+
+async function openEmergencyForm(id = null, opts = {}) {
+
+  modalTitle.textContent = 
+      id 
+      ? (opts.viewOnly ? "عرض الطوارئ" : "تعديل الطوارئ") 
+      : "إضافة طوارئ";
+
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+
+  // إضافة جديدة
+  if (!id) {
+    formFields.innerHTML = genericPlaceFormHtml(
+      {
+        name: "",
+        city: "",
+        phone: "",
+        description: "",
+        img: "",
+        map: "",
+        open24: true
+      },
+      "مركز الطوارئ",
+      { includeOpen24: true }
+    );
+
+    if (opts.viewOnly) disableFormFields(true);
+    return;
+  }
+
+  // تعديل أو عرض
+  try {
+    const snap = await getDoc(doc(db, "emergency", id));
+
+    if (!snap.exists()) {
+      formFields.innerHTML = `<div class="muted">المركز غير موجود</div>`;
+      return;
+    }
+
+    const data = snap.data();
+
+    // دمج أي نقص في البيانات لضمان عدم ظهور undefined
+    const mergedData = {
+      name: data.name || "",
+      city: data.city || "",
+      phone: data.phone || "",
+      description: data.description || "",
+      img: data.img || "",
+      map: data.map || "",
+      open24: data.open24 ?? true
+    };
+
+    formFields.innerHTML = genericPlaceFormHtml(
+      mergedData,
+      "مركز الطوارئ",
+      { includeOpen24: true }
+    );
+
+    if (opts.viewOnly) disableFormFields(true);
+
+  } catch(err) {
+    console.error(err);
+    formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`;
+  }
+}
+
+
+async function openBlogForm(id=null, opts={}) {
+  modalTitle.textContent = id ? (opts.viewOnly ? 'عرض المقال' : 'تعديل المقال') : 'إضافة مقال';
+  formFields.innerHTML = `<div class="muted">جارِ التحميل...</div>`;
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  if(!id){ formFields.innerHTML = blogFormHtml({}); if(opts.viewOnly) disableFormFields(true); return; }
+  try {
+    const snap = await getDoc(doc(db,'blogs',id));
+    if(!snap.exists()){ formFields.innerHTML = `<div class="muted">المقال غير موجود</div>`; return; }
+    const data = snap.data() || {};
+    formFields.innerHTML = blogFormHtml(data);
+    if(opts.viewOnly) disableFormFields(true);
+  } catch(err){ console.error(err); formFields.innerHTML = `<div class="muted">خطأ أثناء الجلب</div>`; }
+}
+
+/* disable fields for view-only */
+function disableFormFields(disable=true){
+  const els = formFields.querySelectorAll('input,textarea,select,button');
+  els.forEach(el=>{
+    if(el.id === 'btnSave') return;
+    el.disabled = disable;
+  });
+  document.getElementById('btnSave').style.display = disable ? 'none' : '';
+}
+
+/* Close modal */
+btnCancel.addEventListener('click', closeModal);
+overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+function closeModal(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); formFields.innerHTML = ''; editing = null; document.getElementById('btnSave').style.display = ''; }
+
+/* Submit modal (add/update) */
+modalForm.addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  const fd = new FormData(modalForm);
+  if(!editing || !editing.collection){ alert('حالة غير معروفة'); return; }
+  const col = editing.collection;
+  try {
+    if(col === 'doctors'){
+      const schedule = {
+        saturday: { time: fd.get('day_saturday') || '' },
+        sunday: { time: fd.get('day_sunday') || '' },
+        monday: { time: fd.get('day_monday') || '' },
+        tuesday: { time: fd.get('day_tuesday') || '' },
+        wednesday: { time: fd.get('day_wednesday') || '' },
+        thursday: { time: fd.get('day_thursday') || '' },
+        friday: { time: fd.get('day_friday') || '' }
+      };
+      const data = {
+        name: (fd.get('name')||'').trim(),
+        specialty: (fd.get('specialty')||'').trim(),
+        hospital: (fd.get('hospital')||'').trim(),
+        phone: (fd.get('phone')||'').trim(),
+        img: (fd.get('img')||'').trim(),
+        notes: (fd.get('notes')||'').trim(),
+        schedule
+      };
+      if(editing.id) await updateDoc(doc(db,'doctors',editing.id), data);
+      else await addDoc(collection(db,'doctors'), data);
+      await loadDoctors(); updateCounts(); closeModal(); return;
+    }
+
+    // places: hospitals/clinics/labs/emergency
+    if(['hospitals','clinics','labs','emergency'].includes(col)){
+      // common fields
+      const base = {
+        name: (fd.get('name')||'').trim(),
+        city: (fd.get('city')||'').trim(),
+        phone: (fd.get('phone')||'').trim(),
+        department: (fd.get('department')||'').trim(),
+        img: (fd.get('img')||'').trim(),
+        map: (fd.get('map')||'').trim(),
+        description: (fd.get('description')||'').trim()
+      };
+
+      // extras
+      if(col === 'labs') base.tests = (fd.get('tests')||'').trim();
+      if(col === 'emergency') base.open24 = !!fd.get('open24');
+
+      if(editing.id) await updateDoc(doc(db,col,editing.id), base);
+      else await addDoc(collection(db,col), base);
+
+      if(col === 'hospitals') await loadHospitals();
+      if(col === 'clinics') await loadClinics();
+      if(col === 'labs') await loadLabs();
+      if(col === 'emergency') await loadEmergency();
+
+      updateCounts(); closeModal(); return;
+    }
+
+    // BLOG (simple)
+    if(col === 'blog'){
+      const data = {
+        title: (fd.get('title')||'').trim(),
+        excerpt: (fd.get('excerpt')||'').trim(),
+        img: (fd.get('img')||'').trim(),
+        content: (fd.get('content')||'').trim(),
+        // date: serverTimestamp()  -> set only for new articles; keep original date on update
+      };
+      if(editing.id){
+        await updateDoc(doc(db,'blog',editing.id), data);
+      } else {
+        await addDoc(collection(db,'blog'), { ...data, date: serverTimestamp() });
+      }
+      await loadBlogs(); updateCounts(); closeModal(); return;
+    }
+
+  } catch(err){ console.error(err); alert('حدث خطأ أثناء الحفظ: ' + (err.message||'خطأ')); }
+});
+
+/* Search filters (client-side) */
+controls.searchDoctors.addEventListener('input', ()=>{ const q = controls.searchDoctors.value.trim().toLowerCase(); Array.from(tbodies.doctors.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+controls.searchHospitals.addEventListener('input', ()=>{ const q = controls.searchHospitals.value.trim().toLowerCase(); Array.from(tbodies.hospitals.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+controls.searchClinics.addEventListener('input', ()=>{ const q = controls.searchClinics.value.trim().toLowerCase(); Array.from(tbodies.clinics.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+controls.searchLabs.addEventListener('input', ()=>{ const q = controls.searchLabs.value.trim().toLowerCase(); Array.from(tbodies.labs.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+controls.searchEmergency.addEventListener('input', ()=>{ const q = controls.searchEmergency.value.trim().toLowerCase(); Array.from(tbodies.emergency.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+controls.searchBlog.addEventListener('input', ()=>{ const q = controls.searchBlog.value.trim().toLowerCase(); Array.from(tbodies.blog.querySelectorAll('tr')).forEach(r=>{ r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; }); });
+
+/* Initial active tab */
+setActiveTab('dashboard');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة التحكم — إدارة الأسباب</title>
+
+<style>
+body {
+  background:#eef2f7;
+  font-family:'Cairo', sans-serif;
+  padding:20px;
+}
+
+h2 {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.input {
+  width:100%;
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  margin:6px 0;
+}
+
+.btn {
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:8px;
+}
+
+.addBtn { background:#28a745; color:white; width:100%; }
+.save { background:#007bff; color:white; }
+.delete { background:#dc3545; color:white; }
+</style>
+</head>
+
+<body>
+
+<h2>⚠ لوحة التحكم — سبب الانقطاع</h2>
+
+<!-- نموذج إضافة سبب جديد -->
+<div class="card">
+  <h3>➕ إضافة سبب جديد</h3>
+  <textarea id="new-reason" class="input" rows="3" placeholder="اكتب سبب الانقطاع..."></textarea>
+  <button class="btn addBtn" id="addBtn">إضافة</button>
+</div>
+
+<hr><br>
+
+<!-- قائمة الأسباب -->
+<div id="list">جاري التحميل...</div>
+
+
+<script type="module">
+import { db } from "./firebase.js";
+import { 
+  collection, addDoc, doc, updateDoc, deleteDoc,
+  getDocs, query, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+import { auth } from "./firebase.js";
+import { onAuthStateChanged } 
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+
+// =========================
+// 🔐 حماية صفحة لوحة التحكم
+// =========================
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = "login.html";
+});
+
+
+// =========================
+// ➕ إضافة سبب جديد
+// =========================
+document.getElementById("addBtn").onclick = async () => {
+  const text = document.getElementById("new-reason").value.trim();
+
+  if (!text) {
+    alert("❗ يرجى كتابة السبب");
+    return;
+  }
+
+  await addDoc(collection(db, "reasons"), {
+    text,
+    updated_at: serverTimestamp()
+  });
+
+  alert("✔ تم إضافة السبب بنجاح");
+
+  document.getElementById("new-reason").value = "";
+  loadData();
+};
+
+
+// =========================
+// 📌 جلب وعرض الأسباب
+// =========================
+const list = document.getElementById("list");
+
+async function loadData() {
+  list.innerHTML = "جاري التحميل...";
+
+  const q = query(collection(db, "reasons"), orderBy("updated_at", "desc"));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    list.innerHTML = "<p>لا توجد أسباب.</p>";
+    return;
+  }
+
+  let html = "";
+
+  snap.forEach(d => {
+    const r = d.data();
+    const id = d.id;
+
+    const date = r.updated_at?.toDate
+      ? r.updated_at.toDate().toLocaleString("ar-EG")
+      : "—";
+
+    html += `
+      <div class="card">
+        <label>السبب:</label>
+        <textarea id="reason-${id}" class="input" rows="3">${r.text}</textarea>
+
+        <p style="opacity:.7; font-size:13px;">
+          آخر تحديث: ${date}
+        </p>
+
+        <button class="btn save" onclick="save('${id}')">💾 حفظ</button>
+        <button class="btn delete" onclick="removeReason('${id}')">🗑 حذف</button>
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
+}
+
+loadData();
+
+
+// =========================
+// 💾 تحديث سبب
+// =========================
+window.save = async (id) => {
+  const text = document.getElementById(`reason-${id}`).value.trim();
+
+  if (!text) return alert("❗ لا يمكن ترك السبب فارغ");
+
+  await updateDoc(doc(db, "reasons", id), {
+    text,
+    updated_at: serverTimestamp()
+  });
+
+  alert("✔ تم التحديث");
+  loadData();
+};
+
+
+// =========================
+// 🗑 حذف سبب
+// =========================
+window.removeReason = async (id) => {
+  if (confirm("هل تريد حذف هذا السبب؟")) {
+    await deleteDoc(doc(db, "reasons", id));
+    alert("✔ تم الحذف");
+    loadData();
+  }
+};
+</script>
+
+</body>
+</html>

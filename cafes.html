@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>المقاهي السياحية</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  * { 
+    margin:0; padding:0; box-sizing:border-box;
+    font-family:'Cairo', sans-serif;
+  }
+
+  body {
+    background:#f3e5ab;
+    display:flex;
+    justify-content:center;
+    padding:0;
+  }
+
+  .container {
+    width:100%;
+    max-width:380px;
+    padding:12px;
+  }
+
+  .back-btn{
+    display:inline-block;
+    background:#6d4c41;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:15px;
+    margin-bottom:12px;
+  }
+
+  h1 {
+    text-align:center;
+    color:#6d4c41;
+    margin-bottom:15px;
+    font-size:22px;
+    font-weight:800;
+  }
+
+  .card {
+    background:white;
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.10);
+    transition:0.2s;
+  }
+
+  .card:hover { transform:translateY(-3px); }
+
+  .cafe-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 10px auto;
+    border: 3px solid #8d6e63;
+  }
+
+  .cafe-title {
+    font-size:19px;
+    font-weight:800;
+    color:#6d4c41;
+    margin-bottom:8px;
+    text-align:center;
+  }
+
+  .info {
+    color:#333;
+    font-size:15px;
+    margin-bottom:4px;
+    text-align:center;
+  }
+
+  .info b {
+    color:#6d4c41;
+  }
+
+  .btn {
+    display:block;
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#8d6e63;
+    color:white;
+    text-align:center;
+    font-size:15px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="index1.html" class="back-btn">⬅ الرئيسية</a>
+
+  <h1>☕ المقاهي السياحية</h1>
+
+  <div id="cafes">جار التحميل...</div>
+
+</div>
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+  import { collection, getDocs }
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  async function loadCafes() {
+    const ref = collection(db, "tourism_cafes");
+    const snap = await getDocs(ref);
+
+    const box = document.getElementById("cafes");
+    box.innerHTML = "";
+
+    if (snap.empty) {
+      box.innerHTML = "<p style='text-align:center;color:#555;'>لا توجد مقاهي</p>";
+      return;
+    }
+
+    snap.forEach(docSnap => {
+      const c = docSnap.data();
+
+      box.innerHTML += `
+  <div class="card">
+
+    <img src="${c.image || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}"
+         class="cafe-img">
+
+    <div class="cafe-title">${c.name || "مقهى بدون اسم"}</div>
+
+    <p class="info"><b>العنوان:</b> ${c.address || "غير متوفر"}</p>
+
+    <a class="btn" href="cafe.html?id=${docSnap.id}">
+       عرض التفاصيل
+    </a>
+
+  </div>
+`;
+    });
+  }
+
+  loadCafes();
+
+</script>
+
+</body>
+</html>

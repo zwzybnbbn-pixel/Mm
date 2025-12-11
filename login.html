@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>تسجيل دخول الأدمن</title>
+<style>
+  :root{--blue:#0a6ebd;--bg:#f3f7fb}
+  body{font-family:Tahoma,Arial;background:var(--bg);display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+  .card{width:360px;background:#fff;padding:26px;border-radius:12px;box-shadow:0 8px 30px rgba(10,110,189,0.08);text-align:center}
+  h2{margin:0 0 12px}
+  input{width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ddd;font-size:15px}
+  button{width:100%;padding:11px;border:0;background:var(--blue);color:#fff;border-radius:8px;font-weight:600;cursor:pointer}
+  .msg{height:18px;margin-top:8px;color:#b71c1c}
+  .small{font-size:13px;color:#666;margin-top:10px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>تسجيل دخول المدير</h2>
+    <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="username">
+    <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button id="loginBtn">دخول</button>
+    <div id="msg" class="msg"></div>
+    <div class="small">استخدم حساب الأدمن الذي أنشأته في Firebase Authentication</div>
+  </div>
+
+<script type="module">
+import { auth } from "./firebase-config.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+const loginBtn = document.getElementById('loginBtn');
+const msg = document.getElementById('msg');
+
+loginBtn.addEventListener('click', async () => {
+  msg.textContent = '';
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if(!email || !password){ msg.textContent = 'املأ الحقول'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // الانتقال بعد الدخول
+    location.href = 'dashboard.html';
+  } catch (e) {
+    // عرض رسالة مفهومة
+    if(e.code === 'auth/user-not-found') msg.textContent = 'المستخدم غير موجود';
+    else if(e.code === 'auth/wrong-password') msg.textContent = 'كلمة المرور خاطئة';
+    else msg.textContent = e.message || 'خطأ في تسجيل الدخول';
+  }
+});
+</script>
+</body>
+</html>

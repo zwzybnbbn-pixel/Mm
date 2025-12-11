@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المدونة الطبية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+}
+
+body {
+  background: #f4f8f9;
+  padding-bottom: 40px;
+}
+
+header {
+  background: #009688;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.back-btn {
+  display: block;
+  width: fit-content;
+  margin: 15px auto;
+  padding: 12px 20px;
+  background: #00695c;
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.back-btn:hover {
+  background: #004d40;
+}
+
+main {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 12px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: 0.2s;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+  font-size: 22px;
+  color: #009688;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.card p {
+  color: #444;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.post-img {
+  width: 100%;
+  max-height: 250px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.empty {
+  text-align: center;
+  color: #666;
+  margin-top: 40px;
+  font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>📘 المدونة الطبية</header>
+
+<a class="back-btn" href="index.html">العودة للرئيسية</a>
+
+<main id="blog-container">
+  <p class="empty">جاري تحميل المقالات...</p>
+</main>
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+import { 
+  collection, 
+  getDocs, 
+  query, 
+  orderBy 
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+const container = document.getElementById("blog-container");
+
+async function loadBlogs() {
+  container.innerHTML = `<p class="empty">جاري تحميل المقالات...</p>`;
+
+  const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    container.innerHTML = `<p class="empty">لا توجد مقالات حالياً</p>`;
+    return;
+  }
+
+  container.innerHTML = "";
+
+  snap.forEach(docu => {
+    const b = docu.data();
+    const id = docu.id;
+
+    let dateStr = "";
+    if (b.createdAt) {
+      dateStr = new Date(b.createdAt).toLocaleDateString("ar-EG");
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      ${b.img ? `<img src="${b.img}" class="post-img">` : ""}
+      <h3>${b.title || "بدون عنوان"}</h3>
+      <p>${b.short || ""}</p>
+      <p style="color:#777; margin-top:8px; font-size:16px;">${dateStr}</p>
+    `;
+
+    card.onclick = () => {
+      window.location.href = `blog-view.html?id=${id}`;
+    };
+
+    container.appendChild(card);
+  });
+}
+
+loadBlogs();
+</script>
+
+</body>
+</html>
