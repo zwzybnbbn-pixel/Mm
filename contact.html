@@ -2,46 +2,75 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>تواصل معنا</title>
+
 <style>
-  body { background:#f7f7f7; font-family:'Cairo',sans-serif; padding:20px; }
+  body {
+    background:#f7f7f7;
+    font-family:'Cairo',sans-serif;
+    padding:15px;
+    margin:0;
+  }
+
   .box {
-    background:white; padding:25px; max-width:500px; margin:auto;
-    border-radius:12px; box-shadow:0 4px 12px #0003;
+    background:white;
+    padding:22px;
+    width:100%;
+    max-width:420px;
+    margin:auto;
+    border-radius:12px;
+    box-shadow:0 4px 12px #0003;
   }
-  textarea, input {
-    width:100%; padding:12px; margin:10px 0;
-    border-radius:8px; border:1px solid #ccc; font-size:16px;
+
+  input, textarea {
+    width:100%;
+    padding:14px;
+    margin:12px 0;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:17px;
+    box-sizing:border-box;
   }
+
   button {
-    width:100%; background:#0D47A1; color:white; padding:14px;
-    font-size:18px; border:none; border-radius:8px; cursor:pointer;
+    width:100%;
+    background:#1976D2;
+    color:white;
+    padding:15px;
+    font-size:19px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
   }
-  button:hover { background:#08306B; }
+
+  button:hover {
+    background:#0D47A1;
+  }
+
+  /* زر الرجوع */
+  .back-btn {
+    display:inline-block;
+    background:#444;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:17px;
+    text-decoration:none;
+    margin-bottom:20px;
+  }
+  .back-btn:hover {
+    background:#222;
+  }
 </style>
 </head>
 
 <body>
+
 <a href="index.html" class="back-btn">⬅ الرجوع للرئيسية</a>
 
-<style>
-.back-btn {
-  display: inline-block;
-  background: #444;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 16px;
-  text-decoration: none;
-  margin-bottom: 20px;
-}
-.back-btn:hover {
-  background: #222;
-}
-</style>
-
 <div class="box">
-  <h2 style="text-align:center;">📨 تواصل معنا</h2>
+  <h2 style="text-align:center; margin-top:0;">📨 تواصل معنا</h2>
 
   <input id="name" placeholder="الاسم الكامل">
   <input id="subject" placeholder="موضوع الرسالة">
