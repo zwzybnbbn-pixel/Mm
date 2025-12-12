@@ -8,6 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+/* ===========================
+   🌙 Dark Mode – BACKGROUND
+=========================== */
 body {
   background: linear-gradient(to bottom, #0a0a0a, #111, #1a1a1a, #222);
   font-family: 'Cairo', sans-serif;
@@ -16,6 +19,9 @@ body {
   color: #e6edf3;
 }
 
+/* ===========================
+   📦 MAIN BOX (Responsive)
+=========================== */
 .section {
   background: rgba(255,255,255,0.06);
   padding: 22px;
@@ -26,6 +32,7 @@ body {
   box-shadow: 0 6px 15px rgba(0,0,0,0.45);
 }
 
+/* Title */
 .section h2 {
   font-size: 26px;
   font-weight: 800;
@@ -34,6 +41,9 @@ body {
   color: #1f6feb;
 }
 
+/* ===========================
+   📝 FORM
+=========================== */
 .report-form {
   background: rgba(0,0,0,0.35);
   padding: 20px;
@@ -79,7 +89,6 @@ body {
   font-weight: 800;
   border: none;
   margin-top: 8px;
-  cursor: pointer;
 }
 
 .separator {
@@ -88,6 +97,9 @@ body {
   border-top: 2px solid #30363d;
 }
 
+/* ===========================
+   📋 REPORT ITEM
+=========================== */
 .item {
   background: rgba(255,255,255,0.07);
   padding: 18px;
@@ -111,6 +123,17 @@ body {
   background: #112542;
   border-right: 5px solid #1f6feb;
   font-size: 17px;
+}
+
+/* ===========================
+   📱 Mobile Tweaks
+=========================== */
+@media (max-width: 480px) {
+  body { padding: 8px; }
+  .section { padding: 18px; }
+  .report-form { padding: 16px; }
+  .section h2 { font-size: 24px; }
+  .item { padding: 16px; font-size: 16px; }
 }
 </style>
 </head>
@@ -154,53 +177,33 @@ body {
 
 <script type="module">
 import { db } from "./firebase.js";
-import { 
-  collection, query, orderBy, onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
+import { collection, addDoc, onSnapshot, query, orderBy } 
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const form = document.getElementById("reportForm");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const payload = {
-    type: document.getElementById("type").value.trim(),
-    name: document.getElementById("name").value.trim(),
-    location: document.getElementById("location").value.trim(),
-    details: document.getElementById("details").value.trim()
+  const data = {
+    type: document.getElementById("type").value,
+    name: document.getElementById("name").value,
+    location: document.getElementById("location").value,
+    details: document.getElementById("details").value,
+    status: "قيد المراجعة",
+    reply: "",
+    created_at: new Date()
   };
 
-  const btn = document.querySelector(".btn-submit");
-  btn.disabled = true;
-  btn.innerText = "⏳ جاري الإرسال...";
-
   try {
-    const res = await fetch("/api/send-report", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "حدث خطأ");
-    } else {
-      alert("✔ تم إرسال البلاغ بنجاح");
-      form.reset();
-    }
-
+    await addDoc(collection(db, "reports"), data);
+    alert("✔ تم إرسال البلاغ بنجاح");
+    form.reset();
   } catch (err) {
-    alert("⚠ خطأ في الاتصال بالسيرفر");
+    alert("⚠ خطأ أثناء إرسال البلاغ");
   }
-
-  btn.disabled = false;
-  btn.innerText = "📨 إرسال البلاغ";
 });
 
-
-// عرض البلاغات
 const list = document.getElementById("list");
 const q = query(collection(db, "reports"), orderBy("created_at", "desc"));
 
