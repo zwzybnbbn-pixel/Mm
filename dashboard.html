@@ -96,8 +96,7 @@
 </head>
 
 <body>
-  <button class="logout-btn" onclick="logoutDashboard()">تسجيل الخروج</button>
-
+<button class="logout-btn" onclick="logoutDashboard()">تسجيل الخروج</button>
 
 <style>
 .logout-btn{
@@ -120,20 +119,20 @@
 </style>
 
 <style>
+/* إصلاح تمدد أزرار النقل */
 .move-btn{
-    display:inline-block !important;
-    width:auto !important;
-    max-width:max-content !important;
-    
+    all: unset !important;            /* إزالة أي خصائص موروثة */
+    display:inline-block !important;  /* زر صغير */
     background:#0d4d91;
     color:#fff;
-    padding:5px 10px; /* صغير */
+    padding:5px 12px;
     border-radius:10px;
-    text-decoration:none;
-    font-size:14px;   /* خط صغير */
+    font-size:14px;
     font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+    margin:8px 0;
     box-shadow:0 3px 10px rgba(0,0,0,0.15);
-    margin:5px 0;     /* مسافة بسيطة */
 }
 </style>
 
@@ -1121,5 +1120,6 @@ setActiveTab('dashboard');
 
 </body>
 </html>
+
 
 
