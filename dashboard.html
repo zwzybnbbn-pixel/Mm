@@ -96,51 +96,47 @@
 </head>
 
 <body>
-<button class="logout-btn" onclick="logoutDashboard()">تسجيل الخروج</button>
-
 <style>
-.logout-btn{
-    display:block;
-    width:100%;
-    background:#d40000;
-    color:#fff;
-    padding:10px;
-    border-radius:10px;
-    font-size:16px;
-    font-weight:700;
-    border:none;
-    cursor:pointer;
-    margin-top:15px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.15);
-}
-.logout-btn:hover{
-    background:#b30000;
-}
-</style>
-
-<style>
-/* إصلاح تمدد أزرار النقل */
-.move-btn{
-    all: unset !important;            /* إزالة أي خصائص موروثة */
-    display:inline-block !important;  /* زر صغير */
+/* تصميم موحّد لكل الأزرار */
+.small-btn{
+    all: unset !important;
+    display:inline-block !important;
     background:#0d4d91;
     color:#fff;
-    padding:5px 12px;
+    padding:6px 14px;
     border-radius:10px;
     font-size:14px;
     font-weight:600;
     text-decoration:none;
     cursor:pointer;
-    margin:8px 0;
+    margin:6px 4px;
     box-shadow:0 3px 10px rgba(0,0,0,0.15);
+}
+
+.logout{
+    background:#d40000 !important; /* لون مختلف للخروج */
+}
+
+.logout:hover{
+    background:#b30000 !important;
+}
+
+/* ديف يحتوي جميع الأزرار */
+.btn-container{
+    padding:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
 }
 </style>
 
-<a href="dashboard2.html" class="move-btn">نقل كهرباء</a>
-<a href="dashbmagedddddd.html" class="move-btn">نقل محافظ</a>
-<a href="admin-all.html" class="move-btn">نقل سياحه</a>
-
-
+<!-- الأزرار داخل ديف -->
+<div class="btn-container">
+    <button class="small-btn logout" onclick="logoutDashboard()">تسجيل الخروج</button>
+    <a href="dashboard2.html" class="small-btn">نقل كهرباء</a>
+    <a href="dashbmagedddddd.html" class="small-btn">نقل محافظ</a>
+    <a href="admin-all.html" class="small-btn">نقل سياحه</a>
+</div>
   <div class="wrap">
     <header class="top">
       <h1>لوحة تحكم — دليل الأطباء والمرافق</h1>
@@ -1120,6 +1116,7 @@ setActiveTab('dashboard');
 
 </body>
 </html>
+
 
 
 
