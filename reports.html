@@ -8,9 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ===========================
-   🌙 Dark Mode – BACKGROUND
-=========================== */
 body {
   background: linear-gradient(to bottom, #0a0a0a, #111, #1a1a1a, #222);
   font-family: 'Cairo', sans-serif;
@@ -19,9 +16,6 @@ body {
   color: #e6edf3;
 }
 
-/* ===========================
-   📦 MAIN BOX (Responsive)
-=========================== */
 .section {
   background: rgba(255,255,255,0.06);
   padding: 22px;
@@ -32,7 +26,6 @@ body {
   box-shadow: 0 6px 15px rgba(0,0,0,0.45);
 }
 
-/* Title */
 .section h2 {
   font-size: 26px;
   font-weight: 800;
@@ -41,9 +34,6 @@ body {
   color: #1f6feb;
 }
 
-/* ===========================
-   📝 FORM
-=========================== */
 .report-form {
   background: rgba(0,0,0,0.35);
   padding: 20px;
@@ -97,9 +87,6 @@ body {
   border-top: 2px solid #30363d;
 }
 
-/* ===========================
-   📋 REPORT ITEM
-=========================== */
 .item {
   background: rgba(255,255,255,0.07);
   padding: 18px;
@@ -125,9 +112,6 @@ body {
   font-size: 17px;
 }
 
-/* ===========================
-   📱 Mobile Tweaks
-=========================== */
 @media (max-width: 480px) {
   body { padding: 8px; }
   .section { padding: 18px; }
@@ -177,22 +161,76 @@ body {
 
 <script type="module">
 import { db } from "./firebase.js";
-import { collection, addDoc, onSnapshot, query, orderBy } 
-  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { 
+  collection, addDoc, onSnapshot, query, orderBy, getDocs 
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const form = document.getElementById("reportForm");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const btn = document.querySelector(".btn-submit");
+  btn.disabled = true;
+  btn.innerText = "⏳ جاري الإرسال...";
+
+  // =====================
+  // 🟦 الحصول على IP
+  // =====================
+  let ip = "unknown";
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const json = await res.json();
+    ip = json.ip;
+  } catch (err) {
+    console.log("IP fetch failed:", err);
+  }
+
+  // =====================
+  // 🟧 فحص آخر بلاغ لنفس الـ IP
+  // =====================
+  const qIP = query(
+    collection(db, "reports"),
+    orderBy("created_at", "desc")
+  );
+
+  const snap = await getDocs(qIP);
+
+  let lastReport = null;
+
+  snap.forEach(doc => {
+    const r = doc.data();
+    if (r.ip === ip && !lastReport) {
+      lastReport = r;
+    }
+  });
+
+  if (lastReport) {
+    const last = lastReport.created_at.toDate();
+    const diffHours = (Date.now() - last) / 1000 / 60 / 60;
+
+    if (diffHours < 24) {
+      btn.disabled = false;
+      btn.innerText = "📨 إرسال البلاغ";
+
+      return alert(
+        `❌ لا يمكنك إرسال أكثر من بلاغ خلال 24 ساعة.\n⏳ تبقى ${(24 - diffHours).toFixed(1)} ساعة.`
+      );
+    }
+  }
+
+  // =====================
+  // 🟩 إضافة البلاغ
+  // =====================
   const data = {
-    type: document.getElementById("type").value,
-    name: document.getElementById("name").value,
-    location: document.getElementById("location").value,
-    details: document.getElementById("details").value,
+    type: document.getElementById("type").value.trim(),
+    name: document.getElementById("name").value.trim(),
+    location: document.getElementById("location").value.trim(),
+    details: document.getElementById("details").value.trim(),
+    created_at: new Date(),
+    ip: ip,
     status: "قيد المراجعة",
-    reply: "",
-    created_at: new Date()
+    reply: ""
   };
 
   try {
@@ -200,10 +238,16 @@ form.addEventListener("submit", async (e) => {
     alert("✔ تم إرسال البلاغ بنجاح");
     form.reset();
   } catch (err) {
-    alert("⚠ خطأ أثناء إرسال البلاغ");
+    alert("⚠ حدث خطأ أثناء الإرسال");
   }
+
+  btn.disabled = false;
+  btn.innerText = "📨 إرسال البلاغ";
 });
 
+// ============================
+// 📋 عرض البلاغات مباشرة
+// ============================
 const list = document.getElementById("list");
 const q = query(collection(db, "reports"), orderBy("created_at", "desc"));
 
@@ -224,7 +268,6 @@ onSnapshot(q, (snap) => {
         <strong>الاسم:</strong> ${r.name}<br>
         <strong>الحي:</strong> ${r.location}<br>
         <strong>تفاصيل:</strong> ${r.details}<br><br>
-
         <strong>الحالة:</strong>
         <span style="color:${r.status === 'تم الحل' ? '#2ecc71' : '#d29922'};">
           ${r.status}
