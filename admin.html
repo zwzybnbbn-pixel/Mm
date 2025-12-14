@@ -202,7 +202,8 @@ async function loadTable(table){
     else if(table==="tourism_hotels") typeValue=item.services||"";
     else if(table==="tourism_markets") typeValue=item.specialties||"";
 
-    const locationVal = item.location || "";
+    // للكافيهات استخدم address، والباقي location
+    const locationVal = (table==="tourism_cafes") ? (item.address||"") : (item.location||"");
 
     tbody.innerHTML+=`
       <tr>
@@ -228,7 +229,14 @@ window.editItem = function(id){
       const item = data[0];
       document.getElementById("item-id").value = id;
       document.getElementById("name").value = item.name||"";
-      document.getElementById("location").value = item.location || "";
+
+      // إذا كان الكافيه، استخدم address، وإلا location
+      if(table==="tourism_cafes"){
+        document.getElementById("location").value = item.address || "";
+      } else {
+        document.getElementById("location").value = item.location || "";
+      }
+
       document.getElementById("phone").value = item.phone||"";
       document.getElementById("rating").value = item.rating||"";
       if(table==="tourism_hotels") document.getElementById("type").value=item.services||"";
@@ -252,14 +260,21 @@ window.deleteItem = async function(id){
 document.getElementById("item-form").addEventListener("submit", async e=>{
   e.preventDefault();
   const id = document.getElementById("item-id").value;
+
   let payload = {
     name: document.getElementById("name").value,
-    location: document.getElementById("location").value, // استخدم location
     phone: document.getElementById("phone").value,
     description: document.getElementById("description").value,
     image: document.getElementById("image").value,
     rating: parseFloat(document.getElementById("rating").value)||null
   };
+
+  // للكافيهات استخدم address، والباقي location
+  if(currentTable==="tourism_cafes"){
+    payload.address = document.getElementById("location").value;
+  } else {
+    payload.location = document.getElementById("location").value;
+  }
 
   if(currentTable==="tourism_hotels") payload.services=document.getElementById("type").value;
   else if(currentTable==="tourism_markets") payload.specialties=document.getElementById("type").value;
