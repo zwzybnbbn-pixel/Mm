@@ -3,89 +3,657 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>الدعم الفني</title>
-
+<title>الدعم الفني | دليل شبوة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+  :root {
+    --primary: #1976D2;
+    --primary-dark: #0D47A1;
+    --secondary: #4CAF50;
+    --secondary-dark: #388E3C;
+    --dark: #333;
+    --light: #fff;
+    --gray: #f7f7f7;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --radius: 12px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   body {
-    background:#f7f7f7;
-    font-family:'Cairo',sans-serif;
-    padding:15px;
-    margin:0;
-  }
-
-  .box {
-    background:white;
-    padding:22px;
-    width:100%;
-    max-width:420px;
-    margin:auto;
-    border-radius:12px;
-    box-shadow:0 4px 12px #0003;
-  }
-
-  textarea {
-    width:100%;
-    padding:14px;
-    margin:12px 0;
-    border-radius:10px;
-    border:1px solid #ccc;
-    font-size:17px;
-    box-sizing:border-box;
-  }
-
-  button {
-    width:100%;
-    background:#1976D2;
-    color:white;
-    padding:15px;
-    font-size:19px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-  }
-
-  button:hover {
-    background:#0D47A1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   /* زر الرجوع */
   .back-btn {
-    display:inline-block;
-    background:#444;
-    color:white;
-    padding:12px 20px;
-    border-radius:10px;
-    font-size:17px;
-    text-decoration:none;
-    margin-bottom:20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    z-index: 100;
   }
+
   .back-btn:hover {
-    background:#222;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-5px);
+  }
+
+  /* الصندوق الرئيسي */
+  .support-container {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 60px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .logo {
+    font-size: 60px;
+    color: white;
+    margin-bottom: 15px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .header h1 {
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+  }
+
+  /* صندوق الدعم */
+  .support-box {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* معلومات التواصل */
+  .contact-info {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+    color: white;
+    font-weight: 600;
+  }
+
+  .contact-item i {
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* حقل النص */
+  .form-group {
+    margin-bottom: 25px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 18px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 150px;
+    transition: border 0.3s ease;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  /* أزرار الإرسال */
+  .buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  @media (min-width: 480px) {
+    .buttons-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .btn {
+    padding: 18px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-whatsapp {
+    background: #25D366;
+    color: white;
+  }
+
+  .btn-whatsapp:hover {
+    background: #128C7E;
+  }
+
+  .btn-email {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn-email:hover {
+    background: var(--primary-dark);
+  }
+
+  /* رسالة التأكيد */
+  .alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+    animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  /* نافذة التأكيد */
+  .confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .confirm-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .confirm-box {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .confirm-box h3 {
+    margin-bottom: 15px;
+    color: var(--dark);
+  }
+
+  .confirm-box p {
+    margin-bottom: 25px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .confirm-buttons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .confirm-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .confirm-btn.yes {
+    background: var(--primary);
+    color: white;
+  }
+
+  .confirm-btn.yes:hover {
+    background: var(--primary-dark);
+  }
+
+  .confirm-btn.no {
+    background: #f0f0f0;
+    color: var(--dark);
+  }
+
+  .confirm-btn.no:hover {
+    background: #e0e0e0;
+  }
+
+  /* تحسينات للجوال */
+  @media (max-width: 480px) {
+    .support-box {
+      padding: 20px;
+    }
+    
+    .back-btn {
+      top: 15px;
+      right: 15px;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+    
+    .header h1 {
+      font-size: 26px;
+    }
+    
+    .logo {
+      font-size: 50px;
+    }
+    
+    .btn {
+      padding: 16px;
+      font-size: 16px;
+    }
+    
+    .confirm-buttons {
+      flex-direction: column;
+    }
+  }
+
+  /* تأثير الضغط على الأزرار */
+  .btn:active, .confirm-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* منع التحديد */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 </style>
 </head>
 
-<body>
+<body class="no-select">
 
-<a href="index.html" class="back-btn">⬅ الرجوع للرئيسية</a>
+<!-- زر الرجوع -->
+<a href="index.html" class="back-btn">
+  <i class="fas fa-arrow-right"></i>
+  العودة للرئيسية
+</a>
 
-<div class="box">
-  <h2 style="text-align:center; margin-top:0;">💬 الدعم الفني</h2>
+<!-- نافذة التأكيد -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-box">
+    <h3>تأكيد الإرسال</h3>
+    <p id="confirmMessage">هل أنت متأكد من إرسال رسالتك عبر واتساب؟</p>
+    <div class="confirm-buttons">
+      <button class="confirm-btn yes" id="confirmYes">نعم، أرسل</button>
+      <button class="confirm-btn no" id="confirmNo">لا، عد للخلف</button>
+    </div>
+  </div>
+</div>
 
-  <textarea id="issue" rows="6" placeholder="اشرح مشكلتك هنا..."></textarea>
+<!-- الرسالة العائمة -->
+<div class="alert" id="alertMessage" style="display: none;">
+  <i class="fas fa-check-circle"></i>
+  <span id="alertText">تم إرسال رسالتك بنجاح!</span>
+</div>
 
-  <button onclick="sendSupport()">إرسال عبر واتساب</button>
+<div class="support-container">
+  <!-- الهيدر -->
+  <div class="header">
+    <div class="logo">
+      <i class="fas fa-headset"></i>
+    </div>
+    <h1>الدعم الفني</h1>
+    <p>نحن هنا لمساعدتك في أي وقت</p>
+  </div>
+
+  <!-- معلومات التواصل -->
+  <div class="contact-info">
+    <div class="contact-item">
+      <i class="fab fa-whatsapp"></i>
+      <span>واتساب: 967776503890</span>
+    </div>
+    <div class="contact-item">
+      <i class="fas fa-envelope"></i>
+      <span>البريد: magedgasem55558@gmail.com</span>
+    </div>
+  </div>
+
+  <!-- صندوق الدعم -->
+  <div class="support-box">
+    <div class="form-group">
+      <label for="issue">
+        <i class="fas fa-comment-dots"></i>
+        اشرح مشكلتك بالتفصيل
+      </label>
+      <textarea id="issue" rows="6" 
+                placeholder="اكتب وصفاً مفصلاً للمشكلة التي تواجهها، سنقوم بالرد عليك في أقرب وقت ممكن..."></textarea>
+    </div>
+
+    <div class="buttons-grid">
+      <!-- زر واتساب -->
+      <button class="btn btn-whatsapp" onclick="confirmSend('whatsapp')">
+        <i class="fab fa-whatsapp"></i>
+        إرسال عبر واتساب
+      </button>
+
+      <!-- زر البريد -->
+      <button class="btn btn-email" onclick="confirmSend('email')">
+        <i class="fas fa-envelope"></i>
+        إرسال عبر البريد
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-function sendSupport(){
-  const issue = document.getElementById("issue").value;
+  // بيانات التواصل
+  const contactInfo = {
+    whatsapp: {
+      number: '967776503890',
+      format: 'https://wa.me/{number}?text={message}'
+    },
+    email: {
+      address: 'magedgasem55558@gmail.com',
+      format: 'mailto:{email}?subject={subject}&body={body}'
+    }
+  };
 
-  const text = `طلب دعم فني:\n${issue}`;
-  const url = `https://wa.me/967776503890?text=${encodeURIComponent(text)}`;
+  let currentMethod = '';
 
-  window.location.href = url;
-}
+  // فتح نافذة التأكيد
+  function confirmSend(method) {
+    currentMethod = method;
+    const modal = document.getElementById('confirmModal');
+    const message = document.getElementById('confirmMessage');
+    const issueText = document.getElementById('issue').value.trim();
+    
+    if (!issueText) {
+      showAlert('يرجى كتابة وصف المشكلة أولاً', 'warning');
+      document.getElementById('issue').focus();
+      return;
+    }
+    
+    const methodName = method === 'whatsapp' ? 'واتساب' : 'البريد الإلكتروني';
+    message.textContent = `هل أنت متأكد من إرسال رسالتك عبر ${methodName}؟`;
+    
+    modal.classList.add('active');
+  }
+
+  // إرسال عبر واتساب
+  function sendWhatsApp() {
+    const issue = document.getElementById('issue').value.trim();
+    if (!issue) return;
+    
+    const text = `🌟 طلب دعم فني 🌟\n\n📝 المشكلة:\n${issue}\n\n⏰ الوقت: ${new Date().toLocaleString('ar-SA')}\n📱 الجهاز: ${navigator.userAgent}`;
+    const url = contactInfo.whatsapp.format
+      .replace('{number}', contactInfo.whatsapp.number)
+      .replace('{message}', encodeURIComponent(text));
+    
+    window.open(url, '_blank');
+    showAlert('جارٍ فتح واتساب... سيتم إرسال رسالتك تلقائياً');
+    
+    // حفظ في localStorage
+    saveSupportRequest('whatsapp', issue);
+  }
+
+  // إرسال عبر البريد
+  function sendEmail() {
+    const issue = document.getElementById('issue').value.trim();
+    if (!issue) return;
+    
+    const subject = 'طلب دعم فني - دليل شبوة';
+    const body = `طلب دعم فني\n\nالتفاصيل:\n${issue}\n\nالتاريخ: ${new Date().toLocaleString('ar-SA')}\n\nيرجى الرد في أقرب وقت ممكن.`;
+    
+    const url = contactInfo.email.format
+      .replace('{email}', contactInfo.email.address)
+      .replace('{subject}', encodeURIComponent(subject))
+      .replace('{body}', encodeURIComponent(body));
+    
+    window.location.href = url;
+    showAlert('جارٍ فتح بريدك الإلكتروني... سيتم إرسال الرسالة تلقائياً');
+    
+    // حفظ في localStorage
+    saveSupportRequest('email', issue);
+  }
+
+  // حفظ طلب الدعم
+  function saveSupportRequest(method, issue) {
+    const requests = JSON.parse(localStorage.getItem('supportRequests') || '[]');
+    requests.push({
+      id: Date.now(),
+      method: method,
+      issue: issue,
+      timestamp: new Date().toISOString(),
+      status: 'pending'
+    });
+    localStorage.setItem('supportRequests', JSON.stringify(requests));
+    
+    console.log('تم حفظ طلب الدعم:', {
+      method,
+      issue: issue.substring(0, 50) + '...',
+      timestamp: new Date().toLocaleString()
+    });
+  }
+
+  // عرض رسالة تأكيد
+  function showAlert(message, type = 'success') {
+    const alertDiv = document.getElementById('alertMessage');
+    const alertText = document.getElementById('alertText');
+    
+    alertText.textContent = message;
+    alertDiv.style.display = 'flex';
+    
+    // إعادة التشغيل للأنيميشن
+    alertDiv.style.animation = 'none';
+    setTimeout(() => {
+      alertDiv.style.animation = 'slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards';
+    }, 10);
+    
+    // إخفاء الرسالة بعد 3 ثواني
+    setTimeout(() => {
+      alertDiv.style.display = 'none';
+    }, 3000);
+  }
+
+  // إغلاق النافذة بالضغط خارجها
+  document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+    }
+  });
+
+  // أحداث أزرار التأكيد
+  document.getElementById('confirmYes').addEventListener('click', function() {
+    const modal = document.getElementById('confirmModal');
+    modal.classList.remove('active');
+    
+    if (currentMethod === 'whatsapp') {
+      sendWhatsApp();
+    } else if (currentMethod === 'email') {
+      sendEmail();
+    }
+    
+    // إعادة تعيين حقل النص بعد التأكيد
+    document.getElementById('issue').value = '';
+  });
+
+  document.getElementById('confirmNo').addEventListener('click', function() {
+    document.getElementById('confirmModal').classList.remove('active');
+  });
+
+  // إغلاق النافذة بالضغط على ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById('confirmModal').classList.remove('active');
+    }
+  });
+
+  // حفظ المسودة تلقائياً
+  let saveTimer;
+  document.getElementById('issue').addEventListener('input', function() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem('supportDraft', this.value);
+    }, 1000);
+  });
+
+  // استعادة المسودة المحفوظة
+  window.addEventListener('load', function() {
+    const savedDraft = localStorage.getItem('supportDraft');
+    if (savedDraft) {
+      document.getElementById('issue').value = savedDraft;
+    }
+    
+    // إضافة تأثيرات للصفحة
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+      document.body.style.transition = 'opacity 0.5s ease';
+      document.body.style.opacity = '1';
+    }, 100);
+  });
+
+  // مسح المسودة عند إرسال ناجح
+  window.addEventListener('beforeunload', function() {
+    if (document.getElementById('issue').value.trim()) {
+      localStorage.setItem('supportDraft', document.getElementById('issue').value);
+    }
+  });
 </script>
 
 </body>
