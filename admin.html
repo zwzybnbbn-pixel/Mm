@@ -58,7 +58,7 @@ label{font-weight:700}
       <label>الاسم</label>
       <input type="text" id="name" required>
 
-      <label>الموقع / العنوان</label>
+      <label>العنوان</label>
       <input type="text" id="location">
 
       <label>الهاتف</label>
@@ -85,7 +85,7 @@ label{font-weight:700}
       <thead>
         <tr>
           <th>الاسم</th>
-          <th>الموقع / العنوان</th>
+          <th>العنوان</th>
           <th>الهاتف</th>
           <th>النوع / الخدمات / التخصص</th>
           <th>التقييم</th>
@@ -202,8 +202,7 @@ async function loadTable(table){
     else if(table==="tourism_hotels") typeValue=item.services||"";
     else if(table==="tourism_markets") typeValue=item.specialties||"";
 
-    // للكافيهات استخدم address، والباقي location
-    const locationVal = (table==="tourism_cafes") ? (item.address||"") : (item.location||"");
+    let locationVal = (table==="tourism_cafes") ? item.address||"" : item.location||"";
 
     tbody.innerHTML+=`
       <tr>
@@ -229,14 +228,7 @@ window.editItem = function(id){
       const item = data[0];
       document.getElementById("item-id").value = id;
       document.getElementById("name").value = item.name||"";
-
-      // إذا كان الكافيه، استخدم address، وإلا location
-      if(table==="tourism_cafes"){
-        document.getElementById("location").value = item.address || "";
-      } else {
-        document.getElementById("location").value = item.location || "";
-      }
-
+      document.getElementById("location").value = (table==="tourism_cafes") ? item.address||"" : item.location||"";
       document.getElementById("phone").value = item.phone||"";
       document.getElementById("rating").value = item.rating||"";
       if(table==="tourism_hotels") document.getElementById("type").value=item.services||"";
@@ -260,21 +252,16 @@ window.deleteItem = async function(id){
 document.getElementById("item-form").addEventListener("submit", async e=>{
   e.preventDefault();
   const id = document.getElementById("item-id").value;
-
   let payload = {
     name: document.getElementById("name").value,
+    location: (currentTable==="tourism_cafes") ? document.getElementById("location").value : document.getElementById("location").value,
     phone: document.getElementById("phone").value,
     description: document.getElementById("description").value,
     image: document.getElementById("image").value,
     rating: parseFloat(document.getElementById("rating").value)||null
   };
 
-  // للكافيهات استخدم address، والباقي location
-  if(currentTable==="tourism_cafes"){
-    payload.address = document.getElementById("location").value;
-  } else {
-    payload.location = document.getElementById("location").value;
-  }
+  if(currentTable==="tourism_cafes") payload.address = document.getElementById("location").value;
 
   if(currentTable==="tourism_hotels") payload.services=document.getElementById("type").value;
   else if(currentTable==="tourism_markets") payload.specialties=document.getElementById("type").value;
