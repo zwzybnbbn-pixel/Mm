@@ -111,11 +111,32 @@ header p{opacity:.8}
     </header>
 
     <div class="cards">
-      <div class="card"><h3>🔔 إدارة التنبيهات</h3><p>إضافة – تعديل – حذف</p></div>
-      <div class="card"><h3>⚡ أسباب الانقطاع</h3><p>التحكم الكامل</p></div>
-      <div class="card"><h3>📅 جدول التشغيل</h3><p>تشغيل – إيقاف</p></div>
-      <div class="card"><h3>📢 البلاغات</h3><p>عرض – رد – حذف</p></div>
-    </div>
+  <div class="card" onclick="goToPage('alerts.html')">
+    <h3>🔔 إدارة التنبيهات</h3>
+    <p>إضافة – تعديل – حذف</p>
+  </div>
+
+  <div class="card" onclick="goToPage('reasons.html')">
+    <h3>⚡ أسباب الانقطاع</h3>
+    <p>التحكم الكامل</p>
+  </div>
+
+  <div class="card" onclick="goToPage('schedule.html')">
+    <h3>📅 جدول التشغيل</h3>
+    <p>تشغيل – إيقاف</p>
+  </div>
+
+  <div class="card" onclick="goToPage('reports.html')">
+    <h3>📢 البلاغات</h3>
+    <p>عرض – رد – حذف</p>
+  </div>
+</div>
+
+<script>
+function goToPage(url){
+  window.location.href = url;
+}
+</script>
 
     <div class="logout" id="logoutBtn">🚪 تسجيل الخروج</div>
 
@@ -188,3 +209,4 @@ checkSession();
 
 </body>
 </html>
+
