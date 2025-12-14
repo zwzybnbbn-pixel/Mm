@@ -4,78 +4,112 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تسجيل الدخول</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-body { 
-  font-family: 'Cairo', sans-serif; 
-  display:flex; justify-content:center; align-items:center; 
-  min-height:100vh; background:#111; color:white; padding:20px; 
+body{
+  font-family:'Cairo',sans-serif;
+  background:#111;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
 }
-.login-container { 
-  background:rgba(255,255,255,0.05); 
-  padding:40px 30px; 
-  border-radius:20px; 
-  backdrop-filter:blur(10px); 
-  box-shadow:0 10px 30px rgba(0,0,0,0.5); 
-  max-width:400px; width:100%; text-align:center;
+.box{
+  width:100%;
+  max-width:400px;
+  background:rgba(255,255,255,0.06);
+  padding:35px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
 }
-h1{ text-align:center; margin-bottom:30px; font-weight:800; }
-input { width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; font-size:16px; }
-button { width:100%; padding:12px; border:none; border-radius:12px; background:#ff4c4c; color:white; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s; }
-button:hover { background:#ff6b6b; }
-.error { color:#ff4c4c; margin-bottom:15px; text-align:center; display:none; }
+h1{margin-bottom:25px}
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#ff4c4c;
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+}
+button:hover{background:#ff6b6b}
+.error{
+  color:#ff4c4c;
+  margin-bottom:15px;
+  display:none;
+}
 </style>
 </head>
+
 <body>
 
-<div class="login-container">
+<div class="box">
   <h1>تسجيل الدخول</h1>
-  <div class="error" id="error-msg"></div>
-  <input type="email" id="email" placeholder="البريد الإلكتروني" value="magedgasem55558@gmail.com">
-  <input type="password" id="password" placeholder="كلمة المرور">
-  <button onclick="login()">تسجيل الدخول</button>
+  <div class="error" id="error"></div>
+
+  <input id="email" type="email" placeholder="البريد الإلكتروني"
+         value="magedgasem55558@gmail.com">
+
+  <input id="password" type="password" placeholder="كلمة المرور">
+
+  <button id="loginBtn">تسجيل الدخول</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<script type="module">
+import { supabase } from './supabase.js';
 
-const errorMsg = document.getElementById('error-msg');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const errorBox = document.getElementById('error');
+const loginBtn = document.getElementById('loginBtn');
 
-async function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  errorMsg.style.display = 'none';
+// تسجيل الدخول
+loginBtn.addEventListener('click', async () => {
+  errorBox.style.display = 'none';
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
   if(!email || !password){
-    errorMsg.innerText = "الرجاء إدخال البريد وكلمة المرور";
-    errorMsg.style.display = 'block';
+    errorBox.textContent = 'يرجى إدخال البريد وكلمة المرور';
+    errorBox.style.display = 'block';
     return;
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
   if(error){
-    errorMsg.innerText = error.message;
-    errorMsg.style.display = 'block';
+    errorBox.textContent = error.message;
+    errorBox.style.display = 'block';
     return;
   }
 
-  // تسجيل الدخول ناجح → تحويل مباشر للـ dashboard2.html
-  window.location.href = "dashboard2.html";
+  // نجاح الدخول
+  window.location.href = 'dashboard2.html';
+});
+
+// تحويل تلقائي إذا كان مسجّل مسبقًا
+const { data } = await supabase.auth.getSession();
+if(data.session){
+  window.location.href = 'dashboard2.html';
 }
-
-// إذا كان المستخدم مسجل دخول مسبقاً، تحويله مباشرة للـ dashboard2.html
-supabase.auth.getSession().then(({ data: { session } }) => {
-  if(session) window.location.href = "dashboard2.html";
-});
-
-// الاستماع لتغير الجلسة (مثلاً تسجيل الخروج من نافذة أخرى)
-supabase.auth.onAuthStateChange((event, session) => {
-  if(session) window.location.href = "dashboard2.html";
-});
 </script>
 
 </body>
