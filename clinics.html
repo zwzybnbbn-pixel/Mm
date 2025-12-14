@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>قائمة العيادات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+  body{background:#eef3f3;display:flex;justify-content:center;}
+  .container{width:100%;max-width:380px;padding:15px;}
+
+  .back-btn{
+    display:inline-block;background:#444;color:white;
+    padding:8px 14px;border-radius:10px;text-decoration:none;
+    margin-bottom:12px;font-size:15px;
+  }
+
+  h1{text-align:center;color:#00695C;margin-bottom:10px;font-size:24px;font-weight:800;}
+
+  .search-box{
+    width:100%;padding:10px;border-radius:10px;border:1px solid #bbb;
+    margin-bottom:15px;font-size:15px;
+  }
+
+  .card{
+    background:white;padding:16px;border-radius:14px;margin-bottom:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.10);transition:0.2s;
+  }
+  .card:hover{transform:translateY(-3px);}
+  
+  .img{
+    width:90px;height:90px;border-radius:50%;object-fit:cover;
+    margin:0 auto 10px auto;border:3px solid #009688;display:block;
+  }
+  .title{font-size:19px;font-weight:800;text-align:center;color:#00695C;margin-bottom:10px;}
+  .info{text-align:center;font-size:15px;margin-bottom:4px;color:#333;}
+
+  .btn{
+    display:block;width:100%;padding:10px;margin-top:10px;background:#00796B;
+    color:white;text-align:center;font-size:15px;border-radius:10px;text-decoration:none;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="branches.html" class="back-btn">⬅ رجوع</a>
+
+  <h1>🏨 العيادات</h1>
+
+  <input type="text" id="search" class="search-box" placeholder="ابحث عن عيادة...">
+
+  <div id="clinics">جار التحميل...</div>
+
+</div>
+
+<!-- استيراد Supabase JavaScript SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script type="module">
+  // 🔧 استبدل هذه القيم بمعلومات مشروعك الخاصة من لوحة Supabase
+  const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+  // إنشاء عميل Supabase
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let allClinics = [];
+
+  async function loadClinics(){
+    try {
+      // جلب البيانات من جدول clinics
+      const { data, error } = await supabase
+        .from('clinics')
+        .select('*')
+        .order('name', { ascending: true });
+
+      const box = document.getElementById("clinics");
+      
+      if (error) {
+        console.error('خطأ في جلب البيانات:', error);
+        box.innerHTML = "<p style='text-align:center;color:#f44336;'>خطأ في تحميل البيانات</p>";
+        return;
+      }
+
+      box.innerHTML = "";
+      allClinics = data || [];
+
+      render(allClinics);
+    } catch (err) {
+      console.error('خطأ غير متوقع:', err);
+      document.getElementById("clinics").innerHTML = "<p style='text-align:center;color:#f44336;'>حدث خطأ غير متوقع</p>";
+    }
+  }
+
+  function render(list){
+    const box = document.getElementById("clinics");
+    box.innerHTML = "";
+
+    if(list.length === 0){
+      box.innerHTML = "<p style='text-align:center;color:#777;'>لا توجد عيادات متاحة</p>";
+      return;
+    }
+
+    list.forEach(c=>{
+      box.innerHTML += `
+        <div class="card">
+          <img class="img" src="${c.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}" 
+               alt="${c.name || 'عيادة'}" 
+               onerror="this.src='https://i.postimg.cc/TPZpYH5f/noimage.png'">
+          <div class="title">${c.name || "بدون اسم"}</div>
+          <p class="info"><b>المدينة:</b> ${c.city || "غير محدد"}</p>
+          <p class="info"><b>الهاتف:</b> ${c.phone || "لا يوجد"}</p>
+          <a class="btn" href="clinic.html?id=${c.id}">عرض التفاصيل</a>
+        </div>
+      `;
+    });
+  }
+
+  // تفعيل البحث
+  document.getElementById("search").addEventListener("input", e=>{
+    const q = e.target.value.trim().toLowerCase();
+    
+    if (q === '') {
+      render(allClinics);
+    } else {
+      const filteredClinics = allClinics.filter(c => 
+        (c.name && c.name.toLowerCase().includes(q)) ||
+        (c.city && c.city.toLowerCase().includes(q)) ||
+        (c.phone && c.phone.includes(q))
+      );
+      render(filteredClinics);
+    }
+  });
+
+  // تحميل البيانات عند فتح الصفحة
+  loadClinics();
+</script>
+
+</body>
+</html>

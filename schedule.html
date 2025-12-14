@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📅 جدول التشغيل – كهرباء عتق</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ===========================
+     إعدادات عامة
+=========================== */
+:root {
+  --primary: #4aa3ff;
+  --primary-dark: #2a7bcf;
+  --secondary: #ff6b6b;
+  --light-bg: rgba(255, 255, 255, 0.07);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --text-color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #1a1a1a 100%);
+  min-height: 100vh;
+  color: var(--text-color);
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* ===========================
+         العنوان
+=========================== */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+}
+
+
+
+header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 3px;
+}
+
+header p {
+  font-size: 18px;
+  opacity: 0.9;
+  color: #ccc;
+  margin-top: 10px;
+}
+
+/* ===========================
+        صندوق المحتوى
+=========================== */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section {
+  background: var(--light-bg);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+       شريط المعلومات
+=========================== */
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-bar h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.last-update {
+  font-size: 14px;
+  color: #888;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.last-update i {
+  margin-left: 5px;
+  color: var(--primary);
+}
+
+/* ===========================
+        عناصر الجدول
+=========================== */
+.schedule-list {
+  display: grid;
+  gap: 20px;
+}
+
+.schedule-item {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.schedule-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(74, 163, 255, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(74, 163, 255, 0.2);
+}
+
+.schedule-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.area-badge {
+  background: rgba(74, 163, 255, 0.2);
+  color: var(--primary);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===========================
+      معلومات التشغيل
+=========================== */
+.schedule-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row i {
+  font-size: 18px;
+  color: var(--primary);
+  width: 24px;
+  text-align: center;
+}
+
+.info-row div {
+  flex: 1;
+}
+
+.info-row strong {
+  display: block;
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 3px;
+}
+
+.info-row span {
+  font-size: 16px;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* ===========================
+       حالات خاصة
+=========================== */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.status-active {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.status-inactive {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+.status-scheduled {
+  background: rgba(241, 196, 15, 0.2);
+  color: #f1c40f;
+}
+
+/* ===========================
+        حالة التحميل
+=========================== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #aaa;
+  font-size: 18px;
+}
+
+.loading i {
+  font-size: 24px;
+  margin-bottom: 15px;
+  display: block;
+  color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===========================
+       حالة فارغة
+=========================== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #444;
+  display: block;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* ===========================
+       فلتر المناطق
+=========================== */
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: rgba(74, 163, 255, 0.1);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: rgba(74, 163, 255, 0.2);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ===========================
+       تحديث تلقائي
+=========================== */
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  font-size: 14px;
+  color: #888;
+}
+
+.auto-refresh i {
+  color: var(--primary);
+}
+
+/* ===========================
+      استجابة للجوال
+=========================== */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  
+  header h1 {
+    font-size: 28px;
+  }
+  
+  .section {
+    padding: 20px;
+  }
+  
+  .schedule-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .filter-container {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 24px;
+  }
+  
+  header p {
+    font-size: 16px;
+  }
+  
+  .schedule-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  
+  <!-- العنوان -->
+  <header>
+    <h1><i class="fas fa-calendar-alt"></i> جدول التشغيل</h1>
+    <p>جدول تشغيل وانقطاع الكهرباء حسب المناطق</p>
+  </header>
+  
+  <!-- القسم الرئيسي -->
+  <div class="section">
+    <div class="info-bar">
+      <h2><i class="fas fa-bolt"></i> جدول التشغيل الحالي</h2>
+      <div class="last-update" id="lastUpdate">
+        <i class="fas fa-clock"></i> آخر تحديث: <span id="updateTime">--:--</span>
+      </div>
+    </div>
+    
+    <!-- فلتر المناطق -->
+    <div class="filter-container" id="filterContainer">
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> جميع المناطق
+      </button>
+      <!-- سيتم إضافة الأزرار ديناميكياً -->
+    </div>
+    
+    <!-- قائمة الجدول -->
+    <div id="list" class="loading">
+      <i class="fas fa-spinner"></i> جاري تحميل جدول التشغيل...
+    </div>
+    
+    <!-- تحديث تلقائي -->
+    <div class="auto-refresh">
+      <i class="fas fa-sync-alt"></i>
+      <span>سيتم تحديث الجدول تلقائياً كل دقيقة</span>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// استيراد Supabase
+import { supabase } from './supabase.js';
+
+// عناصر DOM
+const list = document.getElementById('list');
+const filterContainer = document.getElementById('filterContainer');
+const updateTime = document.getElementById('updateTime');
+
+// متغيرات
+let allSchedules = [];
+let currentFilter = 'all';
+let uniqueAreas = [];
+
+// دالة لتحديث وقت آخر تحديث
+function updateLastUpdateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  updateTime.textContent = timeString;
+}
+
+// دالة لإنشاء أزرار الفلتر ديناميكياً
+function createFilterButtons(areas) {
+  // أضف الأزرار لكل منطقة
+  areas.forEach(area => {
+    const button = document.createElement('button');
+    button.className = 'filter-btn';
+    button.dataset.filter = area;
+    button.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${area}`;
+    button.addEventListener('click', () => {
+      // إزالة النشط من جميع الأزرار
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // تفعيل الزر المختار
+      button.classList.add('active');
+      
+      // تطبيق الفلتر
+      currentFilter = area;
+      filterSchedules();
+    });
+    
+    filterContainer.appendChild(button);
+  });
+}
+
+// دالة لتصفية الجدول حسب المنطقة
+function filterSchedules() {
+  let filtered = [...allSchedules];
+  
+  if (currentFilter !== 'all') {
+    filtered = filtered.filter(schedule => schedule.area === currentFilter);
+  }
+  
+  displaySchedules(filtered);
+}
+
+// دالة لعرض جدول التشغيل
+function displaySchedules(schedules) {
+  if (!schedules || schedules.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="far fa-calendar-times"></i>
+        <p>لا توجد بيانات لجدول التشغيل</p>
+        <p style="font-size: 14px; color: #666;">${currentFilter !== 'all' ? `للمنطقة: ${currentFilter}` : ''}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '<div class="schedule-list">';
+  
+  schedules.forEach(schedule => {
+    const { area, on_time, off_time, notes, status } = schedule;
+    
+    // تحديد أيقونة الحالة
+    let statusClass = 'status-scheduled';
+    let statusIcon = 'fas fa-clock';
+    let statusText = 'مجدول';
+    
+    if (status === 'active') {
+      statusClass = 'status-active';
+      statusIcon = 'fas fa-bolt';
+      statusText = 'نشط';
+    } else if (status === 'inactive') {
+      statusClass = 'status-inactive';
+      statusIcon = 'fas fa-power-off';
+      statusText = 'غير نشط';
+    }
+    
+    html += `
+      <div class="schedule-item">
+        <div class="schedule-header">
+          <h3><i class="fas fa-map-marker-alt"></i> ${area || 'غير محدد'}</h3>
+          <span class="area-badge">${area || '--'}</span>
+        </div>
+        
+        <div class="schedule-info">
+          <div class="info-row">
+            <i class="fas fa-play-circle"></i>
+            <div>
+              <strong>وقت التشغيل</strong>
+              <span>${on_time || 'غير محدد'}</span>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <i class="fas fa-stop-circle"></i>
+            <div>
+              <strong>وقت الانطفاء</strong>
+              <span>${off_time || 'غير محدد'}</span>
+            </div>
+          </div>
+        </div>
+        
+        ${notes ? `
+          <div class="info-row" style="grid-column: 1 / -1;">
+            <i class="fas fa-sticky-note"></i>
+            <div>
+              <strong>ملاحظات</strong>
+              <span>${notes}</span>
+            </div>
+          </div>
+        ` : ''}
+        
+        <div class="${statusClass} status-badge">
+          <i class="${statusIcon}"></i> ${statusText}
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  list.innerHTML = html;
+}
+
+// دالة لتحميل جدول التشغيل من Supabase
+async function loadSchedule() {
+  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل جدول التشغيل...</div>';
+  
+  try {
+    const { data: schedules, error } = await supabase
+      .from('schedule')
+      .select('*')
+      .order('area', { ascending: true });
+    
+    if (error) throw error;
+    
+    console.log(`✅ تم تحميل ${schedules?.length || 0} منطقة`);
+    allSchedules = schedules || [];
+    
+    // استخراج المناطق الفريدة
+    uniqueAreas = [...new Set(allSchedules.map(s => s.area).filter(Boolean))];
+    
+    // تحديث أزرار الفلتر
+    filterContainer.innerHTML = `
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> جميع المناطق
+      </button>
+    `;
+    createFilterButtons(uniqueAreas);
+    
+    // تطبيق الفلتر الحالي
+    filterSchedules();
+    
+    // تحديث وقت آخر تحديث
+    updateLastUpdateTime();
+    
+  } catch (error) {
+    console.error('❌ خطأ في تحميل جدول التشغيل:', error);
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>حدث خطأ في تحميل جدول التشغيل</p>
+        <p style="font-size: 14px; color: #e74c3c;">${error.message}</p>
+        <button onclick="loadSchedule()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600;">
+          <i class="fas fa-redo"></i> إعادة المحاولة
+        </button>
+      </div>
+    `;
+  }
+}
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  console.log('🚀 بدء تحميل صفحة جدول التشغيل...');
+  
+  // تحميل البيانات أول مرة
+  await loadSchedule();
+  
+  // الاشتراك في التحديثات المباشرة
+  const channel = supabase
+    .channel('realtime-schedule')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'schedule'
+      },
+      (payload) => {
+        console.log('📡 تحديث مباشر لجدول التشغيل:', payload);
+        loadSchedule();
+      }
+    )
+    .subscribe((status) => {
+      console.log('📡 حالة اشتراك جدول التشغيل:', status);
+    });
+  
+  // تحديث تلقائي كل دقيقة
+  setInterval(() => {
+    loadSchedule();
+  }, 60000);
+  
+  // تحديث وقت العرض كل ثانية
+  setInterval(() => {
+    updateLastUpdateTime();
+  }, 1000);
+  
+  console.log('✅ تم تهيئة صفحة جدول التشغيل بنجاح');
+}
+
+// بدء التطبيق
+init();
+
+// جعل الدالة متاحة للزر
+window.loadSchedule = loadSchedule;
+</script>
+
+</body>
+</html>

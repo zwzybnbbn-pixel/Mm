@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>فحص حالة المصادقة</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+pre { background: #f5f5f5; padding: 15px; border-radius: 5px; }
+.button { background: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+</style>
+</head>
+<body>
+<h2>🔍 فحص حالة المصادقة</h2>
+<button class="button" onclick="checkAuth()">فحص localStorage</button>
+<button class="button" onclick="clearAll()">مسح الكل</button>
+<button class="button" onclick="window.location.href='login1.html'">تسجيل الدخول</button>
+<button class="button" onclick="window.location.href='dashboard2.html'">لوحة التحكم</button>
+<hr>
+<div id="result"></div>
+
+<script>
+async function checkAuth() {
+  const keys = [
+    'login1_authenticated',
+    'login1_auth_token', 
+    'login1_timeout',
+    'login1_user_data',
+    'supabase_session'
+  ];
+  
+  let result = '<h3>🔑 حالة localStorage:</h3>';
+  
+  keys.forEach(key => {
+    const value = localStorage.getItem(key);
+    const exists = value !== null;
+    
+    result += `<div style="margin: 10px 0; padding: 10px; background: ${exists ? '#d4edda' : '#f8d7da'}; border-radius: 5px;">`;
+    result += `<strong>${key}:</strong> ${exists ? '✅ موجود' : '❌ غير موجود'}<br>`;
+    
+    if (exists) {
+      try {
+        const parsed = JSON.parse(value);
+        if (key === 'login1_timeout') {
+          const date = new Date(parseInt(value));
+          const now = new Date();
+          const expired = date < now;
+          result += `القيمة: ${date.toLocaleString('ar-SA')}<br>`;
+          result += `الحالة: ${expired ? '❌ منتهية' : '✅ سارية'}<br>`;
+        } else {
+          result += `القيمة: ${JSON.stringify(parsed)}<br>`;
+        }
+      } catch {
+        result += `القيمة: ${value}<br>`;
+      }
+    }
+    
+    result += '</div>';
+  });
+  
+  // فحص صلاحية الجلسة
+  const timeout = localStorage.getItem('login1_timeout');
+  if (timeout) {
+    const now = new Date().getTime();
+    const expiry = parseInt(timeout);
+    const isValid = now < expiry;
+    
+    result += `<div style="margin: 20px 0; padding: 15px; background: ${isValid ? '#d4edda' : '#f8d7da'}; border-radius: 5px;">`;
+    result += `<h4>🔐 حالة الجلسة:</h4>`;
+    result += `الوقت الحالي: ${new Date(now).toLocaleString('ar-SA')}<br>`;
+    result += `وقت الانتهاء: ${new Date(expiry).toLocaleString('ar-SA')}<br>`;
+    result += `المتبقي: ${Math.max(0, Math.round((expiry - now) / 1000 / 60))} دقيقة<br>`;
+    result += `<strong>الحالة النهائية: ${isValid ? '✅ جلسة صالحة' : '❌ جلسة منتهية'}</strong>`;
+    result += '</div>';
+  }
+  
+  document.getElementById('result').innerHTML = result;
+}
+
+function clearAll() {
+  if (confirm('هل تريد مسح جميع بيانات الجلسة؟')) {
+    localStorage.clear();
+    alert('تم مسح جميع البيانات');
+    checkAuth();
+  }
+}
+
+// فحص تلقائي عند التحميل
+checkAuth();
+</script>
+</body>
+</html>

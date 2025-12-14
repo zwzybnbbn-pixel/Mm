@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>دليل شبوة (عتق) الشامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00eaff;
+            --primary-dark: #00a8cc;
+            --secondary: #ba68ff;
+            --accent: #ff6b35;
+            --dark-bg: #0a0e1a;
+            --darker-bg: #070a14;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-light: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --gradient-primary: linear-gradient(135deg, #00eaff, #0066ff);
+            --gradient-secondary: linear-gradient(135deg, #ba68ff, #ff6b35);
+            --shadow-glow: 0 0 30px rgba(0, 234, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--darker-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 234, 255, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(186, 104, 255, 0.1) 0%, transparent 30%),
+                linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            z-index: -2;
+        }
+
+        /* شريط التنقل الذكي للجوال */
+        .mobile-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .mobile-nav-item i {
+            font-size: 22px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item.active i {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 10px rgba(0, 234, 255, 0.5));
+        }
+
+        .mobile-nav-label {
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        /* الهيدر المتطور */
+        .main-header {
+            padding: 30px 20px 20px;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .city-glow {
+            position: absolute;
+            top: -50px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 234, 255, 0.2) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .main-title {
+            font-size: clamp(36px, 8vw, 56px);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            line-height: 1.1;
+            text-shadow: 0 5px 15px rgba(0, 234, 255, 0.3);
+        }
+
+        .title-accent {
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .sub-title {
+            font-size: clamp(16px, 4vw, 20px);
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 234, 255, 0.2);
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        /* الشبكة المتطورة */
+        .grid-container {
+            padding: 40px 20px 120px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(28px, 6vw, 40px);
+            margin-bottom: 40px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        /* كروت متطورة */
+        .card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            padding: 30px 25px;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(0, 234, 255, 0.1) 0%, 
+                rgba(186, 104, 255, 0.05) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                var(--primary),
+                transparent 30%
+            );
+            animation: rotate 10s linear infinite;
+            opacity: 0.1;
+            z-index: -2;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            border-color: rgba(0, 234, 255, 0.4);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                var(--shadow-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: clamp(60px, 12vw, 70px);
+            margin-bottom: 20px;
+            color: var(--primary);
+            filter: drop-shadow(0 0 15px rgba(0, 234, 255, 0.5));
+            transition: transform 0.5s ease;
+            display: inline-block;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.15) rotate(10deg);
+        }
+
+        .card-title {
+            font-size: clamp(26px, 6vw, 32px);
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff, #a5d8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            font-size: clamp(15px, 3.5vw, 17px);
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-badge {
+            background: rgba(0, 234, 255, 0.15);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0, 234, 255, 0.3);
+        }
+
+        .card-arrow {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 234, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 234, 255, 0.2);
+        }
+
+        .card:hover .card-arrow {
+            transform: translateX(-5px);
+            background: rgba(0, 234, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        /* قسم المطور */
+        .developer-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            padding: 40px 30px;
+            margin: 60px auto;
+            max-width: 800px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .developer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .developer-title {
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .developer-name {
+            font-size: clamp(24px, 6vw, 36px);
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .developer-role {
+            font-size: clamp(16px, 4vw, 20px);
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .developer-bio {
+            font-size: clamp(15px, 4vw, 18px);
+            line-height: 1.8;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            background: rgba(0, 234, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* الفوتر المتطور */
+        .footer {
+            background: rgba(7, 10, 20, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 20px;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 42px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(0, 234, 255, 0.5));
+        }
+
+        .footer-title {
+            font-size: clamp(24px, 6vw, 36px);
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-subtitle {
+            font-size: clamp(16px, 4vw, 20px);
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .footer-stat {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .footer-stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .copyright strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .hearts {
+            color: var(--accent);
+            animation: pulse 1.5s infinite;
+            display: inline-block;
+        }
+
+        /* الأنيميشن */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تأثيرات دخول */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* الاستجابة للجوال */
+        @media (max-width: 767px) {
+            .mobile-nav {
+                display: flex;
+            }
+            
+            .grid-container {
+                padding-bottom: 140px;
+            }
+            
+            .developer-section {
+                padding: 30px 20px;
+                margin: 40px 20px;
+            }
+            
+            .card {
+                animation: fadeInUp 0.6s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+                opacity: 0;
+            }
+            
+            .card:nth-child(1) { animation-delay: 0.1s; }
+            .card:nth-child(2) { animation-delay: 0.2s; }
+            .card:nth-child(3) { animation-delay: 0.3s; }
+            .card:nth-child(4) { animation-delay: 0.4s; }
+            
+            /* تحسين اللمس */
+            .card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+        }
+
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-container {
+                justify-content: space-between;
+                max-width: 600px;
+                margin: 30px auto 0;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .main-header {
+                padding: 60px 40px 40px;
+            }
+            
+            .grid-container {
+                padding: 60px 40px 80px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+
+        /* تحسينات الأداء */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* تحسين التمرير على iOS */
+        .scroll-smooth {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+    <!-- شريط التنقل للجوال -->
+    <nav class="mobile-nav">
+        <a href="#home" class="mobile-nav-item active">
+            <i class="fas fa-home"></i>
+            <span class="mobile-nav-label">الرئيسية</span>
+        </a>
+        <a href="#services" class="mobile-nav-item">
+            <i class="fas fa-th-large"></i>
+            <span class="mobile-nav-label">الخدمات</span>
+        </a>
+        <a href="#developer" class="mobile-nav-item">
+            <i class="fas fa-code"></i>
+            <span class="mobile-nav-label">المطور</span>
+        </a>
+        <a href="#about" class="mobile-nav-item">
+            <i class="fas fa-info-circle"></i>
+            <span class="mobile-nav-label">من نحن</span>
+        </a>
+    </nav>
+
+    <!-- الهيدر الرئيسي -->
+    <header class="main-header" id="home">
+        <div class="city-glow"></div>
+        <div class="header-content">
+            <h1 class="main-title">
+                دليل <span class="title-accent">شبوة</span> الشامل
+            </h1>
+            <p class="sub-title">
+                أول منصة ذكية متكاملة تقدم جميع الخدمات الأساسية لأبناء محافظة شبوة بتقنيات الويب الحديثة وأداء فائق
+            </p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">أداء فائق</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="stat-value">4+</div>
+                    <div class="stat-label">خدمات متكاملة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">دعم فني</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- الخدمات -->
+    <section class="grid-container" id="services">
+        <h2 class="section-title fade-in">الخدمات المتكاملة</h2>
+        <div class="grid">
+            <a class="card fade-in" href="about1.html">
+                <div class="card-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3 class="card-title">من نحن</h3>
+                <p class="card-desc">
+                    تعرف على رؤيتنا ورسالتنا في تحويل شبوة إلى مدينة ذكية رائدة، وأهدافنا في خدمة المجتمع المحلي بأحدث التقنيات
+                </p>
+                <div class="card-footer">
+                    <div class="card-badge">
+                        <i class="fas fa-eye"></i>
+                        <span>رؤية مستقبلية</span>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a class="card fade-in" href="index.html">
+                <div class="card-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <h3 class="card-title">الخدمات الصحية</h3>
+                <p class="card-desc">
+                    دليل طبي شامل يشمل المستشفيات، المختبرات، الصيدليات، والأطباء المتخصصين مع تفاصيل الاتصال والمواعيد
+                </p>
+                <div class="card-footer">
+                    <div class="card-badge">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>صحة مثالية</span>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a class="card fade-in" href="index2.html">
+                <div class="card-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="card-title">خدمات الكهرباء</h3>
+                <p class="card-desc">
+                    تتبع جدول الكهرباء، سجل البلاغات، تعرف على أسباب الانقطاع والحلول الفورية، وخدمات الصيانة الطارئة
+                </p>
+                <div class="card-footer">
+                    <div class="card-badge">
+                        <i class="fas fa-charging-station"></i>
+                        <span>طاقة مستدامة</span>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a class="card fade-in" href="index1.html">
+                <div class="card-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3 class="card-title">استكشف المدينة</h3>
+                <p class="card-desc">
+                    اكتشف أفضل المطاعم، الفنادق، المعالم السياحية، والأسواق الشعبية في شبوة مع خرائط تفاعلية وتقييمات
+                </p>
+                <div class="card-footer">
+                    <div class="card-badge">
+                        <i class="fas fa-compass"></i>
+                        <span>دليل سياحي</span>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- قسم المطور -->
+    <section class="developer-section fade-in" id="developer">
+        <h3 class="developer-title">خلف التكنولوجيا</h3>
+        <h2 class="developer-name">م/ماجد قاسم حسن مبارك بن عمرو</h2>
+        <p class="developer-role">مطور ومؤسس دليل شبوة الشامل</p>
+        
+        <p class="developer-bio"> أطلقت هذه المنصة لتكون جسراً رقمياً يربط 
+            أبناء شبوة بكافة الخدمات الأساسية بأسلوب عصري وسريع.
+        </p>
+        
+        <div class="tech-badges">
+            <span class="tech-badge">HTML5 & CSS3</span>
+            <span class="tech-badge">JavaScript ES6+</span>
+            <span class="tech-badge">Responsive Design</span>
+            <span class="tech-badge">UI/UX Design</span>
+            <span class="tech-badge">Mobile First</span>
+            <span class="tech-badge">Performance</span>
+        </div>
+    </section>
+
+    <!-- الفوتر المتطور -->
+    <footer class="footer" id="about">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <h3 class="footer-title">دليل شبوة (عتق) الشامل</h3>
+            <p class="footer-subtitle">
+                أول منصة خدمات شاملة في اليمن تقدم تجربة مستخدم فريدة على جميع الأجهزة 
+                المحمولة بأداء 100% وتقنيات الويب الحديثة.
+            </p>
+            
+            <div class="footer-stats">
+                <div class="footer-stat">
+                    <div class="footer-stat-number">4</div>
+                    <div class="footer-stat-label">خدمات رئيسية</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number">100%</div>
+                    <div class="footer-stat-label">أداء فائق</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number">24/7</div>
+                    <div class="footer-stat-label">دعم فني</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number">2025</div>
+                    <div class="footer-stat-label">سنة الإطلاق</div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>
+                    <i class="fas fa-copyright"></i> <strong>جميع الحقوق محفوظة</strong> — دليل شبوة (عتق) الشامل — 2025
+                </p>
+                <p style="margin-top: 15px;">
+                    <span class="hearts">❤️</span> بُنيَ بكل فخر لخدمة أبناء محافظة شبوة <span class="hearts">❤️</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // تأثيرات الظهور عند التمرير
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // تفعيل التنقل المتنقل
+            const navItems = document.querySelectorAll('.mobile-nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // تحديث التنقل النشط عند التمرير
+            const sections = document.querySelectorAll('section, header, footer');
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                const scrollPosition = window.pageYOffset + 100;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${current}`) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // إظهار/إخفاء شريط التنقل على الجوال
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (window.innerWidth <= 767) {
+                    if (scrollPosition > 100) {
+                        mobileNav.style.bottom = '20px';
+                    } else {
+                        mobileNav.style.bottom = '-100px';
+                    }
+                }
+            });
+            
+            // تأثيرات جسيمات خلفية
+            function createParticle() {
+                if (window.innerWidth > 768) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'fixed';
+                    particle.style.width = Math.random() * 6 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = Math.random() > 0.5 ? 'var(--primary)' : 'var(--secondary)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = '-20px';
+                    particle.style.opacity = Math.random() * 0.4 + 0.1;
+                    particle.style.zIndex = '-1';
+                    particle.style.pointerEvents = 'none';
+                    
+                    document.body.appendChild(particle);
+                    
+                    const duration = Math.random() * 4000 + 2000;
+                    
+                    particle.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: particle.style.opacity },
+                        { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration,
+                        easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                    });
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, duration);
+                }
+            }
+            
+            // إنشاء جسيمات
+            if (window.innerWidth > 768) {
+                setInterval(createParticle, 300);
+            }
+            
+            // تأثيرات تفاعلية للكروت
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '100';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '1';
+                });
+                
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // تحديث إحصائيات عشوائية للديناميكية
+            function updateStats() {
+                const statValues = document.querySelectorAll('.stat-value, .footer-stat-number');
+                statValues.forEach(stat => {
+                    const currentValue = parseInt(stat.textContent);
+                    if (!isNaN(currentValue) && currentValue > 0) {
+                        const newValue = Math.floor(Math.random() * 5) + currentValue;
+                        stat.textContent = newValue;
+                    }
+                });
+            }
+            
+            // تحديث الإحصائيات كل 10 ثواني (اختياري)
+            // setInterval(updateStats, 10000);
+        });
+    </script>
+</body>
+</html>

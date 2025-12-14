@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل الطوارئ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';}
+body{background:#eef3f3;padding:12px;}
+
+.back-btn{
+  display:inline-block;background:#444;color:#fff;
+  padding:10px 16px;border-radius:10px;text-decoration:none;
+  margin-bottom:15px;font-size:16px;
+  transition: all 0.3s;
+}
+.back-btn:hover {
+  background: #333;
+  transform: translateX(-5px);
+}
+
+.card{
+  width:100%;background:white;padding:20px;
+  border-radius:15px;box-shadow:0 3px 12px rgba(0,0,0,0.1);
+  margin-bottom:15px;
+  border-top: 4px solid #d32f2f;
+}
+
+h2{
+  font-size:24px;color:#00695C;text-align:center;
+  margin-bottom:15px;font-weight:800;
+}
+
+.info{
+  background:#f9ffff;padding:15px;border-left:5px solid #00796B;
+  border-radius:12px;margin-bottom:15px;
+  transition: all 0.3s;
+}
+.info:hover {
+  transform: translateX(5px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.label{font-size:16px;font-weight:700;color:#00695C;margin-bottom:5px;}
+.value{font-size:18px;color:#333;}
+
+.emg-img{
+  width:140px;height:140px;border-radius:50%;
+  object-fit:cover;display:block;margin:20px auto;
+  border:4px solid #d32f2f;
+  box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
+  transition: all 0.3s;
+}
+.emg-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.3);
+}
+
+/* زر الخريطة */
+.map-btn{
+  display:flex;width:100%;padding:15px;margin-top:15px;
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);color:white;font-size:18px;
+  border-radius:12px;text-align:center;text-decoration:none;
+  font-weight:700;justify-content:center;align-items:center;
+  gap: 10px;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+}
+.map-btn:hover{
+  background: linear-gradient(135deg, #b71c1c, #8b0000);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(183, 28, 28, 0.3);
+}
+
+/* أزرار الاتصال */
+.contact-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.phone-btn {
+  background: linear-gradient(135deg, #00796B, #004D40);
+  color: white;
+}
+.phone-btn:hover {
+  background: linear-gradient(135deg, #004D40, #00251a);
+  transform: translateY(-3px);
+}
+
+.location-btn {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+}
+.location-btn:hover {
+  background: linear-gradient(135deg, #f57c00, #e65100);
+  transform: translateY(-3px);
+}
+
+/* معلومات إضافية */
+.additional-info {
+  background: #fff8e1;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border-right: 5px solid #ffb300;
+}
+
+.additional-info h3 {
+  color: #e65100;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.additional-info p {
+  color: #5d4037;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+  .contact-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  .value {
+    font-size: 16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<a href="emergency.html" class="back-btn">⬅ العودة للقائمة</a>
+
+<img id="emgImg" class="emg-img" alt="مركز طوارئ">
+
+<!-- بيانات الطوارئ -->
+<div class="card">
+  <h2 id="eName">جاري التحميل...</h2>
+
+  <div class="info">
+    <div class="label">📍 المدينة:</div>
+    <div class="value" id="eCity"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📞 الهاتف:</div>
+    <div class="value" id="ePhone"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📝 الوصف:</div>
+    <div class="value" id="eDescription"></div>
+  </div>
+
+  <!-- أزرار الاتصال -->
+  <div class="contact-buttons">
+    <a id="callBtn" class="contact-btn phone-btn" href="#">
+      <span>📞</span> اتصل الآن
+    </a>
+    <a id="locationBtn" class="contact-btn location-btn" href="#" target="_blank">
+      <span>📍</span> فتح الخريطة
+    </a>
+  </div>
+
+  <!-- معلومات إضافية -->
+  <div id="additionalInfo" class="additional-info"></div>
+
+  <button id="mapBtn" class="map-btn">
+    <span>🗺️</span> عرض الموقع على الخريطة
+  </button>
+</div>
+
+<!-- استيراد Supabase SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script type="module">
+// 🔧 استبدل هذه القيم بمعلومات مشروعك الخاصة
+const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+// إنشاء عميل Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// الحصول على معرف الطوارئ من URL
+const urlParams = new URLSearchParams(window.location.search);
+const emergencyId = urlParams.get("id");
+
+/* تحميل بيانات الطوارئ */
+async function loadEmergency(){
+  if (!emergencyId) {
+    document.getElementById("eName").textContent = "خطأ: لا يوجد معرف للطوارئ";
+    return;
+  }
+
+  try {
+    const { data: emergency, error } = await supabase
+      .from('emergency')
+      .select('*')
+      .eq('id', emergencyId)
+      .single();
+
+    if (error) {
+      console.error('خطأ في جلب بيانات الطوارئ:', error);
+      document.getElementById("eName").textContent = "خطأ في تحميل البيانات";
+      return;
+    }
+
+    if (!emergency) {
+      document.getElementById("eName").textContent = "مركز الطوارئ غير موجود";
+      return;
+    }
+
+    const e = emergency;
+
+    // تحديث عناصر الصفحة
+    document.getElementById("eName").textContent = e.name || "مركز طوارئ";
+    document.getElementById("eCity").textContent = e.city || "غير محدد";
+    document.getElementById("ePhone").textContent = e.phone || "غير محدد";
+    document.getElementById("eDescription").textContent = e.description || "لا يوجد وصف مفصل";
+    
+    // صورة المركز
+    const imgSrc = e.img && e.img.trim() !== "" 
+      ? e.img 
+      : "https://i.postimg.cc/W1msLKWD/emergency-default.jpg";
+    document.getElementById("emgImg").src = imgSrc;
+    document.getElementById("emgImg").alt = e.name || "مركز طوارئ";
+    
+    // تحديث زر الاتصال
+    if (e.phone) {
+      const phoneBtn = document.getElementById("callBtn");
+      phoneBtn.href = `tel:${e.phone.replace(/\s/g, '')}`;
+      phoneBtn.innerHTML = `<span>📞</span> اتصل: ${e.phone}`;
+    } else {
+      document.getElementById("callBtn").style.display = "none";
+    }
+    
+    // تحديث زر الموقع
+    if (e.map) {
+      const mapBtn = document.getElementById("mapBtn");
+      mapBtn.onclick = () => window.open(e.map, '_blank');
+      const locationBtn = document.getElementById("locationBtn");
+      locationBtn.href = e.map;
+    } else {
+      document.getElementById("mapBtn").style.display = "none";
+      document.getElementById("locationBtn").style.display = "none";
+    }
+    
+    // إضافة معلومات إضافية
+    const additionalInfo = document.getElementById("additionalInfo");
+    let additionalHTML = '<h3>معلومات إضافية:</h3>';
+    
+    if (e.address) {
+      additionalHTML += `<p><strong>🏠 العنوان:</strong> ${e.address}</p>`;
+    }
+    
+    if (e.working_hours) {
+      additionalHTML += `<p><strong>🕒 ساعات العمل:</strong> ${e.working_hours}</p>`;
+    }
+    
+    if (e.type) {
+      additionalHTML += `<p><strong>🏥 النوع:</strong> ${e.type}</p>`;
+    }
+    
+    if (e.specialties) {
+      additionalHTML += `<p><strong>⚕️ التخصصات:</strong> ${e.specialties}</p>`;
+    }
+    
+    additionalInfo.innerHTML = additionalHTML;
+
+    // تحديث عنوان الصفحة
+    document.title = `${e.name} - تفاصيل الطوارئ`;
+
+    // إضافة رسالة تأكيد للمستخدم
+    console.log('تم تحميل بيانات الطوارئ بنجاح:', e.name);
+
+  } catch (err) {
+    console.error('خطأ غير متوقع:', err);
+    document.getElementById("eName").textContent = "حدث خطأ غير متوقع في تحميل البيانات";
+    
+    // عرض زر إعادة المحاولة
+    const card = document.querySelector('.card');
+    card.innerHTML += `
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="loadEmergency()" style="
+          padding: 10px 20px;
+          background: #00796B;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+        ">
+          🔄 إعادة المحاولة
+        </button>
+      </div>
+    `;
+  }
+}
+
+// إضافة وظائف مساعدة للاتصال
+function shareLocation() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.getElementById("eName").textContent,
+      text: `مركز طوارئ: ${document.getElementById("eName").textContent} - ${document.getElementById("ePhone").textContent}`,
+      url: window.location.href
+    })
+    .then(() => console.log('تمت المشاركة بنجاح'))
+    .catch((error) => console.log('خطأ في المشاركة:', error));
+  } else {
+    // نسخ الرابط إلى الحافظة
+    navigator.clipboard.writeText(window.location.href);
+    alert('تم نسخ الرابط إلى الحافظة!');
+  }
+}
+
+// إضافة زر المشاركة الديناميكي
+function addShareButton() {
+  const card = document.querySelector('.card');
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'map-btn';
+  shareBtn.style.background = 'linear-gradient(135deg, #2196F3, #1976D2)';
+  shareBtn.style.marginTop = '10px';
+  shareBtn.innerHTML = '<span>📤</span> مشاركة الموقع';
+  shareBtn.onclick = shareLocation;
+  
+  // إضافة الزر بعد زر الخريطة
+  const mapBtn = document.getElementById('mapBtn');
+  if (mapBtn) {
+    mapBtn.parentNode.insertBefore(shareBtn, mapBtn.nextSibling);
+  } else {
+    card.appendChild(shareBtn);
+  }
+}
+
+// تحميل البيانات عند فتح الصفحة
+loadEmergency();
+
+// إضافة زر المشاركة بعد تحميل البيانات
+setTimeout(addShareButton, 1000);
+
+// تحديث حالة الاتصال عند فتح الصفحة على الهاتف
+if ('connection' in navigator) {
+  navigator.connection.addEventListener('change', updateConnectionStatus);
+}
+
+function updateConnectionStatus() {
+  const connection = navigator.connection;
+  const speed = connection ? connection.downlink + ' Mbps' : 'غير معروف';
+  console.log('سرعة الاتصال:', speed);
+}
+
+</script>
+
+</body>
+</html>

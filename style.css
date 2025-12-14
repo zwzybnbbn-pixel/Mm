@@ -1,0 +1,262 @@
+/* ===========================
+   🌙 الوضع الداكن الاحترافي
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: #0d1117;
+  margin: 0;
+  padding: 0;
+  color: #e6edf3;
+}
+
+/* ===========================
+   🔵 الشريط العلوي
+=========================== */
+.nav {
+  background: #161b22;
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #30363d;
+  box-shadow: 0 4px 12px #0006;
+}
+
+.nav a {
+  color: #e6edf3;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 16px;
+  transition: 0.3s;
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+.nav a:hover {
+  background: #1f6feb;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   📦 الصناديق الرئيسية
+=========================== */
+.section {
+  background: #161b22;
+  padding: 25px;
+  border-radius: 20px;
+  max-width: 900px;
+  margin: 25px auto;
+  border: 1px solid #30363d;
+  box-shadow: 0 5px 18px #0008;
+  animation: fadeIn 0.5s ease;
+}
+
+.section h2 {
+  margin-top: 0;
+  font-size: 22px;
+  color: #1f6feb;
+  font-weight: 700;
+  border-right: 5px solid #1f6feb;
+  padding-right: 10px;
+}
+
+/* ===========================
+   🎁 عناصر داخلية (التنبيهات - الأسباب)
+=========================== */
+.item {
+  background: #0d1117;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  border: 1px solid #30363d;
+  box-shadow: 0 4px 15px #0007;
+  transition: 0.25s;
+}
+
+.item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px #0009;
+}
+
+.item h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #f85149;
+}
+
+.item p {
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ===========================
+   📅 صفحة الجدول الجديد (واضح + جميل)
+=========================== */
+
+.schedule-box {
+  padding: 18px 20px;
+  background: #0b0f14;
+  border-left: 6px solid #1f6feb;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  border: 1px solid #2d333b;
+  box-shadow: 0 3px 12px #0009;
+  transition: 0.25s;
+}
+
+.schedule-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 18px #000c;
+}
+
+/* عنوان اليوم */
+.schedule-day {
+  font-size: 20px;
+  font-weight: 700;
+  color: #58a6ff;
+  margin-bottom: 10px;
+}
+
+/* النصوص داخل الجدول */
+.schedule-info {
+  color: #e6edf3;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+/* تنسيق الوقت */
+.schedule-time {
+  display: inline-block;
+  background: #1f6feb33;
+  padding: 6px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #79c0ff;
+}
+
+/* تنسيق مكان الدوام */
+.schedule-place {
+  display: inline-block;
+  background: #2d333b;
+  padding: 6px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #e6edf3;
+  border: 1px solid #444c56;
+}
+
+/* أسلوب جميل عند الجمع بين الوقت والمكان */
+.schedule-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* الجوال */
+@media (max-width: 600px) {
+  .schedule-time,
+  .schedule-place {
+    font-size: 15px;
+    width: fit-content;
+  }
+}
+
+/* ===========================
+   📝 صفحة البلاغات
+=========================== */
+.report {
+  background: #161b22;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #30363d;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px #0007;
+}
+
+.status-pending {
+  background: #d29922;
+  color: #000;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.status-done {
+  background: #238636;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* ===========================
+   📝 فورم الإرسال
+=========================== */
+.input-group label {
+  color: #e6edf3;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #30363d;
+  background: #0d1117;
+  color: #e6edf3;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #1f6feb;
+  background: #161b22;
+  box-shadow: 0 0 6px #1f6febaa;
+}
+
+/* زر الإرسال */
+.btn-submit {
+  width: 100%;
+  background: #1f6feb;
+  color: white;
+  padding: 14px;
+  font-size: 17px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: #388bfd;
+  transform: scale(1.03);
+}
+
+/* ===========================
+   📱 تصميم متجاوب
+=========================== */
+@media (max-width: 600px) {
+  .nav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .section {
+    margin: 15px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

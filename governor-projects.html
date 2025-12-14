@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أعمال المحافظ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cairo', sans-serif;
+}
+
+body {
+    background: #0a0f2d;
+    overflow-x:hidden;
+}
+
+/* خطوط الشبكة الخلفية فقط */
+body::before {
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:
+        linear-gradient(transparent 0%, rgba(0,255,255,0.05) 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 40px);
+    animation: gridMove 20s linear infinite;
+    z-index:-1;
+}
+
+@keyframes gridMove {
+    from { transform: translateY(0); }
+    to { transform: translateY(-200px); }
+}
+
+/* ===== صورة المحافظ ===== */
+.governor-photo {
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:#152044;
+    border:4px solid cyan;
+    margin:25px auto 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#8defff;
+    font-size:15px;
+}
+
+header {
+    padding:10px;
+    text-align:center;
+    color:white;
+    font-size:28px;
+    font-weight:900;
+    letter-spacing:3px;
+    text-shadow:0 0 15px cyan;
+}
+
+.projects {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:25px;
+    padding:20px;
+}
+
+/* ===== الكرت كزر كامل ===== */
+.project-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    padding:20px;
+    border-radius:20px;
+    color:white;
+    border:1px solid rgba(0,255,255,0.2);
+    box-shadow:0 0 20px rgba(0,255,255,0.15);
+    transition:0.4s;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+.project-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    border-color:cyan;
+    box-shadow:0 0 30px cyan;
+}
+
+.project-card::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120%;
+    width:200%;
+    height:100%;
+    background:linear-gradient(90deg, transparent, rgba(0,255,255,0.3), transparent);
+    transform:skewX(-20deg);
+    transition:0.4s;
+}
+.project-card:hover::before {
+    left:120%;
+}
+
+.project-title {
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- صورة المحافظ -->
+<div class="governor-photo">
+    صورة المحافظ
+</div>
+
+<header>
+    📌 أعمال المحافظ – محافظة شبوة
+</header>
+
+<div class="projects" id="projectsList">
+    <!-- جلب البيانات -->
+</div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+async function loadProjects() {
+    const container = document.getElementById("projectsList");
+    container.innerHTML = `<p style="color:white;text-align:center;">جاري التحميل...</p>`;
+
+    try {
+        const q = await getDocs(collection(db, "governor_projects"));
+
+        container.innerHTML = "";
+
+        q.forEach(doc => {
+            const d = doc.data();
+
+            const title = d.title || "بدون عنوان";
+            const date = d.date || "—";
+
+            container.innerHTML += `
+                <div class="project-card" onclick="location.href='project-details.html?id=${doc.id}'">
+                    <div class="project-title">${title}</div>
+                    <div> ${date}</div>
+                </div>
+            `;
+        });
+
+    } catch (e) {
+        container.innerHTML = `<p style="color:red;text-align:center;">خطأ في تحميل البيانات</p>`;
+    }
+}
+
+loadProjects();
+</script>
+
+</body>
+</html>

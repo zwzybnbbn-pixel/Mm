@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>قائمة المستشفيات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  * { 
+    margin:0; padding:0; box-sizing:border-box;
+    font-family:'Cairo', sans-serif;
+  }
+
+  body {
+    background:#eef3f3;
+    display:flex;
+    justify-content:center;
+    padding:0;
+  }
+
+  .container {
+    width:100%;
+    max-width:380px;
+    padding:12px;
+  }
+
+  .back-btn{
+    display:inline-block;
+    background:#444;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:15px;
+    margin-bottom:12px;
+  }
+
+  h1 {
+    text-align:center;
+    color:#00695C;
+    margin-bottom:15px;
+    font-size:22px;
+    font-weight:800;
+  }
+
+  .card {
+    background:white;
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.10);
+    transition:0.2s;
+  }
+
+  .card:hover { transform:translateY(-3px); }
+
+  .hospital-name {
+    font-size:19px;
+    font-weight:800;
+    color:#00695C;
+    margin-bottom:8px;
+  }
+
+  .info {
+    color:#333;
+    font-size:15px;
+    margin-bottom:4px;
+  }
+
+  .info b {
+    color:#004D40;
+  }
+
+  .btn {
+    display:block;
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#00796B;
+    color:white;
+    text-align:center;
+    font-size:15px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+  }
+
+ .hospital-imgcircle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 10px auto;
+    border: 3px solid #009688;
+ }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a href="index.html" class="back-btn">⬅ الرئيسية</a>
+
+  <h1>🏥 قائمة المستشفيات</h1>
+
+  <div id="hospitals">جار التحميل...</div>
+
+</div>
+
+<script type="module">
+
+  import { supabase } from "./supabase.js";
+
+  async function loadHospitals() {
+
+    const { data, error } = await supabase
+      .from("hospitals") 
+      .select("*");
+
+    const box = document.getElementById("hospitals");
+    box.innerHTML = "";
+
+    if (error) {
+      box.innerHTML = `<p style='color:red;text-align:center;'>خطأ في الاتصال بقاعدة البيانات</p>`;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      box.innerHTML = "<p style='text-align:center;color:#777;'>لا توجد مستشفيات</p>";
+      return;
+    }
+
+    data.forEach(h => {
+
+      box.innerHTML += `
+        <div class="card">
+
+          <img src="${h.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}" 
+               class="hospital-imgcircle">
+
+          <div class="hospital-name">${h.name}</div>
+
+          <p class="info"><b>المدينة:</b> ${h.city}</p>
+          <p class="info"><b>الهاتف:</b> ${h.phone}</p>
+          <p class="info"><b>الأقسام:</b> ${h.department}</p>
+          <p class="info"><b>الوصف:</b> ${h.description}</p>
+
+          
+
+          <a class="btn" href="hospital.html?id=${h.id}">
+            عرض التفاصيل
+          </a>
+
+        </div>
+      `;
+    });
+  }
+
+  loadHospitals();
+
+</script>
+
+</body>
+</html>

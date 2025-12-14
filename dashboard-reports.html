@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 لوحة التحكم — إدارة البلاغات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+  min-height: 100vh;
+  color: white;
+  padding: 15px;
+}
+
+/* ===== العنوان ===== */
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #ffd166);
+  border-radius: 3px;
+}
+
+/* ===== الإحصائيات ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stat-card i {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.stat-card.total i { color: #4db8ff; }
+.stat-card.pending i { color: #ffd166; }
+.stat-card.progress i { color: #06d6a0; }
+.stat-card.resolved i { color: #ef476f; }
+
+.stat-card .number {
+  font-size: 28px;
+  font-weight: 800;
+  display: block;
+  margin: 5px 0;
+}
+
+.stat-card .label {
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* ===== الكروت ===== */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.report-id {
+  background: rgba(77, 184, 255, 0.2);
+  color: #4db8ff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.report-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-item strong {
+  color: #4db8ff;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.info-item span {
+  font-size: 16px;
+  color: #fff;
+}
+
+.info-item i {
+  margin-left: 5px;
+  color: #ff6b6b;
+}
+
+/* ===== الإدخال ===== */
+.input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 16px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+select.input {
+  width: auto;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+/* ===== الأزرار ===== */
+.btn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn i {
+  font-size: 18px;
+}
+
+.btn.save {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+  flex: 1;
+}
+
+.btn.save:hover {
+  background: linear-gradient(135deg, #42c85a, #28a745);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
+}
+
+.btn.delete {
+  background: linear-gradient(135deg, #dc3545, #bd2130);
+  color: white;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.btn.delete:hover {
+  background: linear-gradient(135deg, #ff5566, #dc3545);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(220, 53, 69, 0.4);
+}
+
+.btn.filter {
+  background: rgba(77, 184, 255, 0.2);
+  color: #4db8ff;
+  border: 1px solid rgba(77, 184, 255, 0.3);
+  padding: 8px 15px;
+  font-size: 14px;
+  margin: 5px;
+}
+
+.btn.filter.active {
+  background: rgba(77, 184, 255, 0.4);
+  color: white;
+}
+
+.btn.filter:hover {
+  background: rgba(77, 184, 255, 0.3);
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* ===== الفلاتر ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+/* ===== التحميل ===== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #aaa;
+  font-size: 18px;
+}
+
+.loading i {
+  font-size: 24px;
+  margin-bottom: 15px;
+  display: block;
+  color: #4db8ff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== حالة فارغة ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 16px;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #444;
+  display: block;
+}
+
+/* ===== رسائل التنبيه ===== */
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-left: 5px solid;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+  max-width: 350px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.alert.success {
+  border-left-color: #28a745;
+  background: rgba(40, 167, 69, 0.15);
+}
+
+.alert.error {
+  border-left-color: #dc3545;
+  background: rgba(220, 53, 69, 0.15);
+}
+
+/* ===== تسجيل الخروج ===== */
+.logout-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.3);
+  color: #ff8a8a;
+  transform: translateY(-2px);
+}
+
+/* ===== علامات الحالة ===== */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.status-pending {
+  background: rgba(255, 209, 102, 0.2);
+  color: #ffd166;
+}
+
+.status-progress {
+  background: rgba(6, 214, 160, 0.2);
+  color: #06d6a0;
+}
+
+.status-resolved {
+  background: rgba(239, 71, 111, 0.2);
+  color: #ef476f;
+}
+
+/* ===== استجابة للهواتف ===== */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn.delete, .btn.save {
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  .report-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters {
+    justify-content: flex-start;
+  }
+  
+  .logout-btn {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- زر تسجيل الخروج -->
+<button class="logout-btn" id="logoutBtn">
+  <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+</button>
+
+<!-- عنوان الصفحة -->
+<h2>📋 لوحة التحكم — إدارة البلاغات</h2>
+
+<!-- إحصائيات -->
+<div class="stats" id="statsContainer">
+  <div class="stat-card total">
+    <i class="fas fa-file-alt"></i>
+    <span class="number" id="totalCount">0</span>
+    <span class="label">إجمالي البلاغات</span>
+  </div>
+  <div class="stat-card pending">
+    <i class="fas fa-clock"></i>
+    <span class="number" id="pendingCount">0</span>
+    <span class="label">قيد المراجعة</span>
+  </div>
+  <div class="stat-card progress">
+    <i class="fas fa-tools"></i>
+    <span class="number" id="progressCount">0</span>
+    <span class="label">جارِ الحل</span>
+  </div>
+  <div class="stat-card resolved">
+    <i class="fas fa-check-circle"></i>
+    <span class="number" id="resolvedCount">0</span>
+    <span class="label">تم الحل</span>
+  </div>
+</div>
+
+<!-- فلاتر -->
+<div class="filters" id="filtersContainer">
+  <button class="btn filter active" data-filter="all">
+    <i class="fas fa-list"></i> الكل
+  </button>
+  <button class="btn filter" data-filter="قيد المراجعة">
+    <i class="fas fa-clock"></i> قيد المراجعة
+  </button>
+  <button class="btn filter" data-filter="جارِ الحل">
+    <i class="fas fa-tools"></i> جارِ الحل
+  </button>
+  <button class="btn filter" data-filter="تم الحل">
+    <i class="fas fa-check-circle"></i> تم الحل
+  </button>
+</div>
+
+<!-- عرض البلاغات -->
+<div id="list" class="loading">
+  <i class="fas fa-spinner"></i> جاري تحميل البلاغات...
+</div>
+
+<!-- حاوية رسائل التنبيه -->
+<div id="alertContainer"></div>
+
+<script type="module">
+// استيراد Supabase
+import { supabase } from './supabase.js';
+
+// عناصر DOM
+const list = document.getElementById('list');
+const logoutBtn = document.getElementById('logoutBtn');
+const alertContainer = document.getElementById('alertContainer');
+const filtersContainer = document.getElementById('filtersContainer');
+const statsContainer = {
+  total: document.getElementById('totalCount'),
+  pending: document.getElementById('pendingCount'),
+  progress: document.getElementById('progressCount'),
+  resolved: document.getElementById('resolvedCount')
+};
+
+// متغيرات
+let currentFilter = 'all';
+let allReports = [];
+
+// دالة لعرض رسائل التنبيه
+function showAlert(message, type = 'success') {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert ${type}`;
+  alertDiv.innerHTML = `
+    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+    ${message}
+  `;
+  alertContainer.appendChild(alertDiv);
+  
+  setTimeout(() => {
+    alertDiv.remove();
+  }, 3000);
+}
+
+// =========================
+// 🔐 التحقق من تسجيل الدخول
+// =========================
+async function checkAuth() {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session) {
+      showAlert('❌ يجب تسجيل الدخول أولاً', 'error');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+      return false;
+    }
+    
+    console.log('✅ المستخدم المسجل:', session.user.email);
+    return true;
+  } catch (error) {
+    console.error('خطأ في التحقق:', error);
+    showAlert('❌ خطأ في المصادقة', 'error');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+    return false;
+  }
+}
+
+// =========================
+// 🚪 تسجيل الخروج
+// =========================
+logoutBtn.addEventListener('click', async () => {
+  if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      showAlert('✅ تم تسجيل الخروج بنجاح', 'success');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1000);
+    } catch (error) {
+      console.error('خطأ في تسجيل الخروج:', error);
+      showAlert('❌ حدث خطأ أثناء تسجيل الخروج', 'error');
+    }
+  }
+});
+
+// =========================
+// 📊 تحديث الإحصائيات
+// =========================
+function updateStatistics(reports) {
+  const total = reports.length;
+  const pending = reports.filter(r => r.status === 'قيد المراجعة').length;
+  const progress = reports.filter(r => r.status === 'جارِ الحل').length;
+  const resolved = reports.filter(r => r.status === 'تم الحل').length;
+  
+  statsContainer.total.textContent = total;
+  statsContainer.pending.textContent = pending;
+  statsContainer.progress.textContent = progress;
+  statsContainer.resolved.textContent = resolved;
+}
+
+// =========================
+// 🎛️ تطبيق الفلاتر
+// =========================
+function filterReports() {
+  let filtered = [...allReports];
+  
+  if (currentFilter !== 'all') {
+    filtered = filtered.filter(report => report.status === currentFilter);
+  }
+  
+  displayReports(filtered);
+  updateStatistics(filtered);
+}
+
+// =========================
+// 📝 عرض البلاغات
+// =========================
+function displayReports(reports) {
+  if (!reports || reports.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="far fa-folder-open"></i>
+        <p>لا توجد بلاغات ${currentFilter !== 'all' ? `بالحالة: ${currentFilter}` : ''}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  reports.forEach(report => {
+    const date = report.created_at 
+      ? new Date(report.created_at).toLocaleString('ar-EG', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      : '—';
+    
+    // تحديد فئة الحالة
+    let statusClass = 'status-pending';
+    if (report.status === 'جارِ الحل') statusClass = 'status-progress';
+    if (report.status === 'تم الحل') statusClass = 'status-resolved';
+    
+    html += `
+      <div class="card" id="report-${report.id}">
+        <div class="card-header">
+          <h3>
+            <i class="fas fa-${report.type === 'كهرباء' ? 'bolt' : 'tools'}"></i>
+            ${report.type || 'بلاغ'} - ${report.name || 'مجهول'}
+          </h3>
+          <span class="report-id">#${report.id.substring(0, 8)}</span>
+        </div>
+        
+        <div class="report-info">
+          <div class="info-item">
+            <strong><i class="fas fa-user"></i> الاسم:</strong>
+            <span>${report.name || 'غير مذكور'}</span>
+          </div>
+          
+          <div class="info-item">
+            <strong><i class="fas fa-phone"></i> الهاتف:</strong>
+            <span>${report.phone || 'غير مذكور'}</span>
+          </div>
+          
+          <div class="info-item">
+            <strong><i class="fas fa-map-marker-alt"></i> الموقع:</strong>
+            <span>${report.location || 'غير محدد'}</span>
+          </div>
+          
+          <div class="info-item">
+            <strong><i class="fas fa-calendar"></i> التاريخ:</strong>
+            <span>${date}</span>
+          </div>
+        </div>
+        
+        <div class="info-item" style="grid-column: 1 / -1;">
+          <strong><i class="fas fa-info-circle"></i> التفاصيل:</strong>
+          <span>${report.details || 'لا توجد تفاصيل'}</span>
+        </div>
+        
+        <hr style="opacity:0.2; margin:20px 0;">
+        
+        <div style="margin-bottom: 15px;">
+          <strong>حالة البلاغ:</strong>
+          <span class="status-badge ${statusClass}">
+            <i class="fas fa-${report.status === 'جارِ الحل' ? 'tools' : report.status === 'تم الحل' ? 'check-circle' : 'clock'}"></i>
+            ${report.status || 'قيد المراجعة'}
+          </span>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <label><strong><i class="fas fa-reply"></i> رد الإدارة:</strong></label>
+          <textarea 
+            id="reply-${report.id}" 
+            class="input" 
+            rows="3" 
+            placeholder="أدخل رد الإدارة هنا..."
+          >${report.reply || ''}</textarea>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <label><strong><i class="fas fa-cogs"></i> تغيير الحالة:</strong></label>
+          <select id="status-${report.id}" class="input">
+            <option value="قيد المراجعة" ${report.status === 'قيد المراجعة' ? 'selected' : ''}>قيد المراجعة</option>
+            <option value="جارِ الحل" ${report.status === 'جارِ الحل' ? 'selected' : ''}>جارِ الحل</option>
+            <option value="تم الحل" ${report.status === 'تم الحل' ? 'selected' : ''}>تم الحل</option>
+          </select>
+        </div>
+        
+        <div class="btn-group">
+          <button class="btn delete" onclick="deleteReport('${report.id}')">
+            <i class="fas fa-trash"></i> حذف البلاغ
+          </button>
+          <button class="btn save" onclick="saveUpdate('${report.id}')">
+            <i class="fas fa-save"></i> حفظ التعديلات
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+}
+
+// =========================
+// 📌 جلب البلاغات من Supabase
+// =========================
+async function loadReports() {
+  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل البلاغات...</div>';
+  
+  try {
+    const { data: reports, error } = await supabase
+      .from('reports')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    allReports = reports || [];
+    
+    // تحديث الإحصائيات الكلية
+    updateStatistics(allReports);
+    
+    // تطبيق الفلتر الحالي
+    filterReports();
+    
+  } catch (error) {
+    console.error('خطأ في تحميل البلاغات:', error);
+    list.innerHTML = '<div class="alert error">❌ حدث خطأ في تحميل البلاغات</div>';
+    showAlert('❌ فشل في تحميل البلاغات', 'error');
+  }
+}
+
+// =========================
+// 💾 حفظ التعديلات (مصحح)
+// =========================
+window.saveUpdate = async (id) => {
+  try {
+    // 🔴 الخطأ: استخدم id بدلاً من report.id
+    const reply = document.getElementById(`reply-${id}`).value.trim();
+    const status = document.getElementById(`status-${id}`).value; // ✅ صححت هنا
+    
+    const updates = {
+      reply: reply || null,
+      status: status || 'قيد المراجعة',
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('🔄 محاولة تحديث البلاغ:', { id, updates });
+    
+    const { data, error } = await supabase
+      .from('reports')
+      .update(updates)
+      .eq('id', id)
+      .select(); // أضف .select() للحصول على البيانات المحدثة
+    
+    if (error) {
+      console.error('❌ خطأ في تحديث البلاغ:', error);
+      
+      // عرض رسالة خطأ مفصلة
+      if (error.code === '42501') {
+        showAlert('❌ ليس لديك صلاحية لتحديث البلاغات. تأكد من تسجيل الدخول كمسؤول', 'error');
+      } else if (error.code === '23505') {
+        showAlert('❌ يوجد تعارض في البيانات', 'error');
+      } else {
+        showAlert(`❌ حدث خطأ: ${error.message}`, 'error');
+      }
+      
+      throw error;
+    }
+    
+    console.log('✅ تم تحديث البلاغ:', data);
+    showAlert('✅ تم تحديث البلاغ بنجاح', 'success');
+    
+    // تحديث البيانات المحلية
+    const reportIndex = allReports.findIndex(r => r.id === id);
+    if (reportIndex !== -1) {
+      allReports[reportIndex] = { 
+        ...allReports[reportIndex], 
+        ...updates,
+        updated_at: new Date().toISOString()
+      };
+    }
+    
+    // تحديث الواجهة مباشرة (بدون إعادة تحميل كامل)
+    const reportElement = document.getElementById(`report-${id}`);
+    if (reportElement) {
+      // تحديث شارة الحالة
+      const statusBadge = reportElement.querySelector('.status-badge');
+      if (statusBadge) {
+        statusBadge.innerHTML = `
+          <i class="fas fa-${status === 'جارِ الحل' ? 'tools' : status === 'تم الحل' ? 'check-circle' : 'clock'}"></i>
+          ${status}
+        `;
+        
+        // تحديث لون الشارة
+        statusBadge.className = 'status-badge ';
+        if (status === 'قيد المراجعة') {
+          statusBadge.classList.add('status-pending');
+        } else if (status === 'جارِ الحل') {
+          statusBadge.classList.add('status-progress');
+        } else if (status === 'تم الحل') {
+          statusBadge.classList.add('status-resolved');
+        }
+      }
+      
+      // إذا كان هناك رد، تحديث أو أضف صندوق الرد
+      if (reply) {
+        let replyBox = reportElement.querySelector('.reply-box');
+        if (!replyBox) {
+          // إنشاء صندوق رد جديد
+          const lastInfoItem = reportElement.querySelector('.info-item[style*="grid-column"]');
+          if (lastInfoItem) {
+            replyBox = document.createElement('div');
+            replyBox.className = 'reply-box';
+            replyBox.innerHTML = `
+              <strong><i class="fas fa-reply"></i> رد الإدارة:</strong>
+              <p>${reply}</p>
+            `;
+            lastInfoItem.after(replyBox);
+          }
+        } else {
+          // تحديث الرد الموجود
+          const replyText = replyBox.querySelector('p');
+          if (replyText) {
+            replyText.textContent = reply;
+          }
+        }
+      }
+    }
+    
+  } catch (error) {
+    console.error('❌ خطأ كامل في التحديث:', error);
+    // لا حاجة لعرض رسالة هنا لأنها عرضت سابقاً
+  }
+};
+
+// =========================
+// 🗑 حذف البلاغ
+// =========================
+window.deleteReport = async (id) => {
+  if (!confirm('⚠️ هل أنت متأكد من حذف هذا البلاغ؟')) {
+    return;
+  }
+  
+  try {
+    const { error } = await supabase
+      .from('reports')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    
+    showAlert('🗑️ تم حذف البلاغ بنجاح');
+    
+    // إزالة من البيانات المحلية
+    allReports = allReports.filter(r => r.id !== id);
+    
+    // إزالة العنصر من الواجهة مع تأثير
+    const element = document.getElementById(`report-${id}`);
+    if (element) {
+      element.style.opacity = '0.5';
+      element.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        element.remove();
+        
+        // تحديث الإحصائيات والعرض
+        updateStatistics(allReports);
+        filterReports();
+      }, 300);
+    }
+    
+  } catch (error) {
+    console.error('خطأ في حذف البلاغ:', error);
+    showAlert('❌ حدث خطأ أثناء الحذف', 'error');
+  }
+};
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  const isAuthenticated = await checkAuth();
+  
+  if (isAuthenticated) {
+    // تحميل البلاغات
+    await loadReports();
+    
+    // إعداد الفلاتر
+    const filterButtons = filtersContainer.querySelectorAll('.btn.filter');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // إزالة النشط من جميع الأزرار
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // تفعيل الزر المختار
+        button.classList.add('active');
+        
+        // تحديث الفلتر
+        currentFilter = button.dataset.filter;
+        
+        // تطبيق الفلتر
+        filterReports();
+      });
+    });
+    
+    // الاشتراك في التحديثات المباشرة
+    const channel = supabase
+      .channel('realtime-reports')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reports'
+        },
+        () => {
+          loadReports();
+        }
+      )
+      .subscribe();
+    
+    // تحديث تلقائي كل 30 ثانية
+    setInterval(() => {
+      loadReports();
+    }, 30000);
+  }
+}
+
+// بدء التطبيق
+init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل العيادة</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';}
+body{background:#eef3f3;padding:12px;}
+
+.back-btn{display:inline-block;background:#444;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;margin-bottom:15px;font-size:16px;}
+
+.card{width:100%;background:white;padding:18px;border-radius:15px;box-shadow:0 3px 12px #00000022;margin-bottom:15px;}
+
+h2{font-size:22px;color:#00695C;text-align:center;margin-bottom:15px;font-weight:800;}
+
+.info{background:#f9ffff;padding:12px;border-left:5px solid #00796B;border-radius:12px;margin-bottom:12px;}
+.label{font-size:15px;font-weight:700;color:#00695C;}
+.value{font-size:16px;color:#333;margin-top:4px;}
+
+.hospital-imgcircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 10px auto;
+  border: 3px solid #009688;
+}
+
+.map-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  background: #00796B;
+  color: white;
+  font-size: 17px;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.map-btn:hover {
+  background: #009688;
+}
+</style>
+</head>
+
+<body>
+
+<a href="clinics.html" class="back-btn">⬅ العودة</a>
+
+<img id="clinicImg" class="hospital-imgcircle" alt="clinic">
+
+<div class="card">
+  <h2 id="cName">جاري التحميل...</h2>
+
+  <div class="info">
+    <div class="label">📍 المدينة:</div>
+    <div class="value" id="cCity"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📞 الهاتف:</div>
+    <div class="value" id="cPhone"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">🧩 الأقسام:</div>
+    <div class="value" id="cDepartment"></div>
+  </div>
+
+  <div class="info">
+    <div class="label">📝 الوصف:</div>
+    <div class="value" id="cDescription"></div>
+  </div>
+  <div class="card">
+  <h2 style="color:#00695C; margin-bottom:12px; text-align:center;">
+    الأطباء في هذه العيادة
+  </h2>
+  <div id="hospitalDoctors" style="display:grid; gap:15px;"></div>
+</div>
+
+  <a id="mapBtn" class="map-btn" href="#" target="_blank">📍 عرض الموقع على الخريطة</a>
+
+</div>
+
+<!-- استيراد Supabase SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script type="module">
+// 🔧 استبدل هذه القيم بمعلومات مشروعك الخاصة
+const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+// إنشاء عميل Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// الحصول على معرف العيادة من URL
+const urlParams = new URLSearchParams(window.location.search);
+const clinicId = urlParams.get("id");
+
+// تحميل بيانات العيادة
+async function loadClinic(){
+  if (!clinicId) {
+    document.getElementById("cName").textContent = "خطأ: لا يوجد معرف للعيادة";
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('clinics')
+      .select('*')
+      .eq('id', clinicId)
+      .single();
+
+    if (error) {
+      console.error('خطأ في جلب بيانات العيادة:', error);
+      document.getElementById("cName").textContent = "خطأ في تحميل البيانات";
+      return;
+    }
+
+    if (!data) {
+      document.getElementById("cName").textContent = "العيادة غير موجودة";
+      return;
+    }
+
+    const c = data;
+
+    document.getElementById("cName").textContent = c.name || "بدون اسم";
+    document.getElementById("cCity").textContent = c.city || "غير محدد";
+    document.getElementById("cPhone").textContent = c.phone || "غير محدد";
+    document.getElementById("cDepartment").textContent = c.department || "غير محدد";
+    document.getElementById("cDescription").textContent = c.description || "لا يوجد وصف";
+    document.getElementById("clinicImg").src = c.img || "https://i.postimg.cc/TPZpYH5f/noimage.png";
+    
+    if (c.map && c.map !== '#') {
+      document.getElementById("mapBtn").href = c.map;
+      document.getElementById("mapBtn").style.display = "block";
+    } else {
+      document.getElementById("mapBtn").style.display = "none";
+    }
+
+    // تحميل الأطباء بعد تحميل بيانات العيادة
+    loadHospitalDoctors(c.name);
+    
+  } catch (err) {
+    console.error('خطأ غير متوقع:', err);
+    document.getElementById("cName").textContent = "حدث خطأ غير متوقع";
+  }
+}
+
+/* تحميل الأطباء */
+async function loadHospitalDoctors(clinicName) {
+  const box = document.getElementById("hospitalDoctors");
+  if (!clinicName || clinicName === "بدون اسم") {
+    box.innerHTML = `<p style="text-align:center;color:#555">لا يمكن تحميل الأطباء بدون اسم العيادة</p>`;
+    return;
+  }
+
+  box.innerHTML = "<p>جارِ التحميل...</p>";
+
+  try {
+    const { data: doctors, error } = await supabase
+      .from('doctors')
+      .select('*')
+      .eq('hospital', clinicName.trim());
+
+    if (error) {
+      console.error('خطأ في جلب الأطباء:', error);
+      box.innerHTML = `<p style="text-align:center;color:#f44336">خطأ في تحميل الأطباء</p>`;
+      return;
+    }
+
+    box.innerHTML = "";
+
+    if (!doctors || doctors.length === 0) {
+      box.innerHTML = `<p style="text-align:center;color:#555">لا يوجد أطباء مرتبطين بهذه العيادة.</p>`;
+      return;
+    }
+
+    doctors.forEach(doctor => {
+      box.innerHTML += `
+        <div style="
+          background:#fff;
+          padding:15px;
+          border-radius:12px;
+          box-shadow:0 2px 8px #0002;
+          display:flex;
+          gap:12px;
+          align-items:center;
+        ">
+        
+          <img src="${doctor.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}"
+               style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid #009688"
+               onerror="this.src='https://i.postimg.cc/TPZpYH5f/noimage.png'"
+               alt="${doctor.name || 'طبيب'}">
+
+          <div style="flex:1;">
+            <div style="font-weight:700;color:#004D40;font-size:18px;">
+              ${doctor.name || "طبيب"}
+            </div>
+            <div>التخصص: ${doctor.specialty || ""}</div>
+            <div>الأيام: ${doctor.days || ""}</div>
+            <div>الوقت: ${doctor.times || ""}</div>
+          </div>
+
+          <a href="doctor.html?id=${doctor.id}"
+             style="
+               padding:8px 14px;
+               background:#00796B;
+               color:white;
+               border-radius:8px;
+               text-decoration:none;
+             ">
+            عرض
+          </a>
+
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error('خطأ غير متوقع في تحميل الأطباء:', err);
+    box.innerHTML = `<p style="text-align:center;color:#f44336">حدث خطأ غير متوقع</p>`;
+  }
+}
+
+// تشغيل الوظائف عند تحميل الصفحة
+loadClinic();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏥 قائمة الأطباء</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #00796b;
+  --primary-dark: #004d40;
+  --secondary: #009688;
+  --light-bg: #f1f1f1;
+  --card-bg: #ffffff;
+  --text-dark: #333;
+  --text-light: #666;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--text-dark);
+}
+
+/* ===== العنوان الرئيسي ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+  position: relative;
+  display: inline-block;
+}
+
+.page-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 3px;
+}
+
+.page-header p {
+  font-size: 18px;
+  color: var(--text-light);
+  margin-top: 10px;
+}
+
+/* ===== شريط التنقل المبسط ===== */
+.nav-bar {
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 77, 64, 0.1);
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(0, 121, 107, 0.1);
+}
+
+.nav-bar a {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 10px 25px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.nav-bar a:hover {
+  background: rgba(0, 121, 107, 0.1);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.nav-bar a.active {
+  background: rgba(0, 121, 107, 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(0, 121, 107, 0.2);
+}
+
+/* ===== شريط البحث الأساسي ===== */
+.search-section {
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  position: relative;
+}
+
+.search-box {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 77, 64, 0.1);
+  border: 1px solid rgba(0, 121, 107, 0.1);
+}
+
+.search-box input {
+  flex: 1;
+  padding: 16px 20px 16px 50px;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 121, 107, 0.2);
+  background: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+}
+
+.search-box .search-icon {
+  position: absolute;
+  right: 30px;
+  color: var(--primary);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.search-stats {
+  text-align: center;
+  margin-top: 10px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* ===== شبكة الأطباء ===== */
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+.doctor-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 77, 64, 0.1);
+  padding: 25px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 121, 107, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.doctor-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 77, 64, 0.2);
+  border-color: rgba(0, 121, 107, 0.3);
+}
+
+.doctor-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+}
+
+.doctor-img-container {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px auto;
+  position: relative;
+}
+
+.doctor-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.2);
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover .doctor-img {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 77, 64, 0.3);
+}
+
+.no-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 50px;
+  border: 4px solid white;
+  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.2);
+}
+
+.doctor-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 121, 107, 0.1);
+}
+
+.doctor-header h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.doctor-title {
+  display: inline-block;
+  padding: 6px 18px;
+  background: rgba(0, 121, 107, 0.1);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.doctor-info {
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(0, 121, 107, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 121, 107, 0.05);
+}
+
+.info-row i {
+  font-size: 18px;
+  color: var(--primary);
+  width: 24px;
+  text-align: center;
+}
+
+.info-row div {
+  flex: 1;
+}
+
+.info-row strong {
+  display: block;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.info-row span {
+  font-size: 16px;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* ===== زر التفاصيل ===== */
+.view-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.view-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+.view-btn:hover::before {
+  left: 100%;
+}
+
+.view-btn:hover {
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0, 121, 107, 0.3);
+}
+
+.view-btn i {
+  font-size: 18px;
+}
+
+/* ===== حالة التحميل ===== */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  grid-column: 1 / -1;
+}
+
+.loading i {
+  font-size: 40px;
+  margin-bottom: 20px;
+  display: block;
+  color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  font-size: 20px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+/* ===== حالة فارغة ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  grid-column: 1 / -1;
+}
+
+.empty-state i {
+  font-size: 60px;
+  margin-bottom: 20px;
+  color: #ccc;
+  display: block;
+}
+
+.empty-state h3 {
+  font-size: 22px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+/* ===== نصائح البحث ===== */
+.search-tips {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(0, 121, 107, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 121, 107, 0.1);
+}
+
+.search-tips h4 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.search-tips ul {
+  list-style: none;
+  padding-right: 20px;
+}
+
+.search-tips li {
+  color: var(--text-light);
+  margin-bottom: 5px;
+  font-size: 14px;
+  position: relative;
+}
+
+.search-tips li::before {
+  content: "•";
+  color: var(--primary);
+  position: absolute;
+  right: -15px;
+}
+
+/* ===== استجابة للجوال ===== */
+@media (max-width: 768px) {
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .page-header h1 {
+    font-size: 28px;
+  }
+  
+  .search-box {
+    flex-direction: column;
+  }
+  
+  .search-box input {
+    width: 100%;
+  }
+  
+  .doctor-img-container {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+  
+  .doctor-card {
+    padding: 20px;
+  }
+  
+  .doctor-img-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- العنوان الرئيسي -->
+<div class="page-header">
+  <h1>🏥 قائمة الأطباء</h1>
+  <p>ابحث عن الطبيب المناسب لاحتياجاتك الصحية</p>
+</div>
+
+<!-- شريط التنقل المبسط -->
+<nav class="nav-bar">
+  <a href="index.html" class="active">
+    <i class="fas fa-home"></i> الرئيسية
+  </a>
+</nav>
+
+<!-- شريط البحث الأساسي -->
+<div class="search-section">
+  <div class="search-box">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" id="searchInput" placeholder="اكتب اسم الطبيب للبحث...">
+  </div>
+  <div class="search-stats" id="searchStats">
+    اكتب اسم الطبيب في الحقل أعلاه للبحث
+  </div>
+</div>
+
+<!-- قائمة الأطباء -->
+<div class="doctors-grid" id="doctorsList">
+  <div class="loading">
+    <i class="fas fa-spinner"></i>
+    <p>جاري تحميل قائمة الأطباء...</p>
+  </div>
+</div>
+
+<!-- نصائح البحث -->
+<div class="search-tips">
+  <h4><i class="fas fa-lightbulb"></i> نصائح للبحث:</h4>
+  <ul>
+    <li>ابحث باسم الطبيب (مثال: د. أحمد، محمد علي)</li>
+    <li>يمكنك البحث بجزء من الاسم (مثال: "محمد" لرؤية جميع الأطباء الذين يحتوي اسمهم على "محمد")</li>
+    <li>لمشاهدة جميع الأطباء، اترك حقل البحث فارغاً</li>
+  </ul>
+</div>
+
+<script type="module">
+// استيراد Supabase
+import { supabase } from './supabase.js';
+
+// عناصر DOM
+const doctorsList = document.getElementById('doctorsList');
+const searchInput = document.getElementById('searchInput');
+const searchStats = document.getElementById('searchStats');
+
+// متغيرات
+let allDoctors = [];
+
+// دالة لتحديث إحصائيات البحث فقط
+function updateSearchStats(filteredDoctors) {
+  const total = allDoctors.length;
+  const showing = filteredDoctors.length;
+  
+  // تحديث إحصائيات البحث
+  if (showing === total) {
+    searchStats.innerHTML = `<i class="fas fa-info-circle"></i> عرض جميع الأطباء (${total} طبيب)`;
+  } else if (showing === 0) {
+    searchStats.innerHTML = `<i class="fas fa-exclamation-triangle"></i> لم يتم العثور على أي طبيب بهذا الاسم`;
+  } else {
+    searchStats.innerHTML = `<i class="fas fa-check-circle"></i> تم العثور على ${showing} طبيب${showing > 1 ? 'اء' : ''}`;
+  }
+}
+
+// دالة للبحث بالأسماء فقط
+function searchDoctors() {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  let filtered = [...allDoctors];
+  
+  // تطبيق البحث إذا كان هناك نص بحث
+  if (searchTerm) {
+    filtered = filtered.filter(doctor => {
+      const doctorName = doctor.name ? doctor.name.toLowerCase() : '';
+      return doctorName.includes(searchTerm);
+    });
+  }
+  
+  displayDoctors(filtered);
+  updateSearchStats(filtered);
+}
+
+// دالة للحصول على صورة الطبيب
+function getDoctorImageUrl(image_url) {
+  // إذا لم يكن هناك رابط صورة، نرجع null
+  if (!image_url || image_url.trim() === '') {
+    return null;
+  }
+  
+  const url = image_url.trim();
+  
+  // تنظيف وتحسين الرابط
+  // إذا كان الرابط ليس كاملاً (لا يبدأ بـ http) لكنه يحتوي على امتداد صورة
+  if (!url.startsWith('http') && 
+      (url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png'))) {
+    // افتراض أن الصورة في bucket اسمه 'doctors' في Supabase Storage
+    return `https://gxuumjhtutkipvkljjhj.supabase.co/storage/v1/object/public/doctors/${url}`;
+  }
+  
+  // إذا كان الرابط يبدأ بـ http أو https
+  if (url.startsWith('http')) {
+    return url;
+  }
+  
+  // في حالة الروابط الأخرى، نرجع الرابط كما هو
+  return url;
+}
+
+// دالة لعرض الأطباء
+function displayDoctors(doctors) {
+  if (!doctors || doctors.length === 0) {
+    const searchTerm = searchInput.value.trim();
+    doctorsList.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-user-md-slash"></i>
+        <h3>${searchTerm ? 'لم يتم العثور على أطباء' : 'لا توجد أطباء حالياً'}</h3>
+        <p>${searchTerm ? `لا توجد نتائج للبحث عن: "${searchTerm}"` : 'سيتم إضافة أطباء قريباً'}</p>
+        ${searchTerm ? `
+          <div style="margin-top: 20px;">
+            <button onclick="clearSearch()" style="padding: 10px 25px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fas fa-eye"></i> عرض جميع الأطباء
+            </button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  doctors.forEach(doctor => {
+    const { id, name, specialty, experience, rating, description, phone, email, image_url } = doctor;
+    
+    // الحصول على رابط الصورة
+    const imgUrl = getDoctorImageUrl(image_url);
+    
+    // تقييم النجوم
+    let starsHtml = '';
+    const ratingNum = parseFloat(rating) || 0;
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(ratingNum)) {
+        starsHtml += '<i class="fas fa-star" style="color: #FFD700;"></i>';
+      } else if (i === Math.ceil(ratingNum) && ratingNum % 1 >= 0.5) {
+        starsHtml += '<i class="fas fa-star-half-alt" style="color: #FFD700;"></i>';
+      } else {
+        starsHtml += '<i class="far fa-star" style="color: #FFD700;"></i>';
+      }
+    }
+    
+    html += `
+      <div class="doctor-card" id="doctor-${id}">
+        <div class="doctor-img-container">
+          ${imgUrl ? `
+            <img class="doctor-img" 
+                 src="${imgUrl}" 
+                 alt="${name}" 
+                 loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"no-image\"><i class=\"fas fa-user-md\"></i></div>';">
+          ` : `
+            <div class="no-image">
+              <i class="fas fa-user-md"></i>
+            </div>
+          `}
+        </div>
+        
+        <div class="doctor-header">
+          <h3>${name || 'دكتور'}</h3>
+          ${specialty ? `<span class="doctor-title">${specialty}</span>` : ''}
+        </div>
+        
+        <div class="doctor-info">
+          ${experience ? `
+            <div class="info-row">
+              <i class="fas fa-briefcase"></i>
+              <div>
+                <strong>سنوات الخبرة</strong>
+                <span>${experience} سنة</span>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${rating ? `
+            <div class="info-row">
+              <i class="fas fa-star"></i>
+              <div>
+                <strong>التقييم</strong>
+                <span>${rating} ${starsHtml}</span>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${phone ? `
+            <div class="info-row">
+              <i class="fas fa-phone"></i>
+              <div>
+                <strong>رقم الهاتف</strong>
+                <span dir="ltr">${phone}</span>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${description ? `
+            <div class="info-row">
+              <i class="fas fa-file-alt"></i>
+              <div>
+                <strong>نبذة</strong>
+                <span style="font-size: 14px; line-height: 1.5;">${description.length > 100 ? description.substring(0, 100) + '...' : description}</span>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        
+        <a href="doctor.html?id=${id}" class="view-btn">
+          <i class="fas fa-eye"></i> عرض التفاصيل والحجز
+        </a>
+      </div>
+    `;
+  });
+  
+  doctorsList.innerHTML = html;
+}
+
+// دالة لمسح البحث
+function clearSearch() {
+  searchInput.value = '';
+  searchDoctors();
+}
+
+// دالة لتحميل الأطباء من Supabase
+async function loadDoctors() {
+  doctorsList.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>جاري تحميل قائمة الأطباء...</p></div>';
+  
+  try {
+    const { data: doctors, error } = await supabase
+      .from('doctors')
+      .select('*')
+      .order('name', { ascending: true });
+    
+    if (error) throw error;
+    
+    console.log(`✅ تم تحميل ${doctors?.length || 0} طبيب`);
+    allDoctors = doctors || [];
+    
+    // تطبيق البحث الأولي
+    searchDoctors();
+    
+  } catch (error) {
+    console.error('❌ خطأ في تحميل الأطباء:', error);
+    doctorsList.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>حدث خطأ في تحميل قائمة الأطباء</h3>
+        <p>${error.message}</p>
+        <button onclick="loadDoctors()" style="margin-top: 15px; padding: 10px 25px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <i class="fas fa-redo"></i> إعادة المحاولة
+        </button>
+      </div>
+    `;
+  }
+}
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  console.log('🚀 بدء تحميل صفحة الأطباء...');
+  
+  // تحميل الأطباء أول مرة
+  await loadDoctors();
+  
+  // إعداد البحث
+  searchInput.addEventListener('input', () => {
+    searchDoctors();
+  });
+  
+  // التركيز التلقائي على حقل البحث
+  searchInput.focus();
+  
+  // زر Enter للبحث
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      searchDoctors();
+    }
+  });
+  
+  // الاشتراك في التحديثات المباشرة
+  const channel = supabase
+    .channel('realtime-doctors')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'doctors'
+      },
+      () => {
+        loadDoctors();
+      }
+    )
+    .subscribe((status) => {
+      console.log('📡 حالة اشتراك الأطباء:', status);
+    });
+  
+  console.log('✅ تم تهيئة صفحة الأطباء بنجاح');
+}
+
+// بدء التطبيق
+init();
+
+// جعل الدوال متاحة للزر
+window.loadDoctors = loadDoctors;
+window.clearSearch = clearSearch;
+</script>
+
+</body>
+</html>

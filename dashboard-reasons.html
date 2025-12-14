@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة أسباب الانقطاع</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+  min-height: 100vh;
+  color: white;
+  padding: 15px;
+}
+
+
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, #007bff, #00d4ff);
+  border-radius: 3px;
+}
+
+/* الكارت */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 25px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 123, 255, 0.2);
+}
+
+/* رأس الكارت */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card-header .badge {
+  background: rgba(0, 123, 255, 0.2);
+  color: #00d4ff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* العنصر داخل القائمة */
+.item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 18px;
+  border-radius: 14px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 123, 255, 0.3);
+}
+
+.item strong {
+  color: #00d4ff;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.item small {
+  color: #aaa;
+  font-size: 13px;
+  display: block;
+  margin-top: 10px;
+}
+
+.item small i {
+  margin-left: 5px;
+  color: #007bff;
+}
+
+/* مربع الإدخال */
+.input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* الأزرار */
+.btn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn i {
+  font-size: 18px;
+}
+
+.btn.add {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  width: 100%;
+}
+
+.btn.add:hover {
+  background: linear-gradient(135deg, #3395ff, #007bff);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn.save {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+  flex: 1;
+}
+
+.btn.save:hover {
+  background: linear-gradient(135deg, #42c85a, #28a745);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
+}
+
+.btn.delete {
+  background: linear-gradient(135deg, #dc3545, #bd2130);
+  color: white;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.btn.delete:hover {
+  background: linear-gradient(135deg, #ff5566, #dc3545);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(220, 53, 69, 0.4);
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* حالة التحميل */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #aaa;
+  font-size: 18px;
+}
+
+.loading i {
+  font-size: 24px;
+  margin-bottom: 15px;
+  display: block;
+  color: #007bff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* رسالة فارغة */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 16px;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #444;
+  display: block;
+}
+
+/* زر تسجيل الخروج */
+.logout-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.3);
+  color: #ff8a8a;
+  transform: translateY(-2px);
+}
+
+/* رسائل التنبيه */
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-left: 5px solid;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+  max-width: 350px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.alert.success {
+  border-left-color: #28a745;
+  background: rgba(40, 167, 69, 0.15);
+}
+
+.alert.error {
+  border-left-color: #dc3545;
+  background: rgba(220, 53, 69, 0.15);
+}
+
+.alert.info {
+  border-left-color: #17a2b8;
+  background: rgba(23, 162, 184, 0.15);
+}
+
+/* استجابة للهواتف */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn.delete, .btn.save {
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  .logout-btn {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- زر تسجيل الخروج -->
+<button class="logout-btn" id="logoutBtn">
+  <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+</button>
+
+<!-- عنوان الصفحة -->
+<h2>⚡ إدارة أسباب انقطاع الكهرباء</h2>
+
+<!-- إضافة سبب جديد -->
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-plus-circle"></i> إضافة سبب جديد</h3>
+    <span class="badge" id="reasonsCount">0 سبب</span>
+  </div>
+  
+  <textarea id="new-reason" class="input" placeholder="اكتب سبب الانقطاع..." rows="3"></textarea>
+  <input type="text" id="new-details" class="input" placeholder="التفاصيل (اختياري)">
+  <input type="text" id="new-areas" class="input" placeholder="المناطق المتأثرة (اختياري)">
+  <input type="text" id="new-time" class="input" placeholder="الوقت المتوقع للإصلاح (اختياري)">
+  
+  <select id="new-status" class="input" style="width: auto; min-width: 180px; margin-top: 10px;">
+    <option value="قيد الإصلاح">قيد الإصلاح</option>
+    <option value="تم الحل">تم الحل</option>
+    <option value="مؤجل">مؤجل</option>
+  </select>
+  
+  <button class="btn add" id="addBtn">
+    <i class="fas fa-plus"></i> إضافة السبب
+  </button>
+</div>
+
+<!-- عرض الأسباب -->
+<div id="list" class="loading">
+  <i class="fas fa-spinner"></i> جاري تحميل البيانات...
+</div>
+
+<!-- حاوية رسائل التنبيه -->
+<div id="alertContainer"></div>
+
+<script type="module">
+// استيراد Supabase
+import { supabase } from './supabase.js';
+
+// عناصر DOM
+const list = document.getElementById('list');
+const logoutBtn = document.getElementById('logoutBtn');
+const alertContainer = document.getElementById('alertContainer');
+const reasonsCount = document.getElementById('reasonsCount');
+
+// دالة لعرض رسائل التنبيه
+function showAlert(message, type = 'success') {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert ${type}`;
+  alertDiv.innerHTML = `
+    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+    ${message}
+  `;
+  alertContainer.appendChild(alertDiv);
+  
+  setTimeout(() => {
+    alertDiv.remove();
+  }, 3000);
+}
+
+// دالة لتنسيق التاريخ
+function formatDate(dateString) {
+  if (!dateString) return '—';
+  
+  const date = new Date(dateString);
+  return date.toLocaleString('ar-EG', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// =========================
+// 🔐 التحقق من تسجيل الدخول
+// =========================
+async function checkAuth() {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session) {
+      showAlert('❌ يجب تسجيل الدخول أولاً', 'error');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+      return false;
+    }
+    
+    console.log('✅ المستخدم المسجل:', session.user.email);
+    return true;
+  } catch (error) {
+    console.error('خطأ في التحقق:', error);
+    showAlert('❌ خطأ في المصادقة', 'error');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+    return false;
+  }
+}
+
+// =========================
+// 🚪 تسجيل الخروج
+// =========================
+logoutBtn.addEventListener('click', async () => {
+  if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      showAlert('✅ تم تسجيل الخروج بنجاح', 'success');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1000);
+    } catch (error) {
+      console.error('خطأ في تسجيل الخروج:', error);
+      showAlert('❌ حدث خطأ أثناء تسجيل الخروج', 'error');
+    }
+  }
+});
+
+// =========================
+// ➕ إضافة سبب جديد
+// =========================
+document.getElementById('addBtn').onclick = async () => {
+  const text = document.getElementById('new-reason').value.trim();
+  const details = document.getElementById('new-details').value.trim();
+  const areas = document.getElementById('new-areas').value.trim();
+  const time = document.getElementById('new-time').value.trim();
+  const status = document.getElementById('new-status').value;
+
+  if (!text) {
+    showAlert('❗ يرجى كتابة السبب الرئيسي', 'error');
+    document.getElementById('new-reason').focus();
+    return;
+  }
+
+  try {
+    const newReason = {
+      text,
+      details: details || null,
+      affected_areas: areas || null,
+      estimated_time: time || null,
+      status: status || 'قيد الإصلاح',
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from('reasons')
+      .insert([newReason])
+      .select();
+
+    if (error) throw error;
+
+    showAlert('✅ تم إضافة السبب بنجاح');
+    
+    // مسح الحقول
+    document.getElementById('new-reason').value = '';
+    document.getElementById('new-details').value = '';
+    document.getElementById('new-areas').value = '';
+    document.getElementById('new-time').value = '';
+    
+  } catch (error) {
+    console.error('خطأ في إضافة السبب:', error);
+    showAlert('❌ حدث خطأ أثناء إضافة السبب', 'error');
+  }
+};
+
+// =========================
+// 📌 جلب وعرض الأسباب
+// =========================
+async function loadData() {
+  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل البيانات...</div>';
+
+  try {
+    const { data: reasons, error } = await supabase
+      .from('reasons')
+      .select('*')
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+
+    // تحديث العداد
+    reasonsCount.textContent = `${reasons?.length || 0} سبب`;
+
+    if (!reasons || reasons.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <i class="far fa-folder-open"></i>
+          <p>لا توجد أسباب مسجلة</p>
+          <p style="font-size: 14px; margin-top: 10px; color: #666;">ابدأ بإضافة سبب جديد</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+
+    reasons.forEach(reason => {
+      const date = formatDate(reason.updated_at);
+      
+      // تحديد أيقونة الحالة
+      let statusIcon = 'fas fa-tools';
+      let statusColor = '#ffc107';
+      
+      if (reason.status === 'تم الحل') {
+        statusIcon = 'fas fa-check-circle';
+        statusColor = '#28a745';
+      } else if (reason.status === 'مؤجل') {
+        statusIcon = 'fas fa-clock';
+        statusColor = '#6c757d';
+      }
+
+      html += `
+        <div class="card" id="reason-${reason.id}">
+          <div class="item">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div style="flex: 1;">
+                <strong>السبب:</strong>
+                <div style="margin-top: 5px; font-size: 16px;">${reason.text || ''}</div>
+              </div>
+              <div style="background: ${statusColor}20; color: ${statusColor}; padding: 5px 12px; border-radius: 20px; font-size: 14px;">
+                <i class="${statusIcon}"></i> ${reason.status || 'قيد الإصلاح'}
+              </div>
+            </div>
+            
+            ${reason.details ? `
+              <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <strong style="color: #aaa;">التفاصيل:</strong>
+                <div>${reason.details}</div>
+              </div>
+            ` : ''}
+            
+            ${reason.affected_areas ? `
+              <div style="margin-top: 10px;">
+                <strong style="color: #aaa;"><i class="fas fa-map-marker-alt"></i> المناطق المتأثرة:</strong>
+                <div>${reason.affected_areas}</div>
+              </div>
+            ` : ''}
+            
+            ${reason.estimated_time ? `
+              <div style="margin-top: 10px;">
+                <strong style="color: #aaa;"><i class="fas fa-clock"></i> الوقت المتوقع:</strong>
+                <div>${reason.estimated_time}</div>
+              </div>
+            ` : ''}
+            
+            <small><i class="far fa-clock"></i> آخر تحديث: ${date}</small>
+          </div>
+          
+          <div style="margin-top: 15px;">
+            <label><strong>تعديل السبب:</strong></label>
+            <textarea id="edit-${reason.id}" class="input" rows="3">${reason.text || ''}</textarea>
+            
+            <div class="btn-group">
+              <button class="btn delete" onclick="deleteReason('${reason.id}')">
+                <i class="fas fa-trash"></i> حذف
+              </button>
+              <button class="btn save" onclick="saveReason('${reason.id}')">
+                <i class="fas fa-save"></i> حفظ التعديل
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    list.innerHTML = html;
+  } catch (error) {
+    console.error('خطأ في تحميل البيانات:', error);
+    list.innerHTML = '<div class="alert error">❌ حدث خطأ في تحميل البيانات</div>';
+  }
+}
+
+// =========================
+// 💾 تحديث سبب
+// =========================
+window.saveReason = async (id) => {
+  try {
+    const textElement = document.getElementById(`edit-${id}`);
+    
+    if (!textElement) return;
+
+    const text = textElement.value.trim();
+
+    if (!text) {
+      showAlert('❗ لا يمكن ترك السبب فارغ', 'error');
+      return;
+    }
+
+    const updates = {
+      text,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error } = await supabase
+      .from('reasons')
+      .update(updates)
+      .eq('id', id);
+
+    if (error) throw error;
+
+    showAlert('✅ تم تحديث السبب بنجاح');
+    
+    // تحديث الواجهة مباشرة
+    const reasonElement = document.querySelector(`#reason-${id} .item strong`);
+    if (reasonElement) {
+      reasonElement.nextElementSibling.textContent = text;
+    }
+    
+    // تحديث التاريخ
+    const dateElement = document.querySelector(`#reason-${id} small`);
+    if (dateElement) {
+      dateElement.innerHTML = `<i class="far fa-clock"></i> آخر تحديث: ${formatDate(new Date().toISOString())}`;
+    }
+    
+  } catch (error) {
+    console.error('خطأ في تحديث السبب:', error);
+    showAlert('❌ حدث خطأ أثناء التحديث', 'error');
+  }
+};
+
+// =========================
+// 🗑 حذف سبب
+// =========================
+window.deleteReason = async (id) => {
+  if (!confirm('⚠️ هل أنت متأكد من حذف هذا السبب؟')) {
+    return;
+  }
+
+  try {
+    const { error } = await supabase
+      .from('reasons')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    showAlert('🗑️ تم حذف السبب بنجاح');
+    
+    // إزالة العنصر من الواجهة مع تأثير
+    const element = document.getElementById(`reason-${id}`);
+    if (element) {
+      element.style.opacity = '0.5';
+      element.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        element.remove();
+        
+        // تحديث العداد
+        const remaining = document.querySelectorAll('.card[id^="reason-"]').length;
+        reasonsCount.textContent = `${remaining} سبب`;
+        
+        // إذا لم يتبقى عناصر، عرض رسالة
+        if (remaining === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <i class="far fa-folder-open"></i>
+              <p>لا توجد أسباب مسجلة</p>
+              <p style="font-size: 14px; margin-top: 10px; color: #666;">ابدأ بإضافة سبب جديد</p>
+            </div>
+          `;
+        }
+      }, 300);
+    }
+  } catch (error) {
+    console.error('خطأ في حذف السبب:', error);
+    showAlert('❌ حدث خطأ أثناء الحذف', 'error');
+  }
+};
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  const isAuthenticated = await checkAuth();
+  
+  if (isAuthenticated) {
+    // تحميل البيانات
+    await loadData();
+    
+    // الاشتراك في التحديثات المباشرة
+    const channel = supabase
+      .channel('realtime-reasons')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reasons'
+        },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+    
+    // تحديث تلقائي كل 30 ثانية (احتياطي)
+    setInterval(() => {
+      loadData();
+    }, 30000);
+  }
+}
+
+// بدء التطبيق
+init();
+</script>
+
+</body>
+</html>

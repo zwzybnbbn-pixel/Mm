@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن — دليل شبوة (عتق) الشامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #005f87;
+            --secondary: #00b4d8;
+            --accent: #ff6b35;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 180, 216, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 119, 182, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* زر العودة */
+        .back-btn {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.3);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        /* التصميم الرئيسي */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 119, 182, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .logo i {
+            font-size: 50px;
+            color: white;
+        }
+
+       
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* البطاقات الزجاجية */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .glass-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .highlight {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .accent {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* قائمة الميزات */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* الشروط */
+        .terms-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .terms-list li {
+            margin-bottom: 15px;
+            padding-right: 30px;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .terms-list li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* الفوتر */
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .developer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .copyright {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 20px;
+        }
+
+        /* التأثيرات */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* الاستجابة */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 15px 40px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .glass-card {
+                padding: 25px;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .back-btn {
+                top: 15px;
+                right: 15px;
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .logo i {
+                font-size: 40px;
+            }
+        }
+
+        /* تأثيرات دخول */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+<a href="all-index.html" class="back-btn">
+    <i class="fas fa-arrow-right"></i> العودة للرئيسية
+</a>
+
+<div class="container">
+    <!-- القسم الرئيسي -->
+    <div class="hero-section">
+        <div class="logo">
+            <i class="fas fa-map-marked-alt"></i>
+        </div>
+        <h1 class="hero-title">من نحن</h1>
+        <p class="hero-subtitle">
+            دليل شبوة الرقمي — بوابتك الشاملة لاكتشاف عروس المحافظات اليمنية
+        </p>
+    </div>
+
+    <!-- بطاقة تعريف المنصة -->
+    <div class="glass-card fade-in">
+        <div class="card-title">
+            <i class="fas fa-bullseye"></i>
+            <span>رسالتنا ورؤيتنا</span>
+        </div>
+        <div class="card-content">
+            <p>
+                <span class="highlight">دليل شبوة (عتق)</span> هو منصة رقمية رائدة تهدف إلى 
+                <span class="accent">توحيد وتنظيم المعلومات</span> الخاصة بمحافظة شبوة العريقة.
+                نحن جسر يربط المواطنين والزوار بكافة الخدمات والمرافق بطريقة حديثة، دقيقة، وسهلة الوصول.
+            </p>
+            <p>
+                نسعى لأن نكون <span class="accent">المرجع الأول</span> لكل من يبحث عن معلومات موثوقة
+                عن شبوة، بدءاً من الخدمات الصحية والتعليمية، وصولاً للمعالم السياحية والتراثية.
+            </p>
+        </div>
+    </div>
+
+    <!-- الميزات -->
+    <div class="glass-card fade-in">
+        <div class="card-title">
+            <i class="fas fa-star"></i>
+            <span>لماذا تختار دليل شبوة؟</span>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">معلومات محدثة</h3>
+                <p>بيانات دقيقة يتم تحديثها باستمرار</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">مصادر موثوقة</h3>
+                <p>معلومات من مصادر رسمية وموثقة</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title">تصميم متجاوب</h3>
+                <p>يعمل على جميع الأجهزة بسلاسة</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="feature-title">مجاني بالكامل</h3>
+                <p>خدمة مجانية لخدمة المجتمع</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- الخصوصية -->
+    <div class="glass-card fade-in">
+        <div class="card-title">
+            <i class="fas fa-lock"></i>
+            <span>خصوصيتك تهمنا</span>
+        </div>
+        <div class="card-content">
+            <p>
+                نلتزم بمعايير عالية لحماية خصوصيتك. <span class="highlight">لا نجمع أي بيانات شخصية</span> 
+                إلا تلك التي تقدمها طواعية لتحسين تجربتك معنا.
+            </p>
+            <p>
+                بياناتك في أمان تام معنا. <span class="accent">نرفض بشدة</span> مشاركة أو بيع أي معلومات 
+                لطرف ثالث، ونستخدم التقنيات الحديثة لتأمين وحماية بيانات المستخدمين.
+            </p>
+        </div>
+    </div>
+
+    <!-- الشروط -->
+    <div class="glass-card fade-in">
+        <div class="card-title">
+            <i class="fas fa-file-contract"></i>
+            <span>شروط استخدام المنصة</span>
+        </div>
+        <div class="card-content">
+            <ul class="terms-list">
+                <li>المنصة مخصصة للحصول على المعلومات والخدمات المقدمة فقط</li>
+                <li>يُمنع نسخ أو إعادة نشر المحتوى دون إذن كتابي مسبق</li>
+                <li>نحتفظ بحق تحديث المعلومات والشروط دون إشعار مسبق</li>
+                <li>استخدامك للمنصة يعني موافقتك الكاملة على هذه الشروط</li>
+                <li>نحن غير مسؤولين عن أي أخطاء في المعلومات المقدمة من مصادر خارجية</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- القصة -->
+    <div class="glass-card fade-in">
+        <div class="card-title">
+            <i class="fas fa-history"></i>
+            <span>قصة الانطلاق</span>
+        </div>
+        <div class="card-content">
+            <p>
+                انطلق <span class="highlight">دليل شبوة</span> من رؤية واضحة: 
+                <span class="accent">"تسهيل الحياة وتوفير الوقت"</span> لأبناء المحافظة وزوارها.
+            </p>
+            <p>
+                كمواطن من شبوة، لاحظت الحاجة الماسة لمنصة موحدة تجمع شتات المعلومات المبعثرة،
+                فقررت تحويل هذا الحلم إلى واقع ملموس يخدم الجميع.
+            </p>
+            <p>
+                اليوم، نفخر بأننا نساهم في <span class="accent">تعزيز الهوية المحلية</span> 
+                وتسليط الضوء على كنوز شبوة التاريخية والطبيعية.
+            </p>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <div class="footer fade-in">
+        <div class="developer">
+            <i class="fas fa-user-tie"></i> م/ماجد قاسم حسن مبارك بن عمرو
+        </div>
+        <p>مطور ومؤسس دليل شبوة الشامل</p>
+        
+        <div class="copyright">
+            <p>
+                <i class="fas fa-copyright"></i> جميع الحقوق محفوظة — دليل شبوة (عتق) الشامل — 2025
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.7;">
+                <i class="fas fa-heart pulse" style="color: var(--accent);"></i>
+                بُنيَ بكل فخر لخدمة أبناء محافظة شبوة
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // تأثيرات الظهور عند التمرير
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        fadeElements.forEach(element => {
+            fadeInObserver.observe(element);
+        });
+
+        // تأثير للزر العائم
+        const backBtn = document.querySelector('.back-btn');
+        backBtn.addEventListener('mouseenter', () => {
+            backBtn.style.transform = 'translateY(-3px) scale(1.05)';
+        });
+        
+        backBtn.addEventListener('mouseleave', () => {
+            if (!backBtn.matches(':hover')) {
+                backBtn.style.transform = 'translateY(0) scale(1)';
+            }
+        });
+
+        // إضافة شرارة عند النقر
+        document.body.addEventListener('click', function(e) {
+            if (e.target.closest('.glass-card') || e.target.closest('.feature-item')) {
+                const spark = document.createElement('div');
+                spark.style.position = 'fixed';
+                spark.style.width = '10px';
+                spark.style.height = '10px';
+                spark.style.background = 'radial-gradient(circle, var(--secondary), transparent)';
+                spark.style.borderRadius = '50%';
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = '10000';
+                spark.style.left = e.clientX + 'px';
+                spark.style.top = e.clientY + 'px';
+                spark.style.animation = 'spark 0.6s ease-out forwards';
+                
+                document.body.appendChild(spark);
+                
+                // إضافة أنيميشن
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes spark {
+                        0% { transform: scale(1); opacity: 1; }
+                        100% { transform: scale(3); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                setTimeout(() => {
+                    if (spark.parentNode) {
+                        spark.parentNode.removeChild(spark);
+                    }
+                    if (style.parentNode) {
+                        style.parentNode.removeChild(style);
+                    }
+                }, 600);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

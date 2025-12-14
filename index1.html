@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل السياحة – اكتشف مدينتك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #eef3ff 0%, #f0f7ff 100%);
+  color: #003f63;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+.hero {
+  height: 90vh;
+  min-height: 650px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #000;
+}
+
+.hero-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  display: block;
+  animation: zoomEffect 25s ease-in-out infinite alternate;
+}
+
+@keyframes zoomEffect {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 63, 99, 0.6));
+  z-index: 2;
+}
+
+.hero .content {
+  position: relative;
+  z-index: 3;
+  color: #fff;
+  padding: 0 20px;
+  max-width: 900px;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+.hero p {
+  margin-top: 10px;
+  font-size: 1.5rem;
+  opacity: 0.9;
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 30px;
+}
+
+.search-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 12px 25px;
+  width: 90%;
+  max-width: 500px;
+  margin: 30px auto 0;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s;
+}
+
+.search-box:focus-within {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  color: white;
+  font-size: 1.1rem;
+  padding-right: 15px;
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-box i {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+}
+
+.clear-search {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 5px;
+  display: none;
+}
+
+.clear-search:hover {
+  color: white;
+}
+
+.search-results {
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  min-height: 24px;
+}
+
+.no-results {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 2.8rem;
+  color: #005f87;
+  margin-bottom: 50px;
+  position: relative;
+  display: inline-block;
+}
+
+.section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, #0077b6, #00b4d8);
+  border-radius: 2px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 0 10px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 0;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to left, #0077b6, #00b4d8);
+}
+
+.card:hover {
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px 20px 0 0;
+  transition: transform 0.5s;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card h3 {
+  margin: 15px 0 10px;
+  color: #005f87;
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.card-cta {
+  display: inline-block;
+  margin-top: 15px;
+  color: #0077b6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+}
+
+.card:hover .card-cta {
+  color: #00b4d8;
+  transform: translateX(-5px);
+}
+
+.badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #0077b6;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  z-index: 10;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  margin-top: 80px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #555;
+  background: linear-gradient(to right, #eef3ff, #e0ebff);
+  border-top: 1px solid rgba(0, 119, 182, 0.1);
+  position: relative;
+}
+
+footer p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+footer .developer {
+  font-weight: 700;
+  color: #0077b6;
+  margin-top: 20px;
+}
+
+.back-btn {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: rgba(0, 119, 182, 0.9);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.back-btn:hover {
+  background: #005f87;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+  }
+  
+  .section h2 {
+    font-size: 2.2rem;
+  }
+  
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .back-btn {
+    top: 15px;
+    right: 15px;
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<a href="all-index.html" class="back-btn">
+  <i class="fas fa-arrow-right"></i> رجوع
+</a>
+
+<div class="hero">
+  <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2068&q=80" class="hero-img" alt="صورة مدينة">
+  
+  <div class="overlay"></div>
+  
+  <div class="content">
+    <h1>اكتشف جمال مدينتك</h1>
+    <p>أماكن مميزة، مطاعم فاخرة، فنادق راقية، فعاليات حصرية... كل ما تحتاجه لاكتشاف المدينة بين يديك</p>
+    
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="ابحث عن: كافيهات، فنادق، فعاليات، مطاعم...">
+      <div class="clear-search" id="clearSearch">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  
+  <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#eef3ff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,138.7C672,139,768,181,864,192C960,203,1056,181,1152,160C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+  </svg>
+</div>
+
+<div class="section">
+  <h2>الأقسام السياحية</h2>
+  
+  <div class="cards" id="cardsContainer">
+    <!-- البطاقات سيتم توليدها ديناميكياً عبر JavaScript -->
+  </div>
+</div>
+
+<footer>
+  <p>دليل السياحة الشامل – اكتشف مدينتك بكل سهولة</p>
+  <p class="developer">مطور: م/ماجد قاسم حسن مبارك بن عمرو</p>
+  <p>© 2025 — دليل السياحة • جميع الحقوق محفوظة</p>
+</footer>
+
+<script>
+// بيانات البطاقات
+const cardsData = [
+  {
+    id: 1,
+    title: "كافيهات",
+    icon: "fa-coffee",
+    description: "جلسات راقية، أجواء هادئة، ومشروبات فاخرة تناسب جميع الأذواق. اكتشف أفضل الكافيهات في المدينة.",
+    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+    link: "cafes.html",
+    badge: "الأكثر زيارة",
+    tags: ["كافيه", "مقهى", "قهوة", "شاي", "مشروبات", "جلسة", "مقاهي"]
+  },
+  {
+    id: 2,
+    title: "فنادق",
+    icon: "fa-hotel",
+    description: "أفضل الفنادق بخدمات مميزة، إقامة مريحة، وتجارب فاخرة تناسب جميع الميزانيات.",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    link: "hotels.html",
+    badge: "تخفيضات",
+    tags: ["فندق", "إقامة", "نزل", "سكن", "فنادق", "غرفة", "استضافة"]
+  },
+  {
+    id: 3,
+    title: "مراكز تسوق",
+    icon: "fa-calendar-alt",
+    description: "أكبر المراكز التجارية والأسواق الشعبية لتجربة تسوق مميزة مع عروض متنوعة.",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    link: "markets.html",
+    badge: "",
+    tags: ["فعالية", "مناسبة", "حفل", "مهرجان", "معرض", "حدث", "ترفيه"]
+  },
+  {
+    id: 4,
+    title: "مطاعم",
+    icon: "fa-utensils",
+    description: "أفضل المأكولات المحلية والعالمية، تجارب طعام لا تُنسى في أجواء مميزة ومذاقات فريدة.",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    link: "restaurants.html",
+    badge: "جديد",
+    tags: ["مطعم", "طعام", "مأكولات", "وجبة", "عشاء", "غداء", "مطاعم"]
+  },
+  
+  
+];
+
+// توليد البطاقات في الصفحة
+function generateCards(cards) {
+  const container = document.getElementById('cardsContainer');
+  container.innerHTML = '';
+  
+  cards.forEach(card => {
+    const cardElement = document.createElement('a');
+    cardElement.href = card.link;
+    cardElement.style.textDecoration = 'none';
+    
+    const badgeHTML = card.badge ? `<div class="badge">${card.badge}</div>` : '';
+    
+    cardElement.innerHTML = `
+      <div class="card" data-id="${card.id}">
+        ${badgeHTML}
+        <img src="${card.image}" alt="${card.title}">
+        <div class="card-content">
+          <h3><i class="fas ${card.icon}"></i> ${card.title}</h3>
+          <p>${card.description}</p>
+          <div class="card-cta">اكتشف الآن <i class="fas fa-arrow-left"></i></div>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(cardElement);
+  });
+}
+
+// وظيفة البحث
+function performSearch(searchTerm) {
+  const resultsContainer = document.getElementById('searchResults');
+  const clearSearchBtn = document.getElementById('clearSearch');
+  
+  if (searchTerm.trim() === '') {
+    // إذا كان البحث فارغاً، عرض جميع البطاقات
+    generateCards(cardsData);
+    resultsContainer.innerHTML = '';
+    resultsContainer.classList.remove('no-results');
+    clearSearchBtn.style.display = 'none';
+    return;
+  }
+  
+  // البحث في البطاقات
+  const searchTermLower = searchTerm.toLowerCase();
+  const filteredCards = cardsData.filter(card => {
+    // البحث في العنوان
+    if (card.title.toLowerCase().includes(searchTermLower)) return true;
+    
+    // البحث في الوصف
+    if (card.description.toLowerCase().includes(searchTermLower)) return true;
+    
+    // البحث في الوسوم (Tags)
+    if (card.tags.some(tag => tag.toLowerCase().includes(searchTermLower))) return true;
+    
+    return false;
+  });
+  
+  // عرض النتائج
+  generateCards(filteredCards);
+  
+  // عرض عدد النتائج
+  if (filteredCards.length > 0) {
+    resultsContainer.innerHTML = `تم العثور على ${filteredCards.length} نتيجة لـ "${searchTerm}"`;
+    resultsContainer.classList.remove('no-results');
+  } else {
+    resultsContainer.innerHTML = `لا توجد نتائج لـ "${searchTerm}". جرب كلمات أخرى مثل: كافيهات، فنادق، مطاعم`;
+    resultsContainer.classList.add('no-results');
+  }
+  
+  // إظهار زر مسح البحث
+  clearSearchBtn.style.display = 'block';
+}
+
+// تهيئة الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  // توليد البطاقات عند تحميل الصفحة
+  generateCards(cardsData);
+  
+  // البحث عند الكتابة
+  const searchInput = document.getElementById('searchInput');
+  const clearSearchBtn = document.getElementById('clearSearch');
+  
+  // بحث فوري أثناء الكتابة
+  searchInput.addEventListener('input', function() {
+    performSearch(this.value);
+  });
+  
+  // مسح البحث
+  clearSearchBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    performSearch('');
+    searchInput.focus();
+  });
+  
+  // البحث عند الضغط على Enter
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      performSearch(this.value);
+    }
+  });
+  
+  // تأثيرات تفاعلية إضافية
+  const cards = document.querySelectorAll('.card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  cards.forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+  });
+  
+  // تأثير للبحث
+  searchInput.addEventListener('focus', function() {
+    document.querySelector('.search-box').classList.add('focused');
+  });
+  
+  searchInput.addEventListener('blur', function() {
+    document.querySelector('.search-box').classList.remove('focused');
+  });
+});
+
+// اقتراحات تلقائية للبحث (ميزة إضافية)
+const searchSuggestions = [
+  "كافيهات",
+  "فنادق",
+  "مطاعم",
+  "فعاليات",
+  "معالم تاريخية",
+  "مراكز تسوق",
+  "أماكن ترفيهية",
+  "مقاهي",
+  "مطاعم عربية",
+  "فنادق فاخرة"
+];
+
+// عرض الاقتراحات عند النقر على حقل البحث
+document.getElementById('searchInput').addEventListener('click', function() {
+  // يمكن إضافة قائمة اقتراحات هنا إذا أردت
+  console.log("يمكن إضافة قائمة اقتراحات للبحث هنا");
+});
+</script>
+
+</body>
+</html>

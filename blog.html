@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<title>المدونة الطبية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- استيراد Supabase SDK -->
+<script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // 🔗 رابط مشروعك
+    const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
+    // 🔑 المفتاح العام (anon key)
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+    // 📦 إنشاء عميل Supabase
+    window.supabase = createClient(supabaseUrl, supabaseKey);
+</script>
+
+<style>
+:root {
+    --medical-primary: #009688;
+    --medical-light: #4DB6AC;
+    --medical-dark: #00695C;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --shadow-light: 0 4px 15px rgba(0, 150, 136, 0.1);
+    --shadow-hover: 0 8px 25px rgba(0, 150, 136, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f4f8f9 0%, #e8f4f5 100%);
+    min-height: 100vh;
+    padding-bottom: 60px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* تأثير الخلفية الطبية */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(0, 150, 136, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(77, 182, 172, 0.06) 0%, transparent 50%);
+    z-index: -1;
+}
+
+/* الهيدر المتطور */
+header {
+    background: linear-gradient(135deg, var(--medical-primary), var(--medical-dark));
+    color: white;
+    text-align: center;
+    padding: 25px 20px;
+    font-size: clamp(26px, 5vw, 32px);
+    font-weight: 900;
+    box-shadow: 0 6px 20px rgba(0, 105, 92, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.header-icon {
+    margin-left: 15px;
+    font-size: 34px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* زر العودة المتطور */
+.back-btn {
+    display: block;
+    width: fit-content;
+    margin: 25px auto 20px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--medical-dark), var(--medical-primary));
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0, 105, 92, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.back-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    z-index: 1;
+}
+
+.back-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 105, 92, 0.4);
+    background: linear-gradient(135deg, var(--medical-primary), var(--medical-dark));
+}
+
+.back-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.back-btn i {
+    font-size: 20px;
+}
+
+/* المحتوى الرئيسي */
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* مؤشر التحميل */
+.loading-container {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(0, 150, 136, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--medical-primary);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: var(--medical-dark);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: var(--shadow-light);
+    margin: 30px auto;
+    max-width: 600px;
+}
+
+.empty-icon {
+    font-size: 60px;
+    color: var(--medical-light);
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: var(--medical-dark);
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+.empty-state p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #777;
+}
+
+/* كروت المقالات */
+.blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.blog-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    border: 1px solid rgba(0, 150, 136, 0.1);
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(0, 150, 136, 0.2);
+}
+
+.blog-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+/* صورة المقال */
+.card-image-container {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--medical-light), var(--medical-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.image-placeholder i {
+    font-size: 50px;
+    opacity: 0.8;
+}
+
+/* محتوى الكارت */
+.card-content {
+    padding: 25px;
+}
+
+.card-title {
+    font-size: clamp(20px, 4vw, 24px);
+    color: var(--medical-dark);
+    margin-bottom: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+}
+
+
+/* معلومات المقال */
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(0, 150, 136, 0.1);
+}
+
+.card-date {
+    color: var(--medical-primary);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-date i {
+    font-size: 16px;
+}
+
+.card-category {
+    background: rgba(0, 150, 136, 0.1);
+    color: var(--medical-dark);
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* زر القراءة */
+.read-more {
+    background: linear-gradient(135deg, var(--medical-primary), var(--medical-dark));
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.read-more:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 4px 15px rgba(0, 150, 136, 0.3);
+}
+
+/* تأثير الضغط على الجوال */
+.blog-card:active {
+    transform: scale(0.98);
+}
+
+/* الفوتر */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    color: #666;
+    font-size: 15px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(0, 150, 136, 0.1);
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.copyright {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 150, 136, 0.05);
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* تأثيرات دخول الكروت */
+@keyframes cardEntry {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.blog-card {
+    animation: cardEntry 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+/* تحسينات للجوال */
+@media (max-width: 767px) {
+    main {
+        padding: 15px;
+    }
+    
+    .back-btn {
+        margin: 20px auto 15px;
+        padding: 12px 24px;
+        font-size: 16px;
+    }
+    
+    .blog-grid {
+        gap: 20px;
+    }
+    
+    .card-image-container {
+        height: 180px;
+    }
+    
+    .card-content {
+        padding: 20px;
+    }
+    
+    .card-title {
+        min-height: auto;
+        margin-bottom: 10px;
+    }
+    
+    
+    .card-meta {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+@media (min-width: 768px) {
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .blog-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <i class="fas fa-book-medical header-icon"></i>
+    📘 المدونة الطبية
+</header>
+
+<a class="back-btn" href="index.html">
+    <i class="fas fa-arrow-right"></i>
+    العودة للرئيسية
+</a>
+
+<main>
+    <div id="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">جاري تحميل المقالات...</p>
+    </div>
+    
+    <div id="blog-container" class="blog-grid"></div>
+    
+    <div id="empty-state" class="empty-state" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-newspaper"></i>
+        </div>
+        <h3>لا توجد مقالات حالياً</h3>
+        <p>لم يتم نشر أي مقالات طبية بعد. تابعنا قريباً لمحتوى طبي مفيد.</p>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <p>مصدر موثوق للمعلومات الطبية والتوعية الصحية</p>
+        <div class="copyright">
+            © 2025 - المدونة الطبية | جميع الحقوق محفوظة
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    const container = document.getElementById('blog-container');
+    const loading = document.getElementById('loading');
+    const emptyState = document.getElementById('empty-state');
+    
+    // انتظار تحميل Supabase
+    await waitForSupabase();
+    
+    async function loadBlogs() {
+        try {
+            // إخفاء الحالة الفارغة مؤقتاً
+            emptyState.style.display = 'none';
+            
+            if (!window.supabase) {
+                throw new Error('Supabase غير متوفر');
+            }
+            
+            // جلب المقالات من Supabase
+            const { data: blogs, error } = await window.supabase
+                .from('blog')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            // إخفاء مؤشر التحميل
+            loading.style.display = 'none';
+            
+            if (error) {
+                console.error('خطأ في جلب المقالات:', error);
+                showEmptyState('حدث خطأ في تحميل المقالات');
+                return;
+            }
+            
+            if (!blogs || blogs.length === 0) {
+                showEmptyState('لا توجد مقالات حالياً');
+                return;
+            }
+            
+            // عرض المقالات
+            container.innerHTML = '';
+            
+            blogs.forEach((blog, index) => {
+                const card = createBlogCard(blog, index);
+                container.appendChild(card);
+            });
+            
+        } catch (error) {
+            console.error('خطأ غير متوقع:', error);
+            loading.style.display = 'none';
+            showEmptyState('حدث خطأ في تحميل المقالات');
+        }
+    }
+    
+    function createBlogCard(blog, index) {
+        const card = document.createElement('div');
+        card.className = 'blog-card';
+        
+        // تأخير ظهور الكروت
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        // معالجة البيانات
+        const title = blog.title || 'مقال بدون عنوان';
+        const content = blog.content || blog.short || 'لا يوجد محتوى';
+        const imageUrl = blog.image_url || blog.img || null;
+        const date = blog.created_at ? formatDate(blog.created_at) : 'غير محدد';
+        const category = blog.category || 'عام';
+        const id = blog.id;
+        
+        // إنشاء محتوى الكارت
+        card.innerHTML = `
+            <div class="card-image-container">
+                ${imageUrl ? 
+                    `<img src="${imageUrl}" alt="${title}" class="card-image" loading="lazy">` :
+                    `<div class="image-placeholder">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>`
+                }
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">${title}</h3>
+                <p class="card-excerpt">${truncateText(content, 150)}</p>
+                <div class="card-meta">
+                    <span class="card-date">
+                        <i class="far fa-calendar"></i>
+                        ${date}
+                    </span>
+                    <span class="card-category">
+                        <i class="fas fa-tag"></i>
+                        ${category}
+                    </span>
+                </div>
+                <button class="read-more" onclick="viewBlog('${id}')">
+                    اقرأ المزيد
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        `;
+        
+        // إضافة حدث النقر على الكارت كله
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.read-more')) {
+                viewBlog(id);
+            }
+        });
+        
+        return card;
+    }
+    
+    function showEmptyState(message) {
+        emptyState.style.display = 'block';
+        emptyState.querySelector('h3').textContent = message;
+    }
+    
+    function formatDate(dateString) {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (error) {
+            return 'غير محدد';
+        }
+    }
+    
+    function truncateText(text, maxLength) {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+    
+    async function waitForSupabase() {
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        return new Promise((resolve, reject) => {
+            const checkSupabase = () => {
+                attempts++;
+                if (window.supabase) {
+                    resolve();
+                } else if (attempts >= maxAttempts) {
+                    reject(new Error('فشل تحميل Supabase'));
+                } else {
+                    setTimeout(checkSupabase, 500);
+                }
+            };
+            checkSupabase();
+        });
+    }
+    
+    // تحميل المقالات
+    await loadBlogs();
+});
+
+// دالة عرض المقال
+function viewBlog(id) {
+    window.location.href = `blog-view.html?id=${id}`;
+}
+</script>
+
+</body>
+</html>

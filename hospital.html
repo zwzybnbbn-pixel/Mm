@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل المستشفى</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';}
+body{background:#eef3f3;padding:12px;}
+.back-btn{display:inline-block;background:#444;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;margin-bottom:15px;font-size:16px;}
+.back-btn:hover{background:#555;}
+.card{width:100%;background:white;padding:18px;border-radius:15px;box-shadow:0 3px 12px #00000022;margin-bottom:15px;}
+h2{font-size:22px;color:#00695C;text-align:center;margin-bottom:15px;font-weight:800;}
+.info{background:#f9ffff;padding:12px;border-left:5px solid #00796B;border-radius:12px;margin-bottom:12px;}
+.label{font-size:15px;font-weight:700;color:#00695C;}
+.value{font-size:16px;color:#333;margin-top:4px;}
+.like-btn { background:none; border:none; cursor:pointer; font-size:16px; padding:5px 10px; border-radius:20px; transition:all 0.3s; display:inline-flex; align-items:center; gap:5px; margin-top:10px;}
+.like-btn:hover { background: rgba(255,105,105,0.1);}
+.like-btn.liked { color:#d32f2f; font-weight:bold;}
+.like-btn i { font-size:18px; }
+.stars-input { margin:15px 0; direction:ltr; text-align:center; }
+.stars-input .star { font-size:32px; color:#ddd; cursor:pointer; transition:color 0.2s; padding:0 3px; }
+.stars-input .star.active { color:#ffc107; }
+.avg-rating { font-size:48px; font-weight:900; color:#ff9800; text-align:center; }
+.rating-stars { font-size:24px; color:#ffc107; text-align:center; margin:10px 0; }
+.review { background:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:15px; border-right:4px solid #00796B; }
+.review .stars { color:#ffc107; font-size:18px; margin-bottom:8px; }
+.btn-submit { background:#00796B; color:white; border:none; padding:12px 24px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; width:100%; transition:all 0.3s; margin-top:15px; }
+.btn-submit:hover:not(:disabled) { background:#009688; transform:translateY(-2px); }
+.btn-submit:disabled { background:#ccc; cursor:not-allowed; }
+.hospital-img { width:150px; height:150px; border-radius:50%; object-fit:cover; display:block; margin:20px auto; border:4px solid #00796B; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+.alert { padding:12px; border-radius:8px; margin:10px 0; text-align:center; font-weight:bold; animation:fadeIn 0.3s; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+.alert-success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+.alert-error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+textarea { width:100%; min-height:120px; padding:12px; border:2px solid #ddd; border-radius:8px; font-size:16px; resize:vertical; transition:border-color 0.3s; }
+textarea:focus { outline:none; border-color:#00796B; }
+</style>
+</head>
+
+<body>
+
+<a href="hospitals.html" class="back-btn">⬅ العودة لقائمة المستشفيات</a>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <img id="hospitalImg" class="hospital-img" alt="صورة المستشفى" src="https://via.placeholder.com/150">
+</div>
+
+<div class="card">
+  <h2 id="hName">جاري تحميل بيانات المستشفى...</h2>
+  <div class="info"><div class="label">📍 المدينة:</div><div class="value" id="hCity">-</div></div>
+  <div class="info"><div class="label">📞 الهاتف:</div><div class="value" id="hPhone">-</div></div>
+  <div class="info"><div class="label">🏥 الأقسام:</div><div class="value" id="hDepartments">-</div></div>
+  <div class="info"><div class="label">📝 الوصف:</div><div class="value" id="hDescription">-</div></div>
+  <a id="mapBtn" class="btn-submit" href="#" target="_blank" style="text-decoration:none; text-align:center;"><i class="fas fa-map-marker-alt"></i> عرض الموقع على الخريطة</a>
+</div>
+
+<div class="card">
+  <h3>⭐ التقييم العام</h3>
+  <div class="avg-rating" id="avgRating">0.0</div>
+  <div class="rating-stars" id="ratingStars">☆☆☆☆☆</div>
+  <div style="text-align:center; color:#666;" id="ratingCount">0 تقييم</div>
+</div>
+
+<div class="card">
+  <h3>📋 التقييمات السابقة</h3>
+  <div id="reviewsList" style="min-height: 100px;">
+    <div style="text-align:center; padding:30px; color:#777;">
+      <i class="fas fa-comments" style="font-size:48px; color:#ddd; margin-bottom:10px;"></i><br>
+      لا توجد تقييمات بعد. كن أول من يقيم!
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>✍️ أضف تقييمك</h3>
+  <div class="stars-input" id="starsInput">
+    <span class="star" data-rating="1">☆</span>
+    <span class="star" data-rating="2">☆</span>
+    <span class="star" data-rating="3">☆</span>
+    <span class="star" data-rating="4">☆</span>
+    <span class="star" data-rating="5">☆</span>
+  </div>
+  <div style="text-align:center; color:#666; margin-bottom:15px;">اختر عدد النجوم من 1 إلى 5</div>
+  <textarea id="reviewText" placeholder="شاركنا تجربتك مع هذا المستشفى..."></textarea>
+  <button id="sendReview" class="btn-submit"><i class="fas fa-paper-plane"></i> إرسال التقييم</button>
+</div>
+
+<div class="card" id="doctorsSection" style="display:none;">
+  <h3>👨‍⚕️ الأطباء في هذا المستشفى</h3>
+  <div id="hospitalDoctors"></div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://gxuumjhtutkipvkljjhj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const urlParams = new URLSearchParams(window.location.search);
+const hospitalId = urlParams.get('id');
+if (!hospitalId) { alert('خطأ: لم يتم تحديد مستشفى'); window.location.href='hospitals.html'; }
+
+let selectedRating = 0;
+let userIdentifier = null;
+
+// ==== النجوم ====
+function generateStars() {
+  const container = document.getElementById('starsInput');
+  container.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('span');
+    star.className = 'star'; star.dataset.rating = i; star.textContent = '☆';
+    star.addEventListener('mouseover',()=>highlightStars(i));
+    star.addEventListener('mouseout',()=>resetStars());
+    star.addEventListener('click',()=>selectRating(i));
+    container.appendChild(star);
+  }
+}
+function highlightStars(r){ document.querySelectorAll('.star').forEach((s,i)=>{s.textContent=i<r?'★':'☆'; s.style.color=i<r?'#ffc107':'#ddd';}); }
+function resetStars(){ document.querySelectorAll('.star').forEach((s,i)=>{s.textContent=i<selectedRating?'★':'☆'; s.style.color=i<selectedRating?'#ffc107':'#ddd';}); }
+function selectRating(r){ selectedRating=r; resetStars(); }
+
+// ==== تحميل المستشفى ====
+async function loadHospital(){
+  const {data,error}=await supabase.from('hospitals').select('*').eq('id',hospitalId).single();
+  if(error){ showAlert('حدث خطأ في تحميل المستشفى','error'); return; }
+  document.getElementById('hName').textContent=data.name;
+  document.getElementById('hCity').textContent=data.city||'غير محدد';
+  document.getElementById('hPhone').textContent=data.phone||'غير محدد';
+  document.getElementById('hDepartments').textContent=data.department||'غير محدد';
+  document.getElementById('hDescription').textContent=data.description||'لا يوجد وصف';
+  const img = document.getElementById('hospitalImg'); img.src=data.img||'https://via.placeholder.com/150?text=المستشفى'; img.alt=data.name;
+  const mapBtn = document.getElementById('mapBtn'); if(data.map){ mapBtn.href=data.map; } else { mapBtn.style.display='none'; }
+}
+
+// ==== تحميل التقييمات ====
+async function loadReviews(){
+  const {data:reviews,error}=await supabase.from('reviews').select('*').eq('hospital_id',hospitalId).order('date',{ascending:false});
+  if(error){ showAlert('حدث خطأ في تحميل التقييمات','error'); return; }
+  const reviewsList = document.getElementById('reviewsList');
+  if(!reviews || reviews.length===0){ reviewsList.innerHTML='<div style="text-align:center; padding:30px; color:#777;"><i class="fas fa-comments" style="font-size:48px; color:#ddd; margin-bottom:10px;"></i><br>لا توجد تقييمات بعد. كن أول من يقيم!</div>'; 
+    document.getElementById('avgRating').textContent='0.0';
+    document.getElementById('ratingStars').textContent='☆☆☆☆☆';
+    document.getElementById('ratingCount').textContent='0 تقييم';
+    return;
+  }
+  let total=0; reviews.forEach(r=>total+=r.rating);
+  const avg=(total/reviews.length).toFixed(1); const stars=Math.round(avg);
+  document.getElementById('avgRating').textContent=avg;
+  document.getElementById('ratingStars').textContent='★'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('ratingCount').textContent=`${reviews.length} تقييم`;
+  let html='';
+  reviews.forEach(r=>{
+    const starsTxt='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    const date=new Date(r.date).toLocaleDateString('ar-SA');
+    html+=`<div class="review"><div class="stars">${starsTxt}</div><p style="margin-bottom:10px;">${r.text||'لا يوجد تعليق'}</p>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:#666; font-size:14px;"><i class="far fa-calendar"></i> ${date}</span>
+      <button class="like-btn" onclick="likeReview('${r.id}',this)" data-likes="${r.likes||0}"><i class="far fa-heart"></i> أعجبني (${r.likes||0})</button>
+      </div></div>`;
+  });
+  reviewsList.innerHTML=html;
+}
+
+// ==== إضافة تقييم ====
+async function addReview(){
+  const text=document.getElementById('reviewText').value.trim();
+  if(selectedRating===0){ showAlert('يرجى اختيار تقييم بالنجوم','error'); return; }
+  if(text.length<5){ showAlert('يرجى كتابة تعليق أطول من 5 أحرف','error'); return; }
+  const btn=document.getElementById('sendReview'); const orig=btn.innerHTML; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...'; btn.disabled=true;
+  try{
+    if(!userIdentifier) userIdentifier=await generateUserIdentifier();
+    const {error}=await supabase.from('reviews').insert([{
+      rating:selectedRating, text, hospital_id:hospitalId, likes:0, liked_by:[], date:new Date().toISOString()
+    }]);
+    if(error) throw error;
+    showAlert('تم إرسال تقييمك بنجاح!','success');
+    document.getElementById('reviewText').value=''; selectedRating=0; resetStars();
+    await loadReviews();
+  }catch(err){ console.error(err); showAlert('حدث خطأ في إرسال التقييم','error'); }
+  finally{ btn.innerHTML=orig; btn.disabled=false; }
+}
+
+// ==== توليد معرف مستخدم ====
+async function generateUserIdentifier(){
+  const local=localStorage.getItem('user_identifier'); if(local) return local;
+  try{ const resp=await fetch('https://api.ipify.org?format=json'); const data=await resp.json(); const id='ip_'+data.ip; localStorage.setItem('user_identifier',id); return id; } catch(e){}
+  const id='user_'+Date.now()+'_'+Math.random().toString(36).substr(2,9); localStorage.setItem('user_identifier',id); return id;
+}
+
+// ==== الإعجاب بالتقييم ====
+window.likeReview=async function(id,btn){
+  if(!userIdentifier) userIdentifier=await generateUserIdentifier();
+  if(btn.classList.contains('liked')){ showAlert('لقد أعجبت بهذا التقييم مسبقاً','error'); return; }
+  try{
+    const {data:review,error}=await supabase.from('reviews').select('likes, liked_by').eq('id',id).single();
+    if(error||!review) throw error||new Error('التقييم غير موجود');
+    let liked=review.liked_by||[];
+    if(liked.includes(userIdentifier)){ showAlert('لقد أعجبت بهذا التقييم مسبقاً','error'); btn.classList.add('liked'); return; }
+    liked.push(userIdentifier); const newLikes=(review.likes||0)+1;
+    const {error:updateError}=await supabase.from('reviews').update({likes:newLikes, liked_by:liked}).eq('id',id);
+    if(updateError) throw updateError;
+    btn.classList.add('liked'); btn.innerHTML=`<i class="fas fa-heart"></i> أعجبني (${newLikes})`;
+    showAlert('تم تسجيل إعجابك بالتقييم','success');
+  }catch(err){ console.error(err); showAlert('حدث خطأ في تسجيل الإعجاب','error'); }
+}
+
+// ==== تحميل الأطباء ====
+async function loadDoctors(){
+  const {data:hosp, error:hErr}=await supabase.from('hospitals').select('name').eq('id',hospitalId).single();
+  if(hErr||!hosp) return;
+  const {data:doctors,error:dErr}=await supabase.from('doctors').select('*').ilike('hospital',`%${hosp.name}%`);
+  if(dErr||!doctors||doctors.length===0) return;
+  const container=document.getElementById('hospitalDoctors'); container.innerHTML=''; document.getElementById('doctorsSection').style.display='block';
+  doctors.forEach(doc=>{
+    let scheduleText='غير محدد';
+    if(doc.schedule){ const sched=doc.schedule; const days=sched.days||'غير محدد'; const times=sched.times||'غير محدد'; scheduleText=`${days} | ${times}`; }
+    container.innerHTML+=`
+      <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:15px;">
+          <img src="${doc.img||'https://via.placeholder.com/50'}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+          <div style="flex:1;">
+            <div style="font-weight:bold; color:#00695C;">${doc.name}</div>
+            <div style="color:#666;">${doc.specialty||'غير محدد'}</div>
+            <div style="font-size:14px; color:#888;"><i class="far fa-calendar"></i> ${scheduleText}</div>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+// ==== رسائل التنبيه ====
+function showAlert(msg,type){
+  const old=document.querySelector('.alert'); if(old) old.remove();
+  const div=document.createElement('div'); div.className=`alert alert-${type}`; div.textContent=msg;
+  document.body.insertBefore(div,document.body.firstChild);
+  setTimeout(()=>{ if(div.parentNode) div.parentNode.removeChild(div); },3000);
+}
+
+// ==== تهيئة الصفحة ====
+document.addEventListener('DOMContentLoaded',async()=>{
+  generateStars();
+  await loadHospital(); await loadReviews(); await loadDoctors();
+  document.getElementById('sendReview').addEventListener('click',addReview);
+  document.getElementById('reviewText').addEventListener('keypress',e=>{if(e.key==='Enter'&&e.ctrlKey)addReview();});
+});
+
+// ==== تحديث تلقائي كل 30 ثانية ====
+setInterval(async()=>{ await loadReviews(); },30000);
+</script>
+</body>
+</html>

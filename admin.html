@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة التحكم | السياحة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+body{font-family:Cairo;margin:0;background:#f4f4f4}
+header{background:#e65100;color:#fff;padding:15px;font-weight:900;text-align:center}
+.container{padding:20px}
+input,button,textarea,select{padding:8px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;width:100%}
+button{cursor:pointer}
+#logout{background:#d32f2f;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:10px}
+.tabs{display:flex;gap:10px;padding:10px;justify-content:center;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.tabs button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;background:#e65100;color:#fff;font-weight:700}
+.tabs button.active{background:#ff9800}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;margin-top:20px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:center}
+button.action{background:#e65100;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;margin:2px}
+button.action.edit{background:#ff9800}
+button.action.delete{background:#d32f2f}
+form{display:flex;flex-direction:column;gap:10px;background:#fff;padding:15px;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.hidden{display:none}
+label{font-weight:700}
+</style>
+</head>
+<body>
+
+<header>لوحة التحكم | السياحة</header>
+
+<div class="container">
+
+  <!-- صفحة تسجيل الدخول -->
+  <div id="login-div">
+    <h3>تسجيل الدخول للمدير</h3>
+    <input type="email" id="login-email" placeholder="البريد الإلكتروني">
+    <input type="password" id="login-password" placeholder="كلمة المرور">
+    <button id="login-btn">تسجيل الدخول</button>
+  </div>
+
+  <!-- لوحة التحكم -->
+  <div id="dashboard" class="hidden">
+
+    <button id="logout">تسجيل خروج</button>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-table="tourism_restaurants">المطاعم</button>
+      <button class="tab-btn" data-table="tourism_cafes">الكافيهات</button>
+      <button class="tab-btn" data-table="tourism_hotels">الفنادق</button>
+      <button class="tab-btn" data-table="tourism_markets">الأسواق</button>
+    </div>
+
+    <form id="item-form">
+      <h3 id="form-title">إضافة عنصر جديد</h3>
+      <input type="hidden" id="item-id">
+
+      <label>الاسم</label>
+      <input type="text" id="name" required>
+
+      <label>الموقع / العنوان</label>
+      <input type="text" id="location">
+
+      <label>الهاتف</label>
+      <input type="text" id="phone">
+
+      <label id="type-label">النوع / الخدمات / التخصص</label>
+      <input type="text" id="type">
+
+      <label>الوصف</label>
+      <textarea id="description"></textarea>
+
+      <label>رابط الصورة</label>
+      <input type="text" id="image">
+
+      <div id="extra-fields"></div>
+
+      <label>التقييم</label>
+      <input type="number" step="0.1" id="rating">
+
+      <button type="submit" id="save-btn">حفظ</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>الموقع / العنوان</th>
+          <th>الهاتف</th>
+          <th>النوع / الخدمات / التخصص</th>
+          <th>التقييم</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="data-body"></tbody>
+    </table>
+
+  </div>
+
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js';
+
+const ADMIN_EMAIL = "maged@gmail.com";
+let currentTable = "tourism_restaurants";
+
+const extraFieldsConfig = {
+  tourism_cafes: [
+    { label:"ساعات العمل", id:"opening_hours", type:"text" },
+    { label:"WiFi متوفر", id:"has_wifi", type:"checkbox" },
+    { label:"موقف سيارات", id:"has_parking", type:"checkbox" },
+    { label:"جلسات خارجية", id:"has_outdoor_seating", type:"checkbox" },
+  ],
+  tourism_hotels: [
+    { label:"ساعات العمل", id:"opening_hours", type:"text" },
+    { label:"WiFi متوفر", id:"has_wifi", type:"checkbox" },
+    { label:"موقف سيارات", id:"has_parking", type:"checkbox" },
+    { label:"مطعم متوفر", id:"has_restaurant", type:"checkbox" },
+    { label:"مسبح متوفر", id:"has_pool", type:"checkbox" },
+    { label:"السعر", id:"price", type:"text" },
+    { label:"الخدمات", id:"services", type:"text" },
+    { label:"رابط الخريطة", id:"map_link", type:"text" },
+  ],
+  tourism_markets: [
+    { label:"ساعات العمل", id:"working_hours", type:"text" },
+    { label:"موقف سيارات", id:"has_parking", type:"checkbox" },
+    { label:"دورات مياه", id:"has_restrooms", type:"checkbox" },
+    { label:"ATM متوفر", id:"has_atm", type:"checkbox" },
+    { label:"تخصصات", id:"specialties", type:"text" },
+    { label:"رابط الخريطة", id:"map_link", type:"text" },
+  ]
+};
+
+// تسجيل الدخول
+document.getElementById("login-btn").addEventListener("click", async () => {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return alert(error.message);
+  if (email !== ADMIN_EMAIL) {
+    alert("غير مصرح لك بالدخول");
+    await supabase.auth.signOut();
+    return;
+  }
+  document.getElementById("login-div").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  loadTable(currentTable);
+});
+
+// تسجيل الخروج
+document.getElementById("logout").addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  location.reload();
+});
+
+// التبديل بين الجداول
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    loadTable(btn.dataset.table);
+  });
+});
+
+// عرض الحقول الإضافية
+function renderExtraFields(table, values={}){
+  const container = document.getElementById("extra-fields");
+  container.innerHTML = "";
+  if(!extraFieldsConfig[table]) return;
+  extraFieldsConfig[table].forEach(f=>{
+    if(f.type==="checkbox"){
+      const div = document.createElement("div");
+      div.innerHTML = `<label><input type="checkbox" id="${f.id}" ${values[f.id]?"checked":""}> ${f.label}</label>`;
+      container.appendChild(div);
+    } else {
+      const label = document.createElement("label");
+      label.innerText = f.label;
+      const input = document.createElement("input");
+      input.type = f.type;
+      input.id = f.id;
+      if(values[f.id]) input.value = values[f.id];
+      container.appendChild(label);
+      container.appendChild(input);
+    }
+  });
+}
+
+// تحميل بيانات الجدول
+async function loadTable(table){
+  currentTable = table;
+  renderExtraFields(table);
+  const tbody = document.getElementById("data-body");
+  tbody.innerHTML = "جاري التحميل...";
+  const { data, error } = await supabase.from(table).select("*").order('created_at',{ascending:false});
+  if(error){ tbody.innerHTML="حدث خطأ"; return; }
+  tbody.innerHTML="";
+  data.forEach(item=>{
+    let typeValue = "";
+    if(table==="tourism_restaurants") typeValue=item.type||"";
+    else if(table==="tourism_cafes") typeValue="";
+    else if(table==="tourism_hotels") typeValue=item.services||"";
+    else if(table==="tourism_markets") typeValue=item.specialties||"";
+
+    const locationVal = item.location || "";
+
+    tbody.innerHTML+=`
+      <tr>
+        <td>${item.name||""}</td>
+        <td>${locationVal}</td>
+        <td>${item.phone||""}</td>
+        <td>${typeValue}</td>
+        <td>${item.rating||""}</td>
+        <td>
+          <button class="action edit" onclick="editItem('${item.id}')">تعديل</button>
+          <button class="action delete" onclick="deleteItem('${item.id}')">حذف</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// تعديل عنصر
+window.editItem = function(id){
+  const table = currentTable;
+  supabase.from(table).select("*").eq("id",id).then(({data})=>{
+    if(data && data[0]){
+      const item = data[0];
+      document.getElementById("item-id").value = id;
+      document.getElementById("name").value = item.name||"";
+      document.getElementById("location").value = item.location || "";
+      document.getElementById("phone").value = item.phone||"";
+      document.getElementById("rating").value = item.rating||"";
+      if(table==="tourism_hotels") document.getElementById("type").value=item.services||"";
+      else if(table==="tourism_markets") document.getElementById("type").value=item.specialties||"";
+      else document.getElementById("type").value=item.type||"";
+      renderExtraFields(table,item);
+      document.getElementById("form-title").innerText="تعديل العنصر";
+    }
+  });
+}
+
+// حذف عنصر
+window.deleteItem = async function(id){
+  if(!confirm("تأكيد الحذف؟")) return;
+  const { error } = await supabase.from(currentTable).delete().eq('id',id);
+  if(error) alert(error.message);
+  loadTable(currentTable);
+}
+
+// حفظ أو تحديث عنصر
+document.getElementById("item-form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const id = document.getElementById("item-id").value;
+  let payload = {
+    name: document.getElementById("name").value,
+    location: document.getElementById("location").value, // استخدم location
+    phone: document.getElementById("phone").value,
+    description: document.getElementById("description").value,
+    image: document.getElementById("image").value,
+    rating: parseFloat(document.getElementById("rating").value)||null
+  };
+
+  if(currentTable==="tourism_hotels") payload.services=document.getElementById("type").value;
+  else if(currentTable==="tourism_markets") payload.specialties=document.getElementById("type").value;
+  else payload.type=document.getElementById("type").value;
+
+  if(extraFieldsConfig[currentTable]){
+    extraFieldsConfig[currentTable].forEach(f=>{
+      const el = document.getElementById(f.id);
+      if(el) payload[f.id]=(f.type==="checkbox")?el.checked:el.value;
+    });
+  }
+
+  if(id){
+    const { error } = await supabase.from(currentTable).update(payload).eq('id',id);
+    if(error) alert(error.message);
+  } else {
+    const { error } = await supabase.from(currentTable).insert([payload]);
+    if(error) alert(error.message);
+  }
+
+  document.getElementById("item-form").reset();
+  document.getElementById("item-id").value="";
+  document.getElementById("form-title").innerText="إضافة عنصر جديد";
+  renderExtraFields(currentTable);
+  loadTable(currentTable);
+});
+</script>
+
+</body>
+</html>

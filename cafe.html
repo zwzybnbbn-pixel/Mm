@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المقهى</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- استيراد Supabase SDK -->
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        // 🔗 رابط مشروعك
+        const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
+        // 🔑 المفتاح العام (anon key)
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+        // 📦 إنشاء عميل Supabase
+        window.supabase = createClient(supabaseUrl, supabaseKey);
+    </script>
+
+    <style>
+        :root {
+            --cafe-primary: #6d4c41;
+            --cafe-secondary: #8d6e63;
+            --cafe-light: #a1887f;
+            --cafe-dark: #5d4037;
+            --cafe-cream: #fff8e1;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow-light: 0 4px 15px rgba(109, 76, 65, 0.1);
+            --shadow-hover: 0 8px 25px rgba(109, 76, 65, 0.2);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f9f5eb 0%, #f3e5ab 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* تأثير خلفي */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(109, 76, 65, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(141, 110, 99, 0.03) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* زر العودة */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--cafe-dark), var(--cafe-primary));
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(93, 64, 55, 0.4);
+            background: linear-gradient(135deg, var(--cafe-primary), var(--cafe-dark));
+        }
+
+        /* مؤشر التحميل */
+        .loading-container {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(109, 76, 65, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--cafe-primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--cafe-dark);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* كارت التفاصيل */
+        .details-card {
+            background: var(--card-bg);
+            padding: 30px 25px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-light);
+            margin-top: 20px;
+            border: 1px solid rgba(109, 76, 65, 0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* صورة المقهى */
+        .cafe-image-container {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .cafe-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 5px solid var(--cafe-secondary);
+            box-shadow: 0 6px 20px rgba(109, 76, 65, 0.25);
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--cafe-light), var(--cafe-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--cafe-secondary);
+        }
+
+        .image-placeholder i {
+            font-size: 60px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* العنوان */
+        .cafe-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--cafe-primary);
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.4;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .cafe-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--cafe-secondary), transparent);
+            border-radius: 2px;
+        }
+
+        /* معلومات المقهى */
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(141, 110, 99, 0.05);
+            border-radius: 15px;
+            border-right: 4px solid var(--cafe-secondary);
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--cafe-dark);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .info-label i {
+            color: var(--cafe-secondary);
+            font-size: 20px;
+        }
+
+        .info-value {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.6;
+            padding-right: 30px;
+        }
+
+        /* الميزات */
+        .features-section {
+            margin: 35px 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--cafe-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(109, 76, 65, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .feature-card.active {
+            border-color: var(--cafe-secondary);
+            background: rgba(141, 110, 99, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(109, 76, 65, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            color: var(--cafe-primary);
+            margin-bottom: 10px;
+        }
+
+        .feature-name {
+            font-weight: 700;
+            color: var(--cafe-dark);
+            font-size: 16px;
+        }
+
+        .feature-status {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* زر الخريطة */
+        .map-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--cafe-secondary), var(--cafe-primary));
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(141, 110, 99, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .map-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(141, 110, 99, 0.4);
+            background: linear-gradient(135deg, var(--cafe-primary), var(--cafe-secondary));
+        }
+
+        .map-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .map-btn i {
+            font-size: 22px;
+        }
+
+        /* التقييم */
+        .rating-section {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .rating-stars {
+            font-size: 24px;
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .rating-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cafe-dark);
+            background: rgba(255, 193, 7, 0.1);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* حالة الخطأ */
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+            margin: 20px 0;
+        }
+
+        .error-icon {
+            font-size: 60px;
+            color: #e53935;
+            margin-bottom: 20px;
+        }
+
+        .error-state h3 {
+            color: var(--cafe-dark);
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .error-state p {
+            color: #777;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* تحسينات للجوال */
+        @media (max-width: 767px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .details-card {
+                padding: 20px 15px;
+            }
+            
+            .cafe-image-container {
+                height: 250px;
+            }
+            
+            .cafe-title {
+                font-size: 24px;
+            }
+            
+            .info-label {
+                font-size: 16px;
+            }
+            
+            .info-value {
+                font-size: 15px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+            }
+            
+            .cafe-image-container {
+                max-width: 400px;
+                height: 350px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="cafes.html" class="back-btn">
+            <i class="fas fa-arrow-right"></i>
+            العودة للمقاهي
+        </a>
+
+        <!-- مؤشر التحميل -->
+        <div id="loading" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">جاري تحميل تفاصيل المقهى...</p>
+        </div>
+
+        <!-- حالة الخطأ -->
+        <div id="error-state" class="error-state" style="display: none;">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 id="error-title">خطأ في تحميل البيانات</h3>
+            <p id="error-message"></p>
+            <a href="cafes.html" class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+                العودة للمقاهي
+            </a>
+        </div>
+
+        <!-- كارت التفاصيل -->
+        <div id="cafe-details" class="details-card" style="display: none;">
+            <!-- الصورة -->
+            <div class="cafe-image-container">
+                <img id="cafeImg" class="cafe-img" alt="صورة المقهى">
+            </div>
+
+            <!-- العنوان -->
+            <h1 id="cafeName" class="cafe-title">جاري التحميل...</h1>
+
+            <!-- المعلومات الأساسية -->
+            <div class="info-section">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        العنوان:
+                    </div>
+                    <div id="cafeAddress" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i>
+                        الهاتف:
+                    </div>
+                    <div id="cafePhone" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-clock"></i>
+                        ساعات العمل:
+                    </div>
+                    <div id="cafeHours" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-info-circle"></i>
+                        الوصف:
+                    </div>
+                    <div id="cafeDescription" class="info-value"></div>
+                </div>
+            </div>
+
+            <!-- التقييم -->
+            <div id="ratingContainer" class="rating-section" style="display: none;">
+                <div class="rating-stars" id="ratingStars"></div>
+                <div class="rating-value" id="ratingValue"></div>
+            </div>
+
+            <!-- الميزات -->
+            <div class="features-section">
+                <h3 class="section-title">المميزات والخدمات</h3>
+                <div class="features-grid" id="featuresGrid"></div>
+            </div>
+
+            <!-- تاريخ الإنشاء -->
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-calendar-alt"></i>
+                    تاريخ الإضافة:
+                </div>
+                <div id="createdAt" class="info-value"></div>
+            </div>
+
+            <!-- زر الخريطة -->
+            <a id="mapBtn" class="map-btn" href="#" target="_blank">
+                <i class="fas fa-map-marked-alt"></i>
+                عرض على الخريطة
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('error-state');
+            const cafeDetails = document.getElementById('cafe-details');
+            
+            // الحصول على ID من رابط الصفحة
+            const urlParams = new URLSearchParams(window.location.search);
+            const cafeId = urlParams.get('id');
+            
+            if (!cafeId) {
+                showError('معرف المقهى غير موجود', 'يرجى العودة إلى صفحة المقاهي وتحديد مقهى لعرضه.');
+                return;
+            }
+            
+            await loadCafeDetails(cafeId);
+            
+            async function loadCafeDetails(id) {
+                try {
+                    // انتظار تحميل Supabase
+                    await waitForSupabase();
+                    
+                    if (!window.supabase) {
+                        throw new Error('Supabase غير متوفر');
+                    }
+                    
+                    // جلب بيانات المقهى من Supabase
+                    const { data: cafe, error } = await window.supabase
+                        .from('tourism_cafes')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    
+                    // إخفاء مؤشر التحميل
+                    loading.style.display = 'none';
+                    
+                    if (error) {
+                        console.error('خطأ في جلب بيانات المقهى:', error);
+                        showError('خطأ في تحميل البيانات', 'تعذر تحميل تفاصيل المقهى. يرجى المحاولة مرة أخرى.');
+                        return;
+                    }
+                    
+                    if (!cafe) {
+                        showError('المقهى غير موجود', 'لم يتم العثور على المقهى المطلوب. قد يكون قد تم حذفه.');
+                        return;
+                    }
+                    
+                    // عرض تفاصيل المقهى
+                    displayCafeDetails(cafe);
+                    
+                } catch (error) {
+                    console.error('خطأ غير متوقع:', error);
+                    loading.style.display = 'none';
+                    showError('خطأ غير متوقع', 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+                }
+            }
+            
+            function displayCafeDetails(cafe) {
+                // إظهار كارت التفاصيل
+                cafeDetails.style.display = 'block';
+                
+                // تعيين القيم
+                document.getElementById('cafeName').textContent = cafe.name || 'مقهى بدون اسم';
+                document.getElementById('cafeAddress').textContent = cafe.address || 'غير محدد';
+                document.getElementById('cafePhone').textContent = cafe.phone || 'لا يوجد';
+                document.getElementById('cafeHours').textContent = cafe.opening_hours || 'غير محدد';
+                document.getElementById('cafeDescription').textContent = cafe.description || 'لا يوجد وصف';
+                
+                // الصورة
+                const cafeImg = document.getElementById('cafeImg');
+                if (cafe.image) {
+                    cafeImg.src = cafe.image;
+                    cafeImg.style.display = 'block';
+                } else {
+                    // إنشاء صورة افتراضية
+                    cafeImg.style.display = 'none';
+                    document.querySelector('.cafe-image-container').innerHTML = `
+                        <div class="image-placeholder">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                    `;
+                }
+                
+                // التقييم
+                if (cafe.rating) {
+                    document.getElementById('ratingContainer').style.display = 'block';
+                    document.getElementById('ratingValue').textContent = cafe.rating.toFixed(1);
+                    
+                    // عرض النجوم
+                    const stars = generateStarRating(cafe.rating);
+                    document.getElementById('ratingStars').innerHTML = stars;
+                }
+                
+                // الميزات
+                const featuresGrid = document.getElementById('featuresGrid');
+                featuresGrid.innerHTML = '';
+                
+                const features = [
+                    { id: 'wifi', name: 'واي فاي', icon: 'fa-wifi', value: cafe.has_wifi },
+                    { id: 'parking', name: 'مواقف سيارات', icon: 'fa-parking', value: cafe.has_parking },
+                    { id: 'outdoor', name: 'جلوس خارجي', icon: 'fa-umbrella-beach', value: cafe.has_outdoor_seating }
+                ];
+                
+                features.forEach(feature => {
+                    const featureCard = document.createElement('div');
+                    featureCard.className = `feature-card ${feature.value ? 'active' : ''}`;
+                    featureCard.innerHTML = `
+                        <div class="feature-icon">
+                            <i class="fas ${feature.icon}"></i>
+                        </div>
+                        <div class="feature-name">${feature.name}</div>
+                        <div class="feature-status">${feature.value ? 'متاح' : 'غير متاح'}</div>
+                    `;
+                    featuresGrid.appendChild(featureCard);
+                });
+                
+                // تاريخ الإضافة
+                if (cafe.created_at) {
+                    const date = new Date(cafe.created_at);
+                    const formattedDate = date.toLocaleDateString('ar-SA', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    document.getElementById('createdAt').textContent = formattedDate;
+                }
+                
+                // رابط الخريطة
+                const mapBtn = document.getElementById('mapBtn');
+                if (cafe.map_link) {
+                    mapBtn.href = cafe.map_link;
+                    mapBtn.style.display = 'flex';
+                } else {
+                    // إنشاء رابط خريطة افتراضي باستخدام العنوان
+                    const address = encodeURIComponent(cafe.address || '');
+                    mapBtn.href = `https://www.google.com/maps/search/?api=1&query=${address}`;
+                    mapBtn.style.display = 'flex';
+                }
+            }
+            
+            function showError(title, message) {
+                errorState.style.display = 'block';
+                document.getElementById('error-title').textContent = title;
+                document.getElementById('error-message').textContent = message;
+            }
+            
+            function generateStarRating(rating) {
+                const fullStars = Math.floor(rating);
+                const halfStar = rating % 1 >= 0.5;
+                const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+                
+                let starsHtml = '';
+                
+                // نجوم ممتلئة
+                for (let i = 0; i < fullStars; i++) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                }
+                
+                // نصف نجمة
+                if (halfStar) {
+                    starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                }
+                
+                // نجوم فارغة
+                for (let i = 0; i < emptyStars; i++) {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+                
+                return starsHtml;
+            }
+            
+            async function waitForSupabase() {
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                return new Promise((resolve, reject) => {
+                    const checkSupabase = () => {
+                        attempts++;
+                        if (window.supabase) {
+                            resolve();
+                        } else if (attempts >= maxAttempts) {
+                            reject(new Error('فشل تحميل Supabase'));
+                        } else {
+                            setTimeout(checkSupabase, 500);
+                        }
+                    };
+                    checkSupabase();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

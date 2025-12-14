@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔔 جميع التنبيهات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #ff6b6b;
+  --primary-dark: #ff4757;
+  --dark-bg: #0a0a0a;
+  --card-bg: rgba(255, 255, 255, 0.07);
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, #111 50%, #1a1a1a 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: white;
+  line-height: 1.6;
+}
+
+/* ===== شريط التنقل ===== */
+.nav {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-around;
+  font-size: 16px;
+  margin-bottom: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
+}
+
+.nav a.active {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--primary);
+}
+
+
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), #ffa726);
+  border-radius: 3px;
+}
+
+/* ===== شريط الإحصائيات ===== */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.stat-item i {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.stat-item .count {
+  font-size: 28px;
+  font-weight: 800;
+  display: block;
+  margin: 5px 0;
+}
+
+.stat-item .label {
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* ===== عنصر التنبيه ===== */
+.alerts-container {
+  display: grid;
+  gap: 20px;
+}
+
+.alert-item {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  border-right: 5px solid var(--primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2);
+}
+
+.alert-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), #ffa726);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-header h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.alert-id {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--primary);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.alert-content {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #e0e0e0;
+}
+
+.alert-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meta-item {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.meta-item strong {
+  color: var(--primary);
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.meta-item span {
+  font-size: 16px;
+  color: #fff;
+}
+
+.meta-item i {
+  margin-left: 5px;
+  color: var(--primary);
+}
+
+/* ===== حالات التنبيه ===== */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.status-active {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.status-inactive {
+  background: rgba(108, 117, 125, 0.2);
+  color: #6c757d;
+}
+
+.status-urgent {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* ===== فلاتر ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 107, 107, 0.1);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ===== حالة التحميل ===== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #aaa;
+  font-size: 18px;
+  grid-column: 1 / -1;
+}
+
+.loading i {
+  font-size: 24px;
+  margin-bottom: 15px;
+  display: block;
+  color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== حالة فارغة ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  grid-column: 1 / -1;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #444;
+  display: block;
+}
+
+/* ===== تحديث تلقائي ===== */
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  font-size: 14px;
+  color: #888;
+  justify-content: center;
+}
+
+.auto-refresh i {
+  color: var(--primary);
+}
+
+/* ===== استجابة للجوال ===== */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .alert-meta {
+    grid-template-columns: 1fr;
+  }
+  
+  .alert-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .filters {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 24px;
+  }
+  
+  .alert-item {
+    padding: 20px;
+  }
+  
+  .alert-content {
+    font-size: 16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- شريط التنقل -->
+<nav class="nav">
+  <a href="index2.html"><i class="fas fa-home"></i> الرئيسية</a>
+  <a href="reports.html"><i class="fas fa-exclamation-triangle"></i> البلاغات</a>
+  <a href="schedule.html"><i class="fas fa-calendar-alt"></i> جدول التشغيل</a>
+  <a href="alerts.html" class="active"><i class="fas fa-bell"></i> التنبيهات</a>
+  <a href="reasons.html"><i class="fas fa-list"></i> أسباب الانقطاع</a>
+</nav>
+
+<!-- العنوان الرئيسي -->
+<h2>🔔 جميع التنبيهات</h2>
+
+<!-- إحصائيات -->
+<div class="stats-bar" id="statsContainer">
+  <div class="stat-item">
+    <i class="fas fa-bell"></i>
+    <span class="count" id="totalCount">0</span>
+    <span class="label">إجمالي التنبيهات</span>
+  </div>
+  <div class="stat-item">
+    <i class="fas fa-bolt"></i>
+    <span class="count" id="activeCount">0</span>
+    <span class="label">تنبيهات نشطة</span>
+  </div>
+  <div class="stat-item">
+    <i class="fas fa-exclamation-circle"></i>
+    <span class="count" id="urgentCount">0</span>
+    <span class="label">عاجلة</span>
+  </div>
+  <div class="stat-item">
+    <i class="fas fa-clock"></i>
+    <span class="count" id="inactiveCount">0</span>
+    <span class="label">منتهية</span>
+  </div>
+</div>
+
+<!-- فلاتر -->
+<div class="filters" id="filtersContainer">
+  <button class="filter-btn active" data-filter="all">
+    <i class="fas fa-list"></i> الكل
+  </button>
+  <button class="filter-btn" data-filter="active">
+    <i class="fas fa-bolt"></i> نشطة
+  </button>
+  <button class="filter-btn" data-filter="urgent">
+    <i class="fas fa-exclamation-circle"></i> عاجلة
+  </button>
+  <button class="filter-btn" data-filter="inactive">
+    <i class="fas fa-clock"></i> منتهية
+  </button>
+</div>
+
+<!-- قائمة التنبيهات -->
+<div id="list" class="loading">
+  <i class="fas fa-spinner"></i> جاري تحميل التنبيهات...
+</div>
+
+<!-- تحديث تلقائي -->
+<div class="auto-refresh">
+  <i class="fas fa-sync-alt"></i>
+  <span>سيتم تحديث التنبيهات تلقائياً كل 30 ثانية</span>
+</div>
+
+<script type="module">
+// استيراد Supabase
+import { supabase } from './supabase.js';
+
+// عناصر DOM
+const list = document.getElementById('list');
+const filtersContainer = document.getElementById('filtersContainer');
+const stats = {
+  total: document.getElementById('totalCount'),
+  active: document.getElementById('activeCount'),
+  urgent: document.getElementById('urgentCount'),
+  inactive: document.getElementById('inactiveCount')
+};
+
+// متغيرات
+let allAlerts = [];
+let currentFilter = 'all';
+
+// دالة لتنسيق التاريخ
+function formatDate(dateString) {
+  if (!dateString) return '—';
+  
+  const date = new Date(dateString);
+  return date.toLocaleString('ar-EG', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+// دالة لتحديث الإحصائيات
+function updateStatistics(alerts) {
+  const total = alerts.length;
+  const active = alerts.filter(a => a.active && !a.urgent).length;
+  const urgent = alerts.filter(a => a.urgent).length;
+  const inactive = alerts.filter(a => !a.active).length;
+  
+  stats.total.textContent = total;
+  stats.active.textContent = active;
+  stats.urgent.textContent = urgent;
+  stats.inactive.textContent = inactive;
+}
+
+// دالة لتطبيق الفلاتر
+function filterAlerts() {
+  let filtered = [...allAlerts];
+  
+  if (currentFilter === 'active') {
+    filtered = filtered.filter(alert => alert.active && !alert.urgent);
+  } else if (currentFilter === 'urgent') {
+    filtered = filtered.filter(alert => alert.urgent);
+  } else if (currentFilter === 'inactive') {
+    filtered = filtered.filter(alert => !alert.active);
+  }
+  
+  displayAlerts(filtered);
+  updateStatistics(filtered);
+}
+
+// دالة لعرض التنبيهات
+function displayAlerts(alerts) {
+  if (!alerts || alerts.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="far fa-bell-slash"></i>
+        <p>لا توجد تنبيهات ${currentFilter !== 'all' ? `بالفلتر: ${currentFilter}` : ''}</p>
+        <p style="font-size: 14px; color: #666;">جميع الأنظمة تعمل بشكل طبيعي</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '<div class="alerts-container">';
+  
+  alerts.forEach(alert => {
+    const { id, title, content, active, urgent, priority, created_at, updated_at } = alert;
+    
+    // تحديد فئة الحالة
+    let statusClass = 'status-inactive';
+    let statusIcon = 'fas fa-clock';
+    let statusText = 'منتهي';
+    
+    if (urgent) {
+      statusClass = 'status-urgent';
+      statusIcon = 'fas fa-exclamation-circle';
+      statusText = 'عاجل';
+    } else if (active) {
+      statusClass = 'status-active';
+      statusIcon = 'fas fa-bolt';
+      statusText = 'نشط';
+    }
+    
+    // تحديد لون الأولوية
+    let priorityColor = '#ff6b6b';
+    if (priority === 'medium') priorityColor = '#ffa726';
+    if (priority === 'low') priorityColor = '#4db8ff';
+    
+    html += `
+      <div class="alert-item" style="border-right-color: ${priorityColor}">
+        <div class="alert-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> ${title || 'تنبيه'}</h3>
+          <span class="alert-id">#${id.substring(0, 8)}</span>
+        </div>
+        
+        <div class="alert-content">
+          ${content || 'لا يوجد محتوى'}
+        </div>
+        
+        <div class="alert-meta">
+          <div class="meta-item">
+            <strong><i class="fas fa-info-circle"></i> الأولوية</strong>
+            <span style="color: ${priorityColor}">${priority === 'high' ? 'عالية' : priority === 'medium' ? 'متوسطة' : 'منخفضة'}</span>
+          </div>
+          
+          <div class="meta-item">
+            <strong><i class="fas fa-calendar-plus"></i> تاريخ الإضافة</strong>
+            <span>${formatDate(created_at)}</span>
+          </div>
+          
+          <div class="meta-item">
+            <strong><i class="fas fa-calendar-check"></i> آخر تحديث</strong>
+            <span>${formatDate(updated_at)}</span>
+          </div>
+        </div>
+        
+        <div class="${statusClass} status-badge">
+          <i class="${statusIcon}"></i> ${statusText}
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  list.innerHTML = html;
+}
+
+// دالة لتحميل التنبيهات من Supabase
+async function loadAlerts() {
+  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل التنبيهات...</div>';
+  
+  try {
+    const { data: alerts, error } = await supabase
+      .from('alerts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    console.log(`✅ تم تحميل ${alerts?.length || 0} تنبيه`);
+    allAlerts = alerts || [];
+    
+    // تطبيق الفلتر الحالي
+    filterAlerts();
+    
+  } catch (error) {
+    console.error('❌ خطأ في تحميل التنبيهات:', error);
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>حدث خطأ في تحميل التنبيهات</p>
+        <p style="font-size: 14px; color: #e74c3c;">${error.message}</p>
+        <button onclick="loadAlerts()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600;">
+          <i class="fas fa-redo"></i> إعادة المحاولة
+        </button>
+      </div>
+    `;
+  }
+}
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  console.log('🚀 بدء تحميل صفحة التنبيهات...');
+  
+  // تحميل التنبيهات أول مرة
+  await loadAlerts();
+  
+  // إعداد الفلاتر
+  const filterButtons = filtersContainer.querySelectorAll('.filter-btn');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // إزالة النشط من جميع الأزرار
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // تفعيل الزر المختار
+      button.classList.add('active');
+      
+      // تحديث الفلتر
+      currentFilter = button.dataset.filter;
+      
+      // تطبيق الفلتر
+      filterAlerts();
+    });
+  });
+  
+  // الاشتراك في التحديثات المباشرة
+  const channel = supabase
+    .channel('realtime-alerts')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'alerts'
+      },
+      () => {
+        loadAlerts();
+      }
+    )
+    .subscribe((status) => {
+      console.log('📡 حالة اشتراك التنبيهات:', status);
+    });
+  
+  // تحديث تلقائي كل 30 ثانية
+  setInterval(() => {
+    loadAlerts();
+  }, 30000);
+  
+  console.log('✅ تم تهيئة صفحة التنبيهات بنجاح');
+}
+
+// بدء التطبيق
+init();
+
+// جعل الدالة متاحة للزر
+window.loadAlerts = loadAlerts;
+</script>
+
+</body>
+</html>

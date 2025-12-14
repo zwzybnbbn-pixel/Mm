@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الفندق</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- استيراد Supabase SDK -->
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        // 🔗 رابط مشروعك
+        const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
+        // 🔑 المفتاح العام (anon key)
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+
+        // 📦 إنشاء عميل Supabase
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        // دالة لتخزين معلومات المستخدم
+        function getUserInfo() {
+            let userInfo = localStorage.getItem('hotel_user_info');
+            if (!userInfo) {
+                userInfo = JSON.stringify({
+                    id: 'user_' + Math.random().toString(36).substr(2, 9),
+                    name: 'زائر'
+                });
+                localStorage.setItem('hotel_user_info', userInfo);
+            }
+            return JSON.parse(userInfo);
+        }
+        
+        function updateUserName(name) {
+            let userInfo = getUserInfo();
+            userInfo.name = name || 'زائر';
+            localStorage.setItem('hotel_user_info', JSON.stringify(userInfo));
+            return userInfo;
+        }
+        
+        // جعل الدوال متاحة عالمياً
+        window.supabase = supabase;
+        window.getUserInfo = getUserInfo;
+        window.updateUserName = updateUserName;
+    </script>
+
+    <style>
+        /* نفس الـ CSS السابق (محفوظ لعدم التكرار) */
+        :root {
+            --hotel-primary: #0d47a1;
+            --hotel-secondary: #1e3a8a;
+            --hotel-light: #3b82f6;
+            --hotel-dark: #1e40af;
+            --hotel-bg: #e9f2ff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow-light: 0 4px 15px rgba(13, 71, 161, 0.1);
+            --shadow-hover: 0 8px 25px rgba(13, 71, 161, 0.2);
+            --rating-color: #ffc107;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #e9f2ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* تأثير خلفي */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(13, 71, 161, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(30, 58, 138, 0.03) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* زر العودة */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--hotel-dark), var(--hotel-primary));
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+            background: linear-gradient(135deg, var(--hotel-primary), var(--hotel-dark));
+        }
+
+        /* كارت التفاصيل */
+        .details-card {
+            background: var(--card-bg);
+            padding: 30px 25px;
+            border-radius: 25px;
+            box-shadow: var(--shadow-light);
+            margin-top: 20px;
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* صورة الفندق */
+        .hotel-image-container {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .hotel-image-container:hover {
+            transform: scale(1.02);
+        }
+
+        .hotel-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 5px solid var(--hotel-secondary);
+            box-shadow: 0 6px 20px rgba(13, 71, 161, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .hotel-image-container:hover .hotel-img {
+            border-color: var(--hotel-primary);
+            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.35);
+        }
+
+        .zoom-icon {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--hotel-primary);
+            font-size: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hotel-image-container:hover .zoom-icon {
+            opacity: 1;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--hotel-light), var(--hotel-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--hotel-secondary);
+        }
+
+        .image-placeholder i {
+            font-size: 60px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* العنوان */
+        .hotel-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--hotel-primary);
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.4;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .hotel-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hotel-secondary), transparent);
+            border-radius: 2px;
+        }
+
+        /* معلومات الفندق */
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(30, 58, 138, 0.05);
+            border-radius: 15px;
+            border-right: 4px solid var(--hotel-secondary);
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--hotel-dark);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .info-label i {
+            color: var(--hotel-secondary);
+            font-size: 20px;
+        }
+
+        .info-value {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.6;
+            padding-right: 30px;
+        }
+
+        /* زر الخريطة */
+        .map-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--hotel-secondary), var(--hotel-primary));
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .map-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+            background: linear-gradient(135deg, var(--hotel-primary), var(--hotel-secondary));
+        }
+
+        /* قسم التقييمات */
+        .ratings-section {
+            margin: 40px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--hotel-primary);
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 100px;
+            height: 3px;
+            background: var(--hotel-secondary);
+            border-radius: 2px;
+        }
+
+        /* إضافة تقييم جديد */
+        .add-rating-card {
+            background: rgba(30, 58, 138, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px dashed var(--hotel-light);
+        }
+
+        .rating-input-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--hotel-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .user-name-input-container {
+            margin-bottom: 20px;
+        }
+
+        .user-name-label {
+            display: block;
+            color: var(--hotel-dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .user-name-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--hotel-light);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Cairo';
+            text-align: right;
+        }
+
+        .user-name-input:focus {
+            outline: none;
+            border-color: var(--hotel-primary);
+        }
+
+        .stars-rating {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            direction: ltr;
+        }
+
+        .star-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 5px;
+        }
+
+        .star-btn:hover {
+            color: #ffc107;
+            transform: scale(1.2);
+        }
+
+        .star-btn.selected {
+            color: #ffc107;
+        }
+
+        .rating-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--hotel-light);
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Cairo';
+            text-align: right;
+        }
+
+        .rating-input:focus {
+            outline: none;
+            border-color: var(--hotel-primary);
+            box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.1);
+        }
+
+        .submit-rating-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--hotel-secondary), var(--hotel-primary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-rating-btn:hover {
+            background: linear-gradient(135deg, var(--hotel-primary), var(--hotel-secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        /* إحصائيات التقييمات */
+        .ratings-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(13, 71, 161, 0.05), rgba(30, 58, 138, 0.05));
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--hotel-primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* قائمة التقييمات */
+        .ratings-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+
+        .rating-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(13, 71, 161, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .rating-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--hotel-primary), var(--hotel-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--hotel-dark);
+        }
+
+        .rating-date {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .rating-stars-small {
+            color: var(--rating-color);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .rating-comment {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .rating-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .like-btn:hover {
+            color: #e53935;
+            background: rgba(229, 57, 53, 0.1);
+        }
+
+        .like-btn.liked {
+            color: #e53935;
+            font-weight: 700;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .no-ratings {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-ratings i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* معرض الصور */
+        .gallery-section {
+            margin: 35px 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 71, 161, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* معرض الصور المكبر */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+        }
+
+        .lightbox-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: -50px;
+            right: 50%;
+            transform: translateX(50%);
+            color: white;
+            font-size: 18px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        /* تحسينات للجوال */
+        @media (max-width: 767px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .details-card {
+                padding: 20px 15px;
+            }
+            
+            .hotel-image-container {
+                height: 250px;
+            }
+            
+            .hotel-title {
+                font-size: 24px;
+            }
+            
+            .ratings-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .rating-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .gallery-item {
+                height: 100px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+            }
+            
+            .hotel-image-container {
+                max-width: 400px;
+                height: 350px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .gallery-item {
+                height: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hotels.html" class="back-btn">
+            <i class="fas fa-arrow-right"></i>
+            العودة للفنادق
+        </a>
+
+        <!-- كارت التفاصيل -->
+        <div id="hotel-details" class="details-card">
+            <!-- الصورة الرئيسية -->
+            <div class="hotel-image-container" id="mainImageContainer">
+                <div class="zoom-icon">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+                <img id="hotelImg" class="hotel-img" alt="صورة الفندق">
+            </div>
+
+            <!-- العنوان -->
+            <h1 id="hotelName" class="hotel-title">جاري التحميل...</h1>
+
+            <!-- المعلومات الأساسية -->
+            <div class="info-section">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        العنوان:
+                    </div>
+                    <div id="hotelAddress" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i>
+                        الهاتف:
+                    </div>
+                    <div id="hotelPhone" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-tag"></i>
+                        السعر:
+                    </div>
+                    <div id="hotelPrice" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-concierge-bell"></i>
+                        الخدمات:
+                    </div>
+                    <div id="hotelServices" class="info-value"></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-info-circle"></i>
+                        الوصف:
+                    </div>
+                    <div id="hotelDescription" class="info-value"></div>
+                </div>
+            </div>
+
+            <!-- معرض الصور -->
+            <div id="gallerySection" class="gallery-section" style="display: none;">
+                <h3 class="section-title">معرض الصور</h3>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+
+            <!-- زر الخريطة -->
+            <a id="mapBtn" class="map-btn" href="#" target="_blank">
+                <i class="fas fa-map-marked-alt"></i>
+                عرض على الخريطة
+            </a>
+        </div>
+
+        <!-- قسم التقييمات -->
+        <div class="ratings-section">
+            <h3 class="section-title">التقييمات والتعليقات</h3>
+            
+            <!-- إحصائيات التقييمات -->
+            <div class="ratings-stats">
+                <div class="stat-item">
+                    <div id="averageRating" class="stat-value">0.0</div>
+                    <div class="stat-label">متوسط التقييم</div>
+                </div>
+                <div class="stat-item">
+                    <div id="totalRatings" class="stat-value">0</div>
+                    <div class="stat-label">عدد التقييمات</div>
+                </div>
+                <div class="stat-item">
+                    <div id="totalLikes" class="stat-value">0</div>
+                    <div class="stat-label">مجموع الإعجابات</div>
+                </div>
+            </div>
+
+            <!-- إضافة تقييم جديد -->
+            <div class="add-rating-card">
+                <div class="rating-input-title">أضف تقييمك</div>
+                
+                <!-- اسم المستخدم -->
+                <div class="user-name-input-container">
+                    <label class="user-name-label" for="userName">اسمك:</label>
+                    <input type="text" 
+                           id="userName" 
+                           class="user-name-input" 
+                           placeholder="اكتب اسمك هنا..."
+                           value="">
+                </div>
+                
+                <!-- النجوم -->
+                <div class="stars-rating" id="ratingStarsInput">
+                    <button class="star-btn" data-value="1">☆</button>
+                    <button class="star-btn" data-value="2">☆</button>
+                    <button class="star-btn" data-value="3">☆</button>
+                    <button class="star-btn" data-value="4">☆</button>
+                    <button class="star-btn" data-value="5">☆</button>
+                </div>
+                
+                <!-- التعليق -->
+                <textarea 
+                    class="rating-input" 
+                    id="ratingComment" 
+                    placeholder="اكتب تعليقك هنا..."></textarea>
+                
+                <!-- زر الإرسال -->
+                <button class="submit-rating-btn" id="submitRating">
+                    <i class="fas fa-paper-plane"></i>
+                    إرسال التقييم
+                </button>
+            </div>
+
+            <!-- قائمة التقييمات -->
+            <div class="ratings-list" id="ratingsList">
+                <div class="no-ratings">
+                    <i class="far fa-comment-alt"></i>
+                    <p>لا توجد تقييمات بعد. كن أول من يقيّم!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- معرض الصور المكبر -->
+    <div id="lightbox" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <img id="lightboxImg" class="lightbox-img" src="" alt="">
+            <div class="lightbox-nav">
+                <button id="prevBtn" class="lightbox-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button id="nextBtn" class="lightbox-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            <button id="closeLightbox" class="lightbox-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="lightboxCounter" class="lightbox-counter">1 / 1</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const hotelDetails = document.getElementById('hotel-details');
+            let currentHotel = null;
+            let selectedRating = 0;
+            let galleryImages = [];
+            let currentImageIndex = 0;
+            
+            // الحصول على ID من رابط الصفحة
+            const urlParams = new URLSearchParams(window.location.search);
+            const hotelId = urlParams.get('id');
+            
+            if (!hotelId) {
+                alert('معرف الفندق غير موجود');
+                window.location.href = 'hotels.html';
+                return;
+            }
+            
+            await loadHotelDetails(hotelId);
+            await loadAdditionalImages(hotelId);
+            await loadRatings(hotelId);
+            setupRatingSystem();
+            setupLightbox();
+            
+            // تحميل اسم المستخدم المخزن
+            const userNameInput = document.getElementById('userName');
+            const userInfo = window.getUserInfo();
+            userNameInput.value = userInfo.name;
+            
+            async function loadHotelDetails(id) {
+                try {
+                    const { data: hotel, error } = await window.supabase
+                        .from('tourism_hotels')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    
+                    if (error) {
+                        console.error('خطأ في تحميل بيانات الفندق:', error);
+                        throw error;
+                    }
+                    
+                    currentHotel = hotel;
+                    displayHotelDetails(hotel);
+                    
+                } catch (error) {
+                    console.error('خطأ في تحميل بيانات الفندق:', error);
+                    hotelDetails.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #f44336;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 60px; margin-bottom: 20px;"></i>
+                            <h3>حدث خطأ في تحميل بيانات الفندق</h3>
+                            <p>يرجى المحاولة مرة أخرى</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            async function loadAdditionalImages(hotelId) {
+                try {
+                    // محاولة جلب الصور من جدول hotel_images
+                    const { data: images, error } = await window.supabase
+                        .from('hotel_images')
+                        .select('image_url')
+                        .eq('hotel_id', hotelId)
+                        .order('created_at', { ascending: true });
+                    
+                    if (error) {
+                        console.log('لا يوجد جدول للصور الإضافية أو حدث خطأ:', error);
+                        galleryImages = [];
+                    } else if (images && images.length > 0) {
+                        galleryImages = images.map(img => img.image_url);
+                    }
+                } catch (error) {
+                    console.log('خطأ في تحميل الصور الإضافية:', error);
+                    galleryImages = [];
+                }
+                
+                // عرض معرض الصور إذا وجدت صور
+                displayGallery();
+            }
+            
+            function displayGallery() {
+                const gallerySection = document.getElementById('gallerySection');
+                const galleryGrid = document.getElementById('galleryGrid');
+                
+                // إضافة الصورة الرئيسية إلى المعرض إذا كانت موجودة
+                if (currentHotel && currentHotel.image) {
+                    galleryImages.unshift(currentHotel.image);
+                }
+                
+                if (galleryImages.length > 0) {
+                    gallerySection.style.display = 'block';
+                    galleryGrid.innerHTML = '';
+                    
+                    galleryImages.forEach((imageUrl, index) => {
+                        const galleryItem = document.createElement('div');
+                        galleryItem.className = 'gallery-item';
+                        galleryItem.innerHTML = `
+                            <img src="${imageUrl}" alt="صورة ${index + 1}" class="gallery-img" loading="lazy">
+                            <div class="gallery-overlay">
+                                <i class="fas fa-search-plus"></i>
+                            </div>
+                        `;
+                        
+                        galleryItem.addEventListener('click', () => {
+                            openLightbox(index);
+                        });
+                        
+                        galleryGrid.appendChild(galleryItem);
+                    });
+                }
+            }
+            
+            function setupLightbox() {
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = document.getElementById('lightboxImg');
+                const closeBtn = document.getElementById('closeLightbox');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const counter = document.getElementById('lightboxCounter');
+                
+                // إضافة حدث النقر للصورة الرئيسية
+                document.getElementById('mainImageContainer').addEventListener('click', () => {
+                    if (galleryImages.length > 0) {
+                        openLightbox(0);
+                    }
+                });
+                
+                // إغلاق المعرض
+                closeBtn.addEventListener('click', closeLightbox);
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+                
+                // التنقل بين الصور
+                prevBtn.addEventListener('click', showPrevImage);
+                nextBtn.addEventListener('click', showNextImage);
+                
+                // إضافة اختصارات لوحة المفاتيح
+                document.addEventListener('keydown', (e) => {
+                    if (lightbox.style.display === 'flex') {
+                        switch (e.key) {
+                            case 'Escape':
+                                closeLightbox();
+                                break;
+                            case 'ArrowRight':
+                                showPrevImage();
+                                break;
+                            case 'ArrowLeft':
+                                showNextImage();
+                                break;
+                        }
+                    }
+                });
+                
+                function openLightbox(index) {
+                    if (galleryImages.length === 0) return;
+                    
+                    currentImageIndex = index;
+                    updateLightboxImage();
+                    lightbox.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                function closeLightbox() {
+                    lightbox.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+                
+                function showPrevImage() {
+                    currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+                    updateLightboxImage();
+                }
+                
+                function showNextImage() {
+                    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+                    updateLightboxImage();
+                }
+                
+                function updateLightboxImage() {
+                    lightboxImg.src = galleryImages[currentImageIndex];
+                    counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+                    
+                    // إخفاء أزرار التنقل إذا كانت صورة واحدة فقط
+                    if (galleryImages.length <= 1) {
+                        prevBtn.style.display = 'none';
+                        nextBtn.style.display = 'none';
+                    } else {
+                        prevBtn.style.display = 'block';
+                        nextBtn.style.display = 'block';
+                    }
+                }
+            }
+            
+            function displayHotelDetails(hotel) {
+                document.getElementById('hotelName').textContent = hotel.name || 'فندق بدون اسم';
+                document.getElementById('hotelAddress').textContent = hotel.address || 'غير محدد';
+                document.getElementById('hotelPhone').textContent = hotel.phone || 'لا يوجد';
+                document.getElementById('hotelPrice').textContent = hotel.price || 'غير متوفر';
+                document.getElementById('hotelServices').textContent = hotel.services || 'غير متوفر';
+                document.getElementById('hotelDescription').textContent = hotel.description || 'لا يوجد وصف';
+                
+                // الصورة الرئيسية
+                const hotelImg = document.getElementById('hotelImg');
+                if (hotel.image) {
+                    hotelImg.src = hotel.image;
+                    hotelImg.style.display = 'block';
+                } else {
+                    hotelImg.style.display = 'none';
+                    document.querySelector('.hotel-image-container').innerHTML = `
+                        <div class="image-placeholder">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                    `;
+                }
+                
+                // رابط الخريطة
+                const mapBtn = document.getElementById('mapBtn');
+                if (hotel.map_link) {
+                    mapBtn.href = hotel.map_link;
+                } else {
+                    const address = encodeURIComponent(hotel.address || '');
+                    mapBtn.href = `https://www.google.com/maps/search/?api=1&query=${address}`;
+                }
+            }
+            
+            async function loadRatings(hotelId) {
+                try {
+                    // جلب التقييمات مع عدد الإعجابات لكل تعليق
+                    const { data: ratings, error } = await window.supabase
+                        .from('hotel_ratings')
+                        .select(`
+                            *,
+                            comment_likes:comment_likes(count)
+                        `)
+                        .eq('hotel_id', hotelId)
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        console.error('خطأ في تحميل التقييمات:', error);
+                        throw error;
+                    }
+                    
+                    displayRatings(ratings || []);
+                    updateStats(ratings || []);
+                    
+                } catch (error) {
+                    console.error('خطأ في تحميل التقييمات:', error);
+                    // عرض رسالة خطأ للمستخدم
+                    const ratingsList = document.getElementById('ratingsList');
+                    ratingsList.innerHTML = `
+                        <div class="no-ratings">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>حدث خطأ في تحميل التقييمات</p>
+                            <p style="font-size: 14px; margin-top: 10px;">${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            function displayRatings(ratings) {
+                const ratingsList = document.getElementById('ratingsList');
+                
+                if (!ratings || ratings.length === 0) {
+                    ratingsList.innerHTML = `
+                        <div class="no-ratings">
+                            <i class="far fa-comment-alt"></i>
+                            <p>لا توجد تقييمات بعد. كن أول من يقيّم!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                ratingsList.innerHTML = '';
+                
+                ratings.forEach(rating => {
+                    const ratingItem = document.createElement('div');
+                    ratingItem.className = 'rating-item';
+                    ratingItem.dataset.id = rating.id;
+                    
+                    // استخراج عدد الإعجابات من الكائن المتداخل
+                    let likesCount = 0;
+                    if (rating.comment_likes && rating.comment_likes.length > 0) {
+                        likesCount = rating.comment_likes[0].count || 0;
+                    }
+                    
+                    const isLiked = checkIfLiked(rating.id);
+                    const userInfo = window.getUserInfo();
+                    const isCurrentUser = rating.user_id === userInfo.id;
+                    
+                    ratingItem.innerHTML = `
+                        <div class="rating-header">
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    ${getInitials(rating.user_name || rating.user_id)}
+                                </div>
+                                <div>
+                                    <div class="user-name">${rating.user_name || rating.user_id}</div>
+                                    <div class="rating-date">${formatDate(rating.created_at)}</div>
+                                </div>
+                            </div>
+                            <div class="rating-stars-small">
+                                ${generateStarRating(rating.rating)}
+                            </div>
+                        </div>
+                        
+                        <div class="rating-comment">
+                            ${rating.comment || 'لا يوجد تعليق'}
+                        </div>
+                        
+                        <div class="rating-actions">
+                            <button class="like-btn ${isLiked ? 'liked' : ''}" data-comment-id="${rating.id}">
+                                <i class="fas fa-heart"></i>
+                                <span class="like-count">${likesCount}</span> أعجبني
+                            </button>
+                            
+                            ${isCurrentUser ? `
+                            <button class="delete-btn" data-rating-id="${rating.id}">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    // إضافة أحداث النقر
+                    const likeBtn = ratingItem.querySelector('.like-btn');
+                    likeBtn.addEventListener('click', () => toggleLike(rating.id));
+                    
+                    if (isCurrentUser) {
+                        const deleteBtn = ratingItem.querySelector('.delete-btn');
+                        deleteBtn.addEventListener('click', () => deleteRating(rating.id));
+                    }
+                    
+                    ratingsList.appendChild(ratingItem);
+                });
+            }
+            
+            function updateStats(ratings) {
+                if (!ratings || ratings.length === 0) {
+                    document.getElementById('averageRating').textContent = '0.0';
+                    document.getElementById('totalRatings').textContent = '0';
+                    document.getElementById('totalLikes').textContent = '0';
+                    return;
+                }
+                
+                // حساب متوسط التقييم
+                const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+                const averageRating = (totalRating / ratings.length).toFixed(1);
+                
+                // حساب مجموع الإعجابات
+                let totalLikes = 0;
+                ratings.forEach(rating => {
+                    if (rating.comment_likes && rating.comment_likes.length > 0) {
+                        totalLikes += rating.comment_likes[0].count || 0;
+                    }
+                });
+                
+                document.getElementById('averageRating').textContent = averageRating;
+                document.getElementById('totalRatings').textContent = ratings.length;
+                document.getElementById('totalLikes').textContent = totalLikes;
+            }
+            
+            function setupRatingSystem() {
+                const starButtons = document.querySelectorAll('.star-btn');
+                const submitButton = document.getElementById('submitRating');
+                const commentInput = document.getElementById('ratingComment');
+                const userNameInput = document.getElementById('userName');
+                
+                // اختيار النجوم
+                starButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const value = parseInt(button.dataset.value);
+                        selectedRating = value;
+                        
+                        starButtons.forEach((btn, index) => {
+                            if (index < value) {
+                                btn.textContent = '★';
+                                btn.classList.add('selected');
+                            } else {
+                                btn.textContent = '☆';
+                                btn.classList.remove('selected');
+                            }
+                        });
+                    });
+                });
+                
+                // تحديث اسم المستخدم عند الكتابة
+                userNameInput.addEventListener('input', () => {
+                    window.updateUserName(userNameInput.value.trim());
+                });
+                
+                // إرسال التقييم
+                submitButton.addEventListener('click', async () => {
+                    if (selectedRating === 0) {
+                        alert('الرجاء اختيار تقييم من 1 إلى 5 نجوم');
+                        return;
+                    }
+                    
+                    const comment = commentInput.value.trim();
+                    const userName = userNameInput.value.trim() || 'زائر';
+                    const userInfo = window.getUserInfo();
+                    
+                    // تحديث اسم المستخدم
+                    window.updateUserName(userName);
+                    
+                    try {
+                        // التحقق إذا كان المستخدم قد قيم بالفعل
+                        const { data: existingRating } = await window.supabase
+                            .from('hotel_ratings')
+                            .select('id')
+                            .eq('hotel_id', hotelId)
+                            .eq('user_id', userInfo.id)
+                            .single();
+                        
+                        let confirmMessage = 'هل تريد إرسال التقييم؟';
+                        if (existingRating) {
+                            confirmMessage = 'لقد قمت بتقييم هذا الفندق مسبقاً. هل تريد تحديث تقييمك؟';
+                        }
+                        
+                        if (!confirm(confirmMessage)) return;
+                        
+                        if (existingRating) {
+                            // تحديث التقييم القديم
+                            const { error } = await window.supabase
+                                .from('hotel_ratings')
+                                .update({
+                                    rating: selectedRating,
+                                    comment: comment,
+                                    user_name: userName,
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', existingRating.id);
+                            
+                            if (error) throw error;
+                        } else {
+                            // إضافة تقييم جديد
+                            const { error } = await window.supabase
+                                .from('hotel_ratings')
+                                .insert({
+                                    hotel_id: hotelId,
+                                    user_id: userInfo.id,
+                                    user_name: userName,
+                                    rating: selectedRating,
+                                    comment: comment
+                                });
+                            
+                            if (error) throw error;
+                        }
+                        
+                        // تحديث القائمة
+                        await loadRatings(hotelId);
+                        
+                        // إعادة تعيين الحقول
+                        selectedRating = 0;
+                        commentInput.value = '';
+                        starButtons.forEach(btn => {
+                            btn.textContent = '☆';
+                            btn.classList.remove('selected');
+                        });
+                        
+                        alert('تم إرسال تقييمك بنجاح!');
+                        
+                    } catch (error) {
+                        console.error('خطأ في إرسال التقييم:', error);
+                        alert('حدث خطأ في إرسال التقييم. يرجى المحاولة مرة أخرى.');
+                    }
+                });
+            }
+            
+            function checkIfLiked(commentId) {
+                const likedComments = JSON.parse(localStorage.getItem('liked_comments') || '[]');
+                return likedComments.includes(commentId);
+            }
+            
+            async function toggleLike(commentId) {
+                const userInfo = window.getUserInfo();
+                
+                try {
+                    const isLiked = checkIfLiked(commentId);
+                    
+                    if (isLiked) {
+                        // إزالة الإعجاب
+                        const { error } = await window.supabase
+                            .from('comment_likes')
+                            .delete()
+                            .eq('comment_id', commentId)
+                            .eq('user_id', userInfo.id);
+                        
+                        if (error) throw error;
+                        
+                        // تحديث localStorage
+                        const likedComments = JSON.parse(localStorage.getItem('liked_comments') || '[]');
+                        const newLikedComments = likedComments.filter(id => id !== commentId);
+                        localStorage.setItem('liked_comments', JSON.stringify(newLikedComments));
+                    } else {
+                        // إضافة إعجاب
+                        const { error } = await window.supabase
+                            .from('comment_likes')
+                            .insert({
+                                comment_id: commentId,
+                                user_id: userInfo.id
+                            });
+                        
+                        if (error) throw error;
+                        
+                        // تحديث localStorage
+                        const likedComments = JSON.parse(localStorage.getItem('liked_comments') || '[]');
+                        likedComments.push(commentId);
+                        localStorage.setItem('liked_comments', JSON.stringify(likedComments));
+                    }
+                    
+                    // تحديث القائمة
+                    await loadRatings(hotelId);
+                    
+                } catch (error) {
+                    console.error('خطأ في تحديث الإعجاب:', error);
+                }
+            }
+            
+            async function deleteRating(ratingId) {
+                if (!confirm('هل أنت متأكد من حذف هذا التقييم؟')) return;
+                
+                try {
+                    const { error } = await window.supabase
+                        .from('hotel_ratings')
+                        .delete()
+                        .eq('id', ratingId);
+                    
+                    if (error) throw error;
+                    
+                    // تحديث القائمة
+                    await loadRatings(hotelId);
+                    alert('تم حذف التقييم بنجاح!');
+                    
+                } catch (error) {
+                    console.error('خطأ في حذف التقييم:', error);
+                    alert('حدث خطأ في حذف التقييم');
+                }
+            }
+            
+            function getInitials(text) {
+                if (!text || text.trim() === '') return 'ز';
+                const words = text.trim().split(' ');
+                if (words.length >= 2) {
+                    return (words[0][0] + words[1][0]).toUpperCase();
+                }
+                return text.substring(0, 2).toUpperCase();
+            }
+            
+            function formatDate(dateString) {
+                try {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('ar-SA', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (error) {
+                    return 'تاريخ غير معروف';
+                }
+            }
+            
+            function generateStarRating(rating) {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= rating ? '★' : '☆';
+                }
+                return stars;
+            }
+        });
+    </script>
+</body>
+</html>
+
