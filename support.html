@@ -355,13 +355,13 @@
 
     <div class="buttons-grid">
       <!-- زر واتساب -->
-      <button class="btn btn-whatsapp" onclick="sendWhatsApp()">
+      <button class="btn btn-whatsapp" id="whatsappBtn">
         <i class="fab fa-whatsapp"></i>
         إرسال عبر واتساب
       </button>
 
       <!-- زر البريد -->
-      <button class="btn btn-email" onclick="sendEmail()">
+      <button class="btn btn-email" id="emailBtn">
         <i class="fas fa-envelope"></i>
         إرسال عبر البريد
       </button>
@@ -390,6 +390,9 @@
     
     // إعادة تعيين حقل النص بعد الإرسال
     document.getElementById("issue").value = '';
+    
+    // مسح المسودة
+    localStorage.removeItem('supportDraft');
   }
 
   // إرسال عبر البريد
@@ -418,6 +421,9 @@
     
     // إعادة تعيين حقل النص بعد الإرسال
     document.getElementById("issue").value = '';
+    
+    // مسح المسودة
+    localStorage.removeItem('supportDraft');
   }
 
   // عرض رسالة تأكيد
@@ -450,7 +456,7 @@
   });
 
   // استعادة المسودة المحفوظة عند تحميل الصفحة
-  window.addEventListener('load', function() {
+  window.addEventListener('DOMContentLoaded', function() {
     const savedDraft = localStorage.getItem('supportDraft');
     if (savedDraft) {
       document.getElementById('issue').value = savedDraft;
@@ -462,25 +468,24 @@
       document.body.style.transition = 'opacity 0.5s ease';
       document.body.style.opacity = '1';
     }, 100);
+    
+    // إضافة أحداث النقر للأزرار
+    document.getElementById('whatsappBtn').addEventListener('click', sendWhatsApp);
+    document.getElementById('emailBtn').addEventListener('click', sendEmail);
+    
+    // يمكنك أيضاً إضافة اختصار لوحة المفاتيح
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        sendWhatsApp();
+      }
+    });
   });
 
-  // مسح المسودة عند إرسال ناجح
-  function clearDraft() {
-    localStorage.removeItem('supportDraft');
-  }
-
-  // عند الإرسال الناجح، مسح المسودة
-  window.sendWhatsApp = function() {
-    sendWhatsApp();
-    clearDraft();
-  };
-
-  window.sendEmail = function() {
-    sendEmail();
-    clearDraft();
-  };
+  // إضافة تحسينات لاختبار الإرسال
+  console.log('صفحة الدعم الفني جاهزة!');
+  console.log('رقم الواتساب: 967776503890');
+  console.log('البريد الإلكتروني: magedgasem55558@gmail.com');
 </script>
 
 </body>
 </html>
-
