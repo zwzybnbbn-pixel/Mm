@@ -18,6 +18,38 @@ body{
   color:white;
 }
 .container{width:100%;max-width:900px;padding:20px}
+
+/* ===== تسجيل الدخول ===== */
+#login-box{
+  background:rgba(255,255,255,.06);
+  padding:35px;
+  border-radius:20px;
+  max-width:400px;
+  margin:auto;
+  text-align:center;
+}
+#login-box h2{margin-bottom:20px}
+#login-box input{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:none;
+}
+#login-box button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#ff4c4c;
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+#login-box button:hover{background:#ff6b6b}
+#error{color:#ff4c4c;margin-bottom:10px;display:none}
+
+/* ===== لوحة التحكم ===== */
 header{text-align:center;margin-bottom:30px}
 header h1{font-size:38px;font-weight:800}
 header p{opacity:.8}
@@ -27,7 +59,6 @@ header p{opacity:.8}
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:20px;
 }
-
 .card{
   background:rgba(255,255,255,.07);
   padding:25px;
@@ -40,7 +71,6 @@ header p{opacity:.8}
   transform:translateY(-6px);
   background:rgba(255,255,255,.12);
 }
-
 .card h3{font-size:22px;margin-bottom:10px}
 .card p{opacity:.85}
 
@@ -54,83 +84,106 @@ header p{opacity:.8}
   cursor:pointer;
 }
 .logout:hover{background:#ff6b6b}
+
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
-<div class="container" id="app" style="display:none">
+<div class="container">
 
-  <header>
-    <h1>⚙ لوحة التحكم</h1>
-    <p id="userEmail"></p>
-  </header>
-
-  <div class="cards">
-    <div class="card">
-      <h3>🔔 إدارة التنبيهات</h3>
-      <p>إضافة – تعديل – حذف</p>
-    </div>
-
-    <div class="card">
-      <h3>⚡ أسباب الانقطاع</h3>
-      <p>التحكم الكامل</p>
-    </div>
-
-    <div class="card">
-      <h3>📅 جدول التشغيل</h3>
-      <p>تشغيل – إيقاف</p>
-    </div>
-
-    <div class="card">
-      <h3>📢 البلاغات</h3>
-      <p>عرض – رد – حذف</p>
-    </div>
+  <!-- تسجيل الدخول -->
+  <div id="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
+    <div id="error"></div>
+    <input type="email" id="email" placeholder="البريد الإلكتروني">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button id="loginBtn">تسجيل الدخول</button>
   </div>
 
-  <div class="logout" id="logoutBtn">🚪 تسجيل الخروج</div>
+  <!-- لوحة التحكم -->
+  <div id="dashboard" class="hidden">
+
+    <header>
+      <h1>⚙ لوحة التحكم</h1>
+      <p id="userEmail"></p>
+    </header>
+
+    <div class="cards">
+      <div class="card"><h3>🔔 إدارة التنبيهات</h3><p>إضافة – تعديل – حذف</p></div>
+      <div class="card"><h3>⚡ أسباب الانقطاع</h3><p>التحكم الكامل</p></div>
+      <div class="card"><h3>📅 جدول التشغيل</h3><p>تشغيل – إيقاف</p></div>
+      <div class="card"><h3>📢 البلاغات</h3><p>عرض – رد – حذف</p></div>
+    </div>
+
+    <div class="logout" id="logoutBtn">🚪 تسجيل الخروج</div>
+
+  </div>
 
 </div>
 
 <script type="module">
-import { checkAuth, getCurrentUser, signOut } from './supabase.js';
+import { supabase } from './supabase.js';
 
-const ALLOWED_EMAIL = "magedgasem55558@gmail.com";
+const ADMIN_EMAIL = "magedgasem55558@gmail.com";
 
-const app = document.getElementById('app');
-const userEmail = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
+const loginBox = document.getElementById("login-box");
+const dashboard = document.getElementById("dashboard");
+const errorBox = document.getElementById("error");
+const userEmail = document.getElementById("userEmail");
 
-async function initDashboard(){
-  const { session } = await checkAuth();
+/* ===== فحص الجلسة ===== */
+async function checkSession(){
+  const { data:{ session } } = await supabase.auth.getSession();
+  if(!session) return;
 
-  // غير مسجل
-  if(!session){
-    location.href = 'login1.html';
+  if(session.user.email !== ADMIN_EMAIL){
+    await supabase.auth.signOut();
     return;
   }
 
-  const { user } = await getCurrentUser();
-
-  // البريد غير مسموح
-  if(user.email !== ALLOWED_EMAIL){
-    await signOut();
-    alert("غير مصرح لك بالدخول");
-    location.href = 'login1.html';
-    return;
-  }
-
-  // مسموح
-  userEmail.textContent = user.email;
-  app.style.display = 'block';
+  showDashboard(session.user.email);
 }
 
-logoutBtn.addEventListener('click', async ()=>{
-  await signOut();
-  location.href = 'login1.html';
-});
+function showDashboard(email){
+  loginBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  userEmail.textContent = email;
+}
 
-initDashboard();
+/* ===== تسجيل الدخول ===== */
+document.getElementById("loginBtn").onclick = async ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  errorBox.style.display="none";
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if(error){
+    errorBox.style.display="block";
+    errorBox.textContent = error.message;
+    return;
+  }
+
+  if(data.user.email !== ADMIN_EMAIL){
+    await supabase.auth.signOut();
+    errorBox.style.display="block";
+    errorBox.textContent = "غير مصرح لك بالدخول";
+    return;
+  }
+
+  showDashboard(data.user.email);
+};
+
+/* ===== تسجيل خروج ===== */
+document.getElementById("logoutBtn").onclick = async ()=>{
+  await supabase.auth.signOut();
+  location.reload();
+};
+
+checkSession();
 </script>
 
 </body>
