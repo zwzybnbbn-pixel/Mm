@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
+<title>لوحة التحكم 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-/* الجسم والخلفية */
 body{
   background:linear-gradient(135deg, #0a0a0a, #111, #1a1a1a, #222);
   min-height:100vh;
@@ -18,96 +16,13 @@ body{
   color:white;
   padding:20px;
 }
+.container{ width:100%; max-width:800px; text-align:center; }
 
-/* الحاوية الرئيسية */
-.container{
-  width:100%;
-  max-width:800px;
-  text-align:center;
-}
-
-/* شاشة التحميل */
-#loading-screen {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:40px 30px;
-  background:rgba(255,255,255,0.05);
-  border-radius:20px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.spinner {
-  width:70px;
-  height:70px;
-  border:6px solid rgba(255,255,255,0.1);
-  border-top-color:#4cd964;
-  border-radius:50%;
-  animation:spin 1s ease-in-out infinite;
-  margin-bottom:25px;
-}
-
-@keyframes spin { to { transform:rotate(360deg); } }
-
-.loading-text { font-size:22px; font-weight:700; color:white; margin-bottom:10px; }
-.loading-subtext { font-size:16px; opacity:0.7; color:#aaa; }
-
-/* رسالة الخطأ */
-#error-message {
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:40px 30px;
-  background:rgba(255,255,255,0.05);
-  border-radius:20px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  border:1px solid rgba(255,255,255,0.1);
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
-
-.error-icon { font-size:70px; color:#ff4c4c; margin-bottom:25px; }
-.error-title { font-size:28px; font-weight:800; margin-bottom:15px; color:white; }
-.error-description { font-size:18px; margin-bottom:30px; color:#ccc; line-height:1.6; max-width:400px; }
-
-.login-btn {
-  background:linear-gradient(135deg, #ff4c4c, #ff6b6b);
-  color:white;
-  border:none;
-  padding:15px 35px;
-  border-radius:12px;
-  font-size:18px;
-  font-weight:700;
-  cursor:pointer;
-  transition:0.3s;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.login-btn:hover {
-  background:linear-gradient(135deg, #ff6b6b, #ff4c4c);
-  transform:translateY(-3px);
-  box-shadow:0 7px 20px rgba(255,107,107,0.4);
-}
-
-/* المحتوى الرئيسي */
-#main-content { display:none; width:100%; }
-
+#loading-screen, #main-content { display:none; }
 .main-wrapper{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:30px 10px; }
-
 header h1{ font-size:38px; font-weight:800; margin-bottom:10px; }
 header p{ font-size:20px; opacity:.9; margin-bottom:25px; }
-
-/* Cards */
 .cards{ width:100%; max-width:600px; display:flex; flex-direction:column; gap:18px; }
-
 .card{
   background:rgba(255,255,255,0.07);
   padding:20px;
@@ -118,16 +33,9 @@ header p{ font-size:20px; opacity:.9; margin-bottom:25px; }
   transition:0.25s;
   cursor:pointer;
 }
-
-.card:hover{
-  background:rgba(255,255,255,0.12);
-  transform:scale(1.03);
-}
-
+.card:hover{ background:rgba(255,255,255,0.12); transform:scale(1.03); }
 .card-title{ font-size:24px; font-weight:800; margin-bottom:6px; }
 .card-value{ font-size:18px; margin-bottom:14px; opacity:.95; }
-
-/* زر تسجيل الخروج */
 .logout-btn{
   background:#ff4c4c;
   padding:12px 20px;
@@ -141,42 +49,26 @@ header p{ font-size:20px; opacity:.9; margin-bottom:25px; }
   cursor:pointer;
   transition:0.2s;
 }
-
 .logout-btn:hover{ background:#ff6b6b; }
-
-/* Footer */
 footer{ text-align:center; opacity:.9; font-size:18px; padding:15px 10px; margin-top:25px; }
 </style>
 </head>
-
 <body>
 <div class="container">
 
   <!-- شاشة التحميل -->
   <div id="loading-screen">
-    <div class="spinner"></div>
-    <div class="loading-text">جاري التحقق من صلاحية الدخول...</div>
-    <div class="loading-subtext">الرجاء الانتظار</div>
-  </div>
-
-  <!-- رسالة الخطأ -->
-  <div id="error-message">
-    <div class="error-icon">🚫</div>
-    <h2 class="error-title">غير مصرح بالدخول</h2>
-    <p class="error-description">يجب عليك تسجيل الدخول أولاً للوصول إلى لوحة التحكم</p>
-    <button class="login-btn" onclick="goToLogin()">
-      <span>👉 تسجيل الدخول الآن</span>
-    </button>
+    <div class="spinner" style="width:70px;height:70px;border:6px solid rgba(255,255,255,0.1);border-top-color:#4cd964;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:25px;"></div>
+    <div class="loading-text" style="font-size:22px;font-weight:700;color:white;margin-bottom:10px;">جاري التحقق من صلاحية الدخول...</div>
+    <div class="loading-subtext" style="font-size:16px;opacity:0.7;color:#aaa;">الرجاء الانتظار</div>
   </div>
 
   <!-- المحتوى الرئيسي -->
   <div id="main-content">
     <div class="main-wrapper">
       <header>
-        <h1>⚙ لوحة التحكم</h1>
-        <div id="user-info" style="font-size:20px; opacity:.9; margin-bottom:25px;">
-          جاري تحميل معلومات المستخدم...
-        </div>
+        <h1>⚙ لوحة التحكم 2</h1>
+        <div id="user-info" style="font-size:20px; opacity:.9; margin-bottom:25px;">جارٍ تحميل معلومات المستخدم...</div>
       </header>
 
       <div class="cards">
@@ -184,17 +76,14 @@ footer{ text-align:center; opacity:.9; font-size:18px; padding:15px 10px; margin
           <div class="card-title">🔔 إدارة التنبيهات</div>
           <div class="card-value">إضافة – تعديل – حذف</div>
         </div>
-
         <div class="card" onclick="goToPage('dashboard-reasons.html')">
           <div class="card-title">⚡ إدارة أسباب الانقطاع</div>
           <div class="card-value">عرض – تعديل – حذف</div>
         </div>
-
         <div class="card" onclick="goToPage('dashboard-schedule.html')">
           <div class="card-title">📅 إدارة جدول التشغيل</div>
           <div class="card-value">تشغيل – انطفاء – تحديث</div>
         </div>
-
         <div class="card" onclick="goToPage('dashboard-reports.html')">
           <div class="card-title">📢 إدارة البلاغات</div>
           <div class="card-value">الرد – تغيير الحالة – حذف</div>
@@ -219,58 +108,44 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const loadingScreen = document.getElementById('loading-screen');
-const errorMessage = document.getElementById('error-message');
 const mainContent = document.getElementById('main-content');
 const userInfoElem = document.getElementById('user-info');
 const logoutBtn = document.getElementById('logoutBtn');
 
-function showLoading(){
+function goToPage(url){ window.location.href = url; }
+
+async function checkSession(){
   loadingScreen.style.display = 'flex';
-  errorMessage.style.display = 'none';
   mainContent.style.display = 'none';
-}
 
-function showError(){
-  loadingScreen.style.display = 'none';
-  errorMessage.style.display = 'flex';
-  mainContent.style.display = 'none';
-}
+  const { data: { session } } = await supabase.auth.getSession();
 
-function showContent(user){
+  // إذا لم يكن هناك session → إعادة توجيه مباشرة للـ login
+  if(!session){
+    window.location.href = 'login1.html';
+    return;
+  }
+
+  // يوجد session → عرض المحتوى
   loadingScreen.style.display = 'none';
-  errorMessage.style.display = 'none';
   mainContent.style.display = 'block';
+  const user = session.user;
   userInfoElem.innerHTML = `
     مرحباً <strong style="color:#4cd964">${user.user_metadata?.name || user.email}</strong>
     <div style="font-size:16px; opacity:0.7;">البريد: ${user.email}</div>
   `;
 }
 
-function goToLogin(){ window.location.href = 'login1.html'; }
-function goToPage(url){ window.location.href = url; }
-
-async function checkSession(){
-  showLoading();
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if(error || !session){
-    showError();
-    return;
-  }
-  showContent(session.user);
-}
-
 // زر تسجيل الخروج
 logoutBtn.addEventListener('click', async () => {
   if(confirm('هل أنت متأكد من تسجيل الخروج؟')){
     await supabase.auth.signOut();
-    showError();
+    window.location.href = 'login1.html';
   }
 });
 
-// التحقق عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', async () => {
-  await checkSession();
-});
+// عند تحميل الصفحة → تحقق من الجلسة فوراً
+document.addEventListener('DOMContentLoaded', checkSession);
 
 // الحماية ضد الرجوع أو الكاش
 window.addEventListener('pageshow', function(event) {
@@ -279,6 +154,5 @@ window.addEventListener('pageshow', function(event) {
 history.pushState(null,null,location.href);
 window.onpopstate = function(){ history.go(1); };
 </script>
-
 </body>
 </html>
