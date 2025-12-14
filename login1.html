@@ -3,581 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول - لوحة التحكم</title>
-
+<title>تسجيل الدخول</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-body{
-  background:linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:white;
-  padding:20px;
-}
-
-.login-container{
-  width:100%;
-  max-width:420px;
-  background:rgba(255,255,255,0.08);
-  padding:35px 30px;
-  border-radius:20px;
-  backdrop-filter:blur(15px);
-  box-shadow:0 15px 35px rgba(0,0,0,0.5);
-  text-align:center;
-  border:1px solid rgba(255,255,255,0.1);
-  animation:fadeIn .8s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(30px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-.login-header{
-  margin-bottom:30px;
-}
-
-.login-header h1{
-  font-size:32px;
-  margin-bottom:10px;
-  font-weight:800;
-  background:linear-gradient(90deg, #00b4db, #0083b0);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.login-header p{
-  font-size:16px;
-  opacity:0.8;
-  color:#a0a0c0;
-}
-
-.input-group{
-  margin-bottom:20px;
-  text-align:right;
-}
-
-.input-group label{
-  display:block;
-  margin-bottom:8px;
-  font-weight:600;
-  color:#e0e0ff;
-  font-size:16px;
-}
-
-.input-group input{
-  width:100%;
-  padding:15px 18px;
-  background:rgba(255,255,255,0.07);
-  border:2px solid rgba(255,255,255,0.1);
-  border-radius:12px;
-  font-size:17px;
-  color:white;
-  outline:none;
-  transition:all 0.3s ease;
-}
-
-.input-group input:focus{
-  border-color:#0083b0;
-  background:rgba(255,255,255,0.1);
-  box-shadow:0 0 0 3px rgba(0, 131, 176, 0.2);
-}
-
-.input-group input::placeholder{
-  color:rgba(255,255,255,0.4);
-}
-
-.login-btn{
-  width:100%;
-  padding:16px;
-  margin-top:25px;
-  background:linear-gradient(90deg, #00b4db, #0083b0);
-  color:white;
-  border:none;
-  font-size:20px;
-  font-weight:800;
-  border-radius:14px;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-}
-
-.login-btn:hover{
-  background:linear-gradient(90deg, #0083b0, #006a8e);
-  transform:translateY(-3px);
-  box-shadow:0 7px 20px rgba(0, 131, 176, 0.4);
-}
-
-.login-btn:active{
-  transform:translateY(-1px);
-}
-
-.message-box{
-  margin-top:20px;
-  padding:15px;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:600;
-  text-align:center;
-  transition:all 0.3s ease;
-}
-
-.message-box.error{
-  background:rgba(255, 86, 86, 0.1);
-  color:#ff5656;
-  border:1px solid rgba(255, 86, 86, 0.3);
-}
-
-.message-box.success{
-  background:rgba(86, 255, 118, 0.1);
-  color:#56ff76;
-  border:1px solid rgba(86, 255, 118, 0.3);
-}
-
-.message-box.info{
-  background:rgba(86, 176, 255, 0.1);
-  color:#56b0ff;
-  border:1px solid rgba(86, 176, 255, 0.3);
-}
-
-/* نصائح الدخول */
-.login-tips{
-  margin-top:25px;
-  padding:15px;
-  background:rgba(0,0,0,0.2);
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
-}
-
-.login-tips h4{
-  color:#56b0ff;
-  margin-bottom:10px;
-  font-size:16px;
-}
-
-.login-tips ul{
-  list-style:none;
-  padding-right:20px;
-  text-align:right;
-}
-
-.login-tips li{
-  margin-bottom:8px;
-  font-size:14px;
-  color:#a0a0c0;
-  position:relative;
-}
-
-.login-tips li::before{
-  content:"•";
-  color:#00b4db;
-  position:absolute;
-  right:-15px;
-  font-size:18px;
-}
-
-/* شاشة التحميل */
-#loadingOverlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-  backdrop-filter:blur(10px);
-}
-
-.spinner{
-  width:60px;
-  height:60px;
-  border:5px solid rgba(255,255,255,0.1);
-  border-top-color:#00b4db;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-  margin-bottom:20px;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
-
-.loading-text{
-  font-size:18px;
-  font-weight:600;
-  color:white;
-}
-
-/* استجابة للجوال */
-@media(max-width:480px){
-  .login-container{
-    padding:25px 20px;
-  }
-  
-  .login-header h1{
-    font-size:28px;
-  }
-  
-  .input-group input{
-    padding:14px 16px;
-    font-size:16px;
-  }
-  
-  .login-btn{
-    padding:15px;
-    font-size:18px;
-  }
-}
+body { font-family: 'Cairo', sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; background:#111; color:white; padding:20px; }
+.login-container { background:rgba(255,255,255,0.05); padding:40px 30px; border-radius:20px; backdrop-filter:blur(10px); box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:400px; width:100%; }
+h1{ text-align:center; margin-bottom:30px; }
+input { width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; font-size:16px; }
+button { width:100%; padding:12px; border:none; border-radius:12px; background:#ff4c4c; color:white; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s; }
+button:hover { background:#ff6b6b; }
+.error { color:#ff4c4c; margin-bottom:15px; text-align:center; display:none; }
 </style>
 </head>
-
 <body>
 
-<!-- شاشة التحميل -->
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div class="loading-text">جاري تسجيل الدخول...</div>
-</div>
-
-<!-- المحتوى الرئيسي -->
 <div class="login-container">
-  
-  <div class="login-header">
-    <h1>🔐 تسجيل الدخول</h1>
-    <p>الرجاء إدخال بيانات الدخول للوصول إلى لوحة التحكم</p>
-  </div>
-  
-  <div class="input-group">
-    <label for="email">البريد الإلكتروني</label>
-    <input type="email" id="email" placeholder="magedgasem55558@gmail.com">
-  </div>
-  
-  <div class="input-group">
-    <label for="password">كلمة المرور</label>
-    <input type="password" id="password" placeholder="كلمة المرور">
-  </div>
-  
-  <button class="login-btn" onclick="login()">
-    <span>🚀 تسجيل الدخول</span>
-  </button>
-  
-  <div id="message" class="message-box"></div>
-  
-  <div class="login-tips">
-    <h4>💡 معلومات الدخول:</h4>
-    <ul>
-      <li>البريد الإلكتروني: magedgasem55558@gmail.com</li>
-      <li>أدخل كلمة المرور المخصصة لهذا البريد</li>
-      <li>يجب أن تكون قد قمت بإنشاء الحساب في Supabase مسبقاً</li>
-    </ul>
-  </div>
-  
+  <h1>تسجيل الدخول</h1>
+  <div class="error" id="error-msg"></div>
+  <input type="email" id="email" placeholder="البريد الإلكتروني">
+  <input type="password" id="password" placeholder="كلمة المرور">
+  <button onclick="login()">تسجيل الدخول</button>
 </div>
 
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-// =============================================
-// 🔧 إعداد Supabase
-// =============================================
-
-// بيانات Supabase الخاصة بك
 const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// إنشاء عميل Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// =============================================
-// 🎯 إعدادات الدخول
-// =============================================
-
-// البريد الإلكتروني المطلوب
-const REQUIRED_EMAIL = "magedgasem55558@gmail.com";
-
-// مفاتيح التخزين للجلسة
-const AUTH_KEY = 'login1_authenticated';
-const TOKEN_KEY = 'login1_auth_token';
-const TIMEOUT_KEY = 'login1_timeout';
-const USER_KEY = 'login1_user_data';
-
-// مدة صلاحية الجلسة (6 ساعات)
-const SESSION_TIMEOUT = 6 * 60 * 60 * 1000;
-
-// =============================================
-// 📝 وظائف المساعدة
-// =============================================
-
-// عرض رسالة
-function showMessage(text, type = 'info') {
-  const messageBox = document.getElementById('message');
-  messageBox.textContent = text;
-  messageBox.className = 'message-box ' + type;
-}
-
-// إخفاء رسالة
-function clearMessage() {
-  const messageBox = document.getElementById('message');
-  messageBox.textContent = '';
-  messageBox.className = 'message-box';
-}
-
-// عرض شاشة التحميل
-function showLoading() {
-  document.getElementById('loadingOverlay').style.display = 'flex';
-}
-
-// إخفاء شاشة التحميل
-function hideLoading() {
-  document.getElementById('loadingOverlay').style.display = 'none';
-}
-
-// التحقق من صحة الإيميل
-function validateEmail(email) {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
-}
-
-// =============================================
-// 🔐 وظائف المصادقة
-// =============================================
-
-// تسجيل الدخول باستخدام Supabase
 async function login() {
-  // الحصول على البيانات من النموذج
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  
-  // التحقق من الحقول الفارغة
-  if (!email || !password) {
-    showMessage('⚠️ يرجى تعبئة جميع الحقول', 'error');
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const errorMsg = document.getElementById('error-msg');
+  errorMsg.style.display = 'none';
+
+  if(!email || !password){
+    errorMsg.innerText = "الرجاء إدخال البريد وكلمة المرور";
+    errorMsg.style.display = 'block';
     return;
   }
-  
-  // التحقق من صحة الإيميل
-  if (!validateEmail(email)) {
-    showMessage('❌ البريد الإلكتروني غير صحيح', 'error');
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if(error){
+    errorMsg.innerText = error.message;
+    errorMsg.style.display = 'block';
     return;
   }
-  
-  // التحقق من أن البريد هو المطلوب
-  if (email !== REQUIRED_EMAIL) {
-    showMessage(`❌ البريد الإلكتروني يجب أن يكون: ${REQUIRED_EMAIL}`, 'error');
-    return;
-  }
-  
-  // عرض شاشة التحميل
-  showLoading();
-  clearMessage();
-  
-  try {
-    // محاولة تسجيل الدخول مع Supabase Auth
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-    
-    if (error) {
-      throw error;
-    }
-    
-    // إذا نجح تسجيل الدخول
-    if (data.user && data.session) {
-      console.log('✅ تسجيل الدخول ناجح:', data.user.email);
-      
-      // إعداد جلسة المستخدم
-      setupUserSession(data.user, data.session);
-      
-      showMessage('✔️ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
-      
-      // الانتقال إلى لوحة التحكم بعد تأخير
-      setTimeout(() => {
-        window.location.href = 'dashboard2.html';
-      }, 1500);
-      
-    } else {
-      throw new Error('لم يتم إنشاء جلسة صحيحة');
-    }
-    
-  } catch (error) {
-    console.error('❌ خطأ في تسجيل الدخول:', error);
-    
-    // رسائل الخطأ المخصصة
-    let errorMessage = '❌ بيانات الدخول غير صحيحة';
-    
-    if (error.message.includes('Invalid login credentials')) {
-      errorMessage = '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
-    } else if (error.message.includes('Email not confirmed')) {
-      errorMessage = '❌ البريد الإلكتروني لم يتم تأكيده';
-    } else if (error.message.includes('User not found')) {
-      errorMessage = '❌ المستخدم غير موجود في النظام';
-    } else if (error.message.includes('Network')) {
-      errorMessage = '❌ مشكلة في الاتصال بالإنترنت';
-    }
-    
-    showMessage(errorMessage, 'error');
-  } finally {
-    // إخفاء شاشة التحميل
-    hideLoading();
-  }
+
+  // نجاح تسجيل الدخول → تحويل إلى لوحة التحكم
+  window.location.href = "dashboard2.html";
 }
 
-// إعداد جلسة المستخدم في localStorage
-function setupUserSession(user, session) {
-  const currentTime = new Date().getTime();
-  const expirationTime = currentTime + SESSION_TIMEOUT;
-  
-  // توليد توكن للمصادقة
-  const authToken = 'supa_' + btoa(Date.now().toString()) + '_' + Math.random().toString(36).substr(2);
-  
-  // حفظ بيانات الجلسة
-  localStorage.setItem(AUTH_KEY, 'true');
-  localStorage.setItem(TOKEN_KEY, authToken);
-  localStorage.setItem(TIMEOUT_KEY, expirationTime.toString());
-  localStorage.setItem(USER_KEY, JSON.stringify({
-    id: user.id,
-    email: user.email,
-    name: user.user_metadata?.name || 'المستخدم',
-    created_at: user.created_at,
-    last_login: new Date().toISOString()
-  }));
-  
-  console.log('✅ تم حفظ جلسة المستخدم في localStorage');
-}
-
-// =============================================
-// 🎯 إعدادات الصفحة
-// =============================================
-
-// تعبئة البريد الإلكتروني تلقائياً للإختصار
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 صفحة تسجيل الدخول جاهزة');
-  
-  // تعبئة البريد الإلكتروني تلقائياً
-  document.getElementById('email').value = REQUIRED_EMAIL;
-  document.getElementById('email').focus();
-  
-  // السماح بالدخول باستخدام زر Enter
-  document.getElementById('password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      login();
-    }
-  });
-  
-  // التحقق من وجود جلسة نشطة
-  checkExistingSession();
+// إذا كان المستخدم مسجل دخول مسبقاً، تحويله مباشرة للوحة التحكم
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if(session) window.location.href = "dashboard.html";
 });
-
-// التحقق من جلسة موجودة
-function checkExistingSession() {
-  const isAuthenticated = localStorage.getItem(AUTH_KEY);
-  const timeout = localStorage.getItem(TIMEOUT_KEY);
-  
-  if (isAuthenticated === 'true' && timeout) {
-    const currentTime = new Date().getTime();
-    const sessionEndTime = parseInt(timeout);
-    
-    if (currentTime < sessionEndTime) {
-      // إذا كانت الجلسة سارية، الانتقال مباشرة
-      console.log('✅ جلسة نشطة موجودة، جاري التحويل...');
-      showMessage('⚡ جلسة نشطة موجودة، جاري التحويل...', 'info');
-      
-      setTimeout(() => {
-        window.location.href = 'dashboard2.html';
-      }, 1000);
-    } else {
-      // إذا انتهت الجلسة، تنظيف
-      console.log('⏰ انتهت الجلسة السابقة');
-      localStorage.removeItem(AUTH_KEY);
-      localStorage.removeItem(TIMEOUT_KEY);
-    }
-  }
-}
-
-// =============================================
-// 📱 وظائف إضافية
-// =============================================
-
-// وظيفة لإعادة تعيين كلمة المرور (يمكن إضافتها لاحقاً)
-async function resetPassword() {
-  const email = document.getElementById('email').value.trim();
-  
-  if (!email || !validateEmail(email)) {
-    showMessage('⚠️ يرجى إدخال بريد إلكتروني صحيح', 'error');
-    return;
-  }
-  
-  showLoading();
-  
-  try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/reset-password.html',
-    });
-    
-    if (error) throw error;
-    
-    showMessage('📧 تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك', 'success');
-  } catch (error) {
-    console.error('❌ خطأ في إعادة تعيين كلمة المرور:', error);
-    showMessage('❌ فشل في إرسال رابط إعادة التعيين', 'error');
-  } finally {
-    hideLoading();
-  }
-}
-// في login1.html، داخل دالة login() بعد نجاح تسجيل الدخول
-// أضف هذا الكود في القسم try بعد if (data.user && data.session):
-
-// ⚡ حفظ بيانات الجلسة بشكل صحيح
-const currentTime = new Date().getTime();
-const expirationTime = currentTime + (6 * 60 * 60 * 1000); // 6 ساعات
-
-// المفاتيح الأساسية (يجب أن تتطابق مع dashboard2.html)
-localStorage.setItem('login1_authenticated', 'true');
-localStorage.setItem('login1_auth_token', data.session.access_token);
-localStorage.setItem('login1_timeout', expirationTime.toString());
-localStorage.setItem('login1_user_data', JSON.stringify({
-  id: data.user.id,
-  email: data.user.email,
-  name: data.user.user_metadata?.name || data.user.email.split('@')[0],
-  last_login: new Date().toISOString()
-}));
-
-// حفظ جلسة Supabase للنسخ الاحتياطي
-localStorage.setItem('supabase_session', JSON.stringify(data.session));
-
-console.log('✅ تم حفظ جميع بيانات الجلسة في localStorage');
-console.log('🔑 المفاتيح المحفوظة:', Object.keys(localStorage).filter(k => k.includes('login1')));
-// =============================================
-// 📝 معلومات للمطور
-// =============================================
-console.log(`
-=============================================
-🔐 معلومات تسجيل الدخول
-=============================================
-البريد المطلوب: ${REQUIRED_EMAIL}
-Supabase URL: ${SUPABASE_URL}
-=============================================
-لتسجيل الدخول الناجح، يجب أن:
-1. تم إنشاء الحساب في Supabase Auth
-2. البريد: ${REQUIRED_EMAIL}
-3. كلمة المرور: (يجب إدخالها يدوياً)
-=============================================
-`);
 </script>
-
 </body>
 </html>
