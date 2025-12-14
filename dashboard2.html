@@ -4,285 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة التحكم</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-/* شاشة الحظر الكاملة */
-body{
-  background:linear-gradient(135deg, #0a0a0a, #111, #1a1a1a, #222);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:white;
-  padding:20px;
-}
-
-/* الحاوية الرئيسية */
-.container{
-  width:100%;
-  max-width:800px;
-  text-align:center;
-}
-
-/* شاشة التحميل */
-#loading-screen {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:40px 30px;
-  background:rgba(255,255,255,0.05);
-  border-radius:20px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.spinner {
-  width:70px;
-  height:70px;
-  border:6px solid rgba(255,255,255,0.1);
-  border-top-color:#ff4c4c;
-  border-radius:50%;
-  animation:spin 1s ease-in-out infinite;
-  margin-bottom:25px;
-}
-
-@keyframes spin { to { transform:rotate(360deg); } }
-
-.loading-text { font-size:22px; font-weight:700; color:white; margin-bottom:10px; }
-.loading-subtext { font-size:16px; opacity:0.7; color:#aaa; }
-
-/* رسالة الخطأ */
-#error-message {
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:40px 30px;
-  background:rgba(255,255,255,0.05);
-  border-radius:20px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  border:1px solid rgba(255,255,255,0.1);
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
-
-.error-icon { font-size:70px; color:#ff4c4c; margin-bottom:25px; }
-.error-title { font-size:28px; font-weight:800; margin-bottom:15px; color:white; }
-.error-description { font-size:18px; margin-bottom:30px; color:#ccc; line-height:1.6; max-width:400px; }
-
-.login-btn {
-  background:linear-gradient(135deg, #ff4c4c, #ff6b6b);
-  color:white;
-  border:none;
-  padding:15px 35px;
-  border-radius:12px;
-  font-size:18px;
-  font-weight:700;
-  cursor:pointer;
-  transition:0.3s;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.login-btn:hover {
-  background:linear-gradient(135deg, #ff6b6b, #ff4c4c);
-  transform:translateY(-3px);
-  box-shadow:0 7px 20px rgba(255,107,107,0.4);
-}
-
-/* المحتوى الرئيسي */
-#main-content { display:none; width:100%; }
-
-.main-wrapper{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:30px 10px; }
-
-header h1{ font-size:38px; font-weight:800; margin-bottom:10px; }
-header p{ font-size:20px; opacity:.9; margin-bottom:25px; }
-
-/* Cards */
-.cards{ width:100%; max-width:600px; display:flex; flex-direction:column; gap:18px; }
-
-.card{
-  background:rgba(255,255,255,0.07);
-  padding:20px;
-  border-radius:16px;
-  text-align:center;
-  backdrop-filter:blur(5px);
-  box-shadow:0 6px 18px rgba(0,0,0,0.45);
-  transition:0.25s;
-  cursor:pointer;
-}
-
-.card:hover{
-  background:rgba(255,255,255,0.12);
-  transform:scale(1.03);
-}
-
-.card-title{ font-size:24px; font-weight:800; margin-bottom:6px; }
-.card-value{ font-size:18px; margin-bottom:14px; opacity:.95; }
-
-/* زر تسجيل الخروج */
-.logout-btn{
-  background:#ff4c4c;
-  padding:12px 20px;
-  border-radius:12px;
-  text-align:center;
-  color:white;
-  font-weight:800;
-  width:100%;
-  max-width:600px;
-  margin-top:20px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
+body { font-family:'Cairo',sans-serif; margin:0; padding:0; background:#111; color:white; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+.container{ width:100%; max-width:800px; text-align:center; padding:20px; }
+.card{ background:rgba(255,255,255,0.07); margin:15px 0; padding:20px; border-radius:16px; cursor:pointer; transition:0.25s; }
+.card:hover{ background:rgba(255,255,255,0.12); transform:scale(1.03); }
+.logout-btn{ background:#ff4c4c; padding:12px 20px; border-radius:12px; cursor:pointer; margin-top:20px; transition:0.2s; }
 .logout-btn:hover{ background:#ff6b6b; }
-
-/* Footer */
-footer{ text-align:center; opacity:.9; font-size:18px; padding:15px 10px; margin-top:25px; }
 </style>
 </head>
-
 <body>
+
 <div class="container">
-  
-  <!-- شاشة التحميل -->
-  <div id="loading-screen">
-    <div class="spinner"></div>
-    <div class="loading-text">جاري التحقق من صلاحية الدخول...</div>
-    <div class="loading-subtext">يجب أن تكون مسجلاً للدخول</div>
-  </div>
-  
-  <!-- رسالة الخطأ -->
-  <div id="error-message">
-    <div class="error-icon">🚫</div>
-    <h2 class="error-title">غير مصرح بالدخول</h2>
-    <p class="error-description">يجب عليك تسجيل الدخول أولاً للوصول إلى لوحة التحكم</p>
-    <button class="login-btn" onclick="goToLogin()">
-      <span>👉 تسجيل الدخول الآن</span>
-    </button>
-    <div style="margin-top:20px; color:#888; font-size:14px;">
-      إذا كنت قد سجلت الدخول مسبقاً، جرب <a href="javascript:location.reload()" style="color:#4cd964; text-decoration:none;">إعادة التحميل</a>
-    </div>
-  </div>
-  
-  <!-- المحتوى الرئيسي -->
-  <div id="main-content">
-    <div class="main-wrapper">
-      <header>
-        <h1>⚙ لوحة التحكم</h1>
-        <div id="user-info" style="font-size:20px; opacity:.9; margin-bottom:25px;">
-          جاري تحميل معلومات المستخدم...
-        </div>
-      </header>
+  <h1>⚙ لوحة التحكم</h1>
+  <div id="user-info" style="margin-bottom:25px;">جارٍ تحميل معلومات المستخدم...</div>
 
-      <div class="cards">
-        <div class="card" onclick="goToPage('dashboard-alerts.html')">
-          <div class="card-title">🔔 إدارة التنبيهات</div>
-          <div class="card-value">إضافة – تعديل – حذف</div>
-        </div>
+  <div class="card" onclick="goToPage('dashboard-alerts.html')">🔔 إدارة التنبيهات</div>
+  <div class="card" onclick="goToPage('dashboard-reasons.html')">⚡ إدارة أسباب الانقطاع</div>
+  <div class="card" onclick="goToPage('dashboard-schedule.html')">📅 إدارة جدول التشغيل</div>
+  <div class="card" onclick="goToPage('dashboard-reports.html')">📢 إدارة البلاغات</div>
 
-        <div class="card" onclick="goToPage('dashboard-reasons.html')">
-          <div class="card-title">⚡ إدارة أسباب الانقطاع</div>
-          <div class="card-value">عرض – تعديل – حذف</div>
-        </div>
-
-        <div class="card" onclick="goToPage('dashboard-schedule.html')">
-          <div class="card-title">📅 إدارة جدول التشغيل</div>
-          <div class="card-value">تشغيل – انطفاء – تحديث</div>
-        </div>
-
-        <div class="card" onclick="goToPage('dashboard-reports.html')">
-          <div class="card-title">📢 إدارة البلاغات</div>
-          <div class="card-value">الرد – تغيير الحالة – حذف</div>
-        </div>
-      </div>
-
-      <div class="logout-btn" id="logoutBtn">🚪 تسجيل الخروج</div>
-
-      <footer>
-        <p>م/ماجد قاسم حسن مبارك بن عمرو</p>
-        © 2025 – منصة كهرباء عتق
-      </footer>
-    </div>
-  </div>
-
+  <div class="logout-btn" onclick="logout()">🚪 تسجيل الخروج</div>
 </div>
 
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const loadingScreen = document.getElementById('loading-screen');
-const errorMessage = document.getElementById('error-message');
-const mainContent = document.getElementById('main-content');
-const userInfoElem = document.getElementById('user-info');
-const logoutBtn = document.getElementById('logoutBtn');
+function goToPage(url){ window.location.href = url; }
 
-function showLoading() {
-  loadingScreen.style.display = 'flex';
-  errorMessage.style.display = 'none';
-  mainContent.style.display = 'none';
+async function logout(){
+  if(confirm("هل أنت متأكد من تسجيل الخروج؟")){
+    await supabase.auth.signOut();
+    window.location.href = "login1.html";
+  }
 }
 
-function showError() {
-  loadingScreen.style.display = 'none';
-  errorMessage.style.display = 'flex';
-  mainContent.style.display = 'none';
-}
-
-function showContent(user) {
-  loadingScreen.style.display = 'none';
-  errorMessage.style.display = 'none';
-  mainContent.style.display = 'block';
-  userInfoElem.innerHTML = `
-    مرحباً <strong style="color:#4cd964">${user.user_metadata?.name || user.email}</strong>
-    <div style="font-size:16px; opacity:0.7;">البريد: ${user.email}</div>
+// التحقق من الجلسة
+async function checkSession(){
+  const { data: { session } } = await supabase.auth.getSession();
+  if(!session){
+    window.location.href = "login1.html";
+    return;
+  }
+  const user = session.user;
+  document.getElementById('user-info').innerHTML = `
+    مرحباً <strong style="color:#4cd964">${user.user_metadata?.name || user.email}</strong><br>
+    <span style="opacity:0.7; font-size:16px;">${user.email}</span>
   `;
 }
 
-async function checkSession() {
-  showLoading();
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if (error || !session) {
-    showError();
-    return null;
-  }
-  showContent(session.user);
-  return session.user;
-}
-
-logoutBtn.addEventListener('click', async () => {
-  if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-    await supabase.auth.signOut();
-    showError();
-  }
+// الاستماع لتغير الجلسة (مثلاً إذا تم تسجيل الخروج من نافذة أخرى)
+supabase.auth.onAuthStateChange((event, session) => {
+  if(!session) window.location.href = "login1.html";
 });
 
-// التحقق عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', async () => {
-  await checkSession();
-});
-
-// الحماية ضد الرجوع أو الكاش
-window.addEventListener('pageshow', function(event) {
-  if (event.persisted) {
-    checkSession();
-  }
-});
-history.pushState(null, null, location.href);
-window.onpopstate = function () { history.go(1); };
+document.addEventListener('DOMContentLoaded', checkSession);
 </script>
 </body>
 </html>
