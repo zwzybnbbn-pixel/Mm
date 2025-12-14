@@ -6,9 +6,25 @@
 <title>تسجيل الدخول</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Cairo', sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; background:#111; color:white; padding:20px; }
-.login-container { background:rgba(255,255,255,0.05); padding:40px 30px; border-radius:20px; backdrop-filter:blur(10px); box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:400px; width:100%; }
-h1{ text-align:center; margin-bottom:30px; }
+body { 
+  font-family: 'Cairo', sans-serif; 
+  display:flex; justify-content:center; align-items:center; 
+  min-height:100vh; background:#111; color:white; padding:20px; 
+}
+
+/* حاوية تسجيل الدخول */
+.login-container { 
+  background:rgba(255,255,255,0.05); 
+  padding:40px 30px; 
+  border-radius:20px; 
+  backdrop-filter:blur(10px); 
+  box-shadow:0 10px 30px rgba(0,0,0,0.5); 
+  max-width:400px; 
+  width:100%; 
+  text-align:center;
+}
+
+h1{ text-align:center; margin-bottom:30px; font-weight:800; }
 input { width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; font-size:16px; }
 button { width:100%; padding:12px; border:none; border-radius:12px; background:#ff4c4c; color:white; font-weight:700; font-size:16px; cursor:pointer; transition:0.3s; }
 button:hover { background:#ff6b6b; }
@@ -31,10 +47,11 @@ const SUPABASE_URL = "https://gxuumjhtutkipvkljjhj.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const errorMsg = document.getElementById('error-msg');
+
 async function login() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  const errorMsg = document.getElementById('error-msg');
   errorMsg.style.display = 'none';
 
   if(!email || !password){
@@ -51,14 +68,20 @@ async function login() {
     return;
   }
 
-  // نجاح تسجيل الدخول → تحويل إلى لوحة التحكم
+  // نجاح تسجيل الدخول → تحويل للوحة التحكم
   window.location.href = "dashboard2.html";
 }
 
 // إذا كان المستخدم مسجل دخول مسبقاً، تحويله مباشرة للوحة التحكم
 supabase.auth.getSession().then(({ data: { session } }) => {
-  if(session) window.location.href = "dashboard.html";
+  if(session) window.location.href = "dashboard2.html";
+});
+
+// الاستماع لتغير الجلسة (مثلاً تسجيل الخروج من نافذة أخرى)
+supabase.auth.onAuthStateChange((event, session) => {
+  if(session) window.location.href = "dashboard2.html";
 });
 </script>
+
 </body>
 </html>
