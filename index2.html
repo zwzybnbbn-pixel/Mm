@@ -2,143 +2,196 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>كهرباء عتق – المنصة الذكية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>كهرباء عتق - المنصة الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00eaff;
-            --primary-dark: #00a8cc;
-            --electric-blue: #0066ff;
-            --dark-bg: #0a0e1a;
-            --darker-bg: #070a14;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glow-primary: 0 0 20px rgba(0, 234, 255, 0.7);
-            --glow-electric: 0 0 20px rgba(0, 102, 255, 0.7);
-            --zekr-bg: linear-gradient(135deg, #E8DCC3, #D9C7A5);
-            --zekr-text: #5A4A34;
-        }
-
+        /* CSS Reset للجوال */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+
+        :root {
+            /* ألوان متوافقة مع الشاشات الصغيرة */
+            --primary: #0066ff;
+            --primary-light: #4d94ff;
+            --primary-dark: #0047cc;
+            --secondary: #00e6e6;
+            --accent: #ff6b35;
+            --success: #00cc66;
+            --warning: #ff9900;
+            --danger: #ff3333;
+            --dark: #0a0e1a;
+            --darker: #050913;
+            --light: #ffffff;
+            --gray: #8c8c8c;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         html {
+            font-size: 16px;
+            -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
+            height: 100%;
+            overflow-x: hidden;
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--darker-bg);
-            color: white;
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
             min-height: 100vh;
+            min-height: -webkit-fill-available;
+            line-height: 1.5;
+            position: relative;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 102, 255, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 234, 255, 0.1) 0%, transparent 20%),
-                linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* زر الرجوع المتطور */
+        /* إزالة تظليل الأزرار على iOS */
+        input, button, textarea, select {
+            font-family: inherit;
+            font-size: 16px; /* منع التكبير على iOS */
+        }
+
+        /* تحسين التمرير على iOS */
+        .scroll-container {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
+        }
+
+        /* زر الرجوع ثابت أعلى الشاشة */
         .back-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 102, 255, 0.9);
+            top: max(12px, env(safe-area-inset-top));
+            right: 15px;
+            background: var(--primary);
             color: white;
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .back-btn:hover {
-            background: rgba(0, 86, 214, 0.95);
-            transform: translateX(-5px);
-            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.6);
-        }
-
-        .back-btn:active {
-            transform: translateX(-5px) scale(0.95);
-        }
-
-        /* الهيدر الرئيسي */
-        .main-header {
-            padding: 40px 20px 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .electric-pulse {
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--primary), transparent);
-            animation: pulse 3s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .main-title {
-            font-size: clamp(32px, 7vw, 44px);
-            font-weight: 900;
-            background: linear-gradient(135deg, #ffffff, var(--primary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 5px 15px rgba(0, 234, 255, 0.3);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            border: none;
+            font-size: 20px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            touch-action: manipulation;
         }
 
-        .title-icon {
-            font-size: 40px;
-            filter: drop-shadow(0 0 10px rgba(0, 234, 255, 0.7));
+        .back-btn:active {
+            transform: scale(0.92);
+            background: var(--primary-dark);
         }
 
-        .sub-title {
-            font-size: clamp(16px, 3.8vw, 20px);
-            opacity: 0.9;
+        /* رأس الصفحة */
+        .page-header {
+            padding: 70px 20px 25px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15) 0%, transparent 100%);
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .electric-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--primary-light) 20%, 
+                var(--secondary) 50%, 
+                var(--primary-light) 80%, 
+                transparent 100%);
+            opacity: 0.3;
+            filter: blur(8px);
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--light), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 15px;
             font-weight: 400;
         }
 
-        /* بطاقة الأذكار المتطورة */
+        /* شريط الحالة السريع */
+        .status-quickview {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 120px;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .status-badge:active {
+            transform: scale(0.98);
+        }
+
+        .status-badge i {
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+
+        /* بطاقة الأذكار */
+        .zekr-container {
+            margin: 0 15px 25px;
+            position: relative;
+        }
+
         .zekr-card {
-            max-width: 800px;
-            margin: 25px auto;
-            padding: 28px 25px;
-            border-radius: 24px;
-            background: var(--zekr-bg);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            min-height: 180px;
+            min-height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -150,35 +203,29 @@
             top: 0;
             right: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-            z-index: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         .zekr-title {
-            font-size: clamp(24px, 5vw, 30px);
-            font-weight: 900;
-            color: var(--zekr-text);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            position: relative;
-            z-index: 1;
+            gap: 10px;
         }
 
-        #zekr {
-            font-size: clamp(22px, 5vw, 28px);
+        #zekr-text {
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #4B3E2A;
-            opacity: 0;
-            transition: opacity 1s ease;
-            margin: 0;
+            color: var(--light);
             line-height: 1.6;
-            text-align: center;
-            position: relative;
-            z-index: 1;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
             min-height: 60px;
             display: flex;
             align-items: center;
@@ -186,516 +233,648 @@
             padding: 0 10px;
         }
 
+        #zekr-text.show {
+            opacity: 1;
+        }
+
         .zekr-timer {
             position: absolute;
-            bottom: 15px;
-            left: 25px;
-            font-size: 14px;
-            color: var(--zekr-text);
-            opacity: 0.7;
+            bottom: 10px;
+            left: 20px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
             font-weight: 600;
-            z-index: 1;
         }
 
-        /* شبكة الكروت الذكية */
-        .grid-container {
-            padding: 20px 15px 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+        /* القائمة الرئيسية */
+        .main-menu {
+            padding: 0 15px 30px;
         }
 
-        .grid {
+        .menu-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-right: 10px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-title i {
+            color: var(--secondary);
+        }
+
+        /* شبكة الخدمات */
+        .services-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        /* كروت الخدمات الكهربائية */
         .service-card {
             background: var(--card-bg);
-            border-radius: 22px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(15px);
-            padding: 25px 20px;
+            border-radius: 18px;
+            padding: 20px 15px;
             text-decoration: none;
-            color: white;
+            color: inherit;
+            border: 1px solid var(--card-border);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: block;
+            touch-action: manipulation;
+            box-shadow: var(--shadow);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .service-card::before {
+        .service-card::after {
             content: '';
             position: absolute;
             top: 0;
             right: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(0, 234, 255, 0.05));
-            z-index: -1;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 230, 230, 0.05) 100%);
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
-        .service-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(transparent, var(--electric-blue), transparent 30%);
-            animation: rotate 8s linear infinite;
-            opacity: 0.1;
-            z-index: -2;
+        .service-card:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        .service-card:hover::before,
-        .service-card:active::before {
+        .service-card:active::after {
             opacity: 1;
         }
 
         .card-icon {
-            font-size: clamp(40px, 10vw, 50px);
+            font-size: 2.5rem;
             margin-bottom: 15px;
-            color: var(--primary);
-            filter: drop-shadow(0 0 10px rgba(0, 234, 255, 0.5));
-            transition: transform 0.5s ease;
-        }
-
-        .service-card:hover .card-icon {
-            transform: scale(1.1);
+            color: var(--secondary);
+            text-align: center;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .card-title {
-            font-size: clamp(22px, 5vw, 26px);
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff, #a5d8ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--light);
+            text-align: center;
+            line-height: 1.3;
         }
 
-        .card-value {
-            font-size: clamp(16px, 4vw, 18px);
-            opacity: 0.9;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            min-height: 30px;
-        }
-
-        .card-footer {
+        .card-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            line-height: 1.4;
+            flex-grow: 1;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
         }
 
         .card-badge {
-            background: rgba(0, 102, 255, 0.15);
-            color: var(--electric-blue);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 204, 102, 0.2);
+            color: var(--success);
+            font-size: 0.7rem;
             font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 204, 102, 0.3);
+        }
+
+        /* قسم التنبيهات العاجلة */
+        .urgent-alerts {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 51, 51, 0.1) 100%);
+            border-radius: 18px;
+            padding: 20px;
+            margin: 25px 15px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .urgent-alerts::before {
+            content: '⚠️';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 1.5rem;
+        }
+
+        .alert-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ff9966;
+            margin-bottom: 10px;
+            padding-right: 30px;
+        }
+
+        .alert-content {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        /* قسم التحديثات الحية */
+        .live-updates {
+            padding: 0 15px 30px;
+        }
+
+        .update-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-right: 4px solid var(--primary);
             display: flex;
-            align-items: center;
-            gap: 6px;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.2s ease;
         }
 
-        .card-arrow {
-            color: var(--primary);
-            font-size: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover .card-arrow {
+        .update-item:active {
+            background: rgba(255, 255, 255, 0.08);
             transform: translateX(-5px);
         }
 
-        /* تأثير الضغط على الجوال */
-        .service-card:active {
-            transform: scale(0.97);
-            transition: transform 0.1s ease;
-        }
-
-        /* شريط حالة الكهرباء */
-        .status-bar {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 25px auto;
-            max-width: 800px;
-            flex-wrap: wrap;
-        }
-
-        .status-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 700;
-            border: 1px solid rgba(0, 102, 255, 0.3);
+        .update-icon {
+            background: rgba(0, 102, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .status-item:hover {
-            background: rgba(0, 102, 255, 0.15);
-            transform: translateY(-3px);
-        }
-
-        .status-item i {
-            color: var(--primary);
-        }
-
-        /* الفوتر المتطور */
-        .footer {
-            background: rgba(7, 10, 20, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px 20px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .footer-title {
-            font-size: clamp(20px, 5vw, 24px);
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--electric-blue));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .footer-text {
-            font-size: clamp(14px, 3.5vw, 16px);
-            opacity: 0.8;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .tech-stack {
-            display: flex;
             justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            color: var(--primary-light);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .update-content h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+
+        .update-content p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        .update-time {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+        }
+
+        /* زر الطوارئ */
+        .emergency-btn {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--danger), #ff5252);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(255, 51, 51, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 900;
+            white-space: nowrap;
+            touch-action: manipulation;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .emergency-btn:active {
+            transform: translateX(-50%) scale(0.95);
+            box-shadow: 0 4px 15px rgba(255, 51, 51, 0.6);
+        }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            flex: 1;
+            padding: 5px 0;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .nav-item:active {
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            color: var(--secondary);
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* الفوتر */
+        .footer {
+            padding: 30px 20px 80px;
+            text-align: center;
+            background: rgba(5, 9, 19, 0.8);
             margin-top: 20px;
         }
 
-        .tech-item {
+        .footer-logo {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .footer-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .developer-info {
             background: rgba(0, 102, 255, 0.1);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .developer-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .developer-role {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .copyright {
-            margin-top: 25px;
-            font-size: 14px;
-            opacity: 0.7;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* تحسينات للجوال */
-        @media (max-width: 767px) {
-            .back-btn {
-                top: 15px;
-                right: 15px;
-                padding: 10px 16px;
-                font-size: 15px;
-            }
-            
-            .main-header {
-                padding: 60px 15px 20px;
-            }
-            
-            .zekr-card {
-                margin: 20px 10px;
-                padding: 22px 18px;
-                min-height: 160px;
-            }
-            
-            .grid-container {
-                padding: 15px 10px 30px;
-            }
-            
-            .grid {
-                gap: 16px;
-            }
-            
-            .service-card {
-                padding: 22px 18px;
-            }
-            
-            .status-bar {
-                margin: 20px 10px;
-                gap: 10px;
-            }
-            
-            .status-item {
-                padding: 10px 16px;
-                font-size: 13px;
-            }
-            
-            /* تأثيرات دخول الكروت */
-            @keyframes cardEntry {
-                0% { transform: translateY(30px); opacity: 0; }
-                100% { transform: translateY(0); opacity: 1; }
-            }
-            
-            .service-card {
-                animation: cardEntry 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-                opacity: 0;
-            }
-            
-            .service-card:nth-child(1) { animation-delay: 0.1s; }
-            .service-card:nth-child(2) { animation-delay: 0.2s; }
-            .service-card:nth-child(3) { animation-delay: 0.3s; }
-            .service-card:nth-child(4) { animation-delay: 0.4s; }
+        /* رسائل التحميل */
+        .loading-skeleton {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.05) 0%, 
+                rgba(255, 255, 255, 0.1) 50%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 10px;
         }
 
-        @media (min-width: 600px) and (max-width: 767px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* تحسينات للأجهزة المختلفة */
+        @media (max-width: 320px) {
+            .main-title { font-size: 1.8rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .status-badge { min-width: 100px; font-size: 0.8rem; }
         }
 
         @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .main-header {
-                padding: 50px 30px 25px;
-            }
-            
-            .zekr-card {
-                margin: 30px auto;
-                padding: 30px 35px;
-            }
-            
-            .grid-container {
-                padding: 30px 25px 50px;
-            }
-            
-            .service-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 
-                    0 15px 35px rgba(0, 0, 0, 0.3),
-                    var(--glow-electric),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .back-btn { width: 56px; height: 56px; font-size: 24px; }
         }
 
         @media (min-width: 1024px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .main-header {
-                padding: 60px 40px 30px;
+            .services-grid { grid-template-columns: repeat(4, 1fr); }
+            body { max-width: 768px; margin: 0 auto; }
+        }
+
+        /* دعم Safe Area للأجهزة الحديثة */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
             }
         }
 
-        /* تحسينات أداء الجوال */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+        /* منع التكبير على حقول الإدخال في iOS */
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select,
+            textarea,
+            input {
+                font-size: 16px !important;
             }
+        }
+
+        /* تحسين الأداء للأنيميشن */
+        .will-change {
+            will-change: transform, opacity;
+        }
+
+        /* إخفاء شريط التمرير مع الحفاظ على إمكانية التمرير */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body>
-    <!-- زر الرجوع المتطور -->
-    <a href="all-index.html" class="back-btn">
+<body class="scroll-container">
+    <!-- زر الرجوع -->
+    <a href="all-index.html" class="back-btn" aria-label="رجوع">
         <i class="fas fa-arrow-right"></i>
-        <span>رجوع</span>
     </a>
 
-    <!-- الهيدر الرئيسي -->
-    <header class="main-header">
-        <div class="electric-pulse"></div>
+    <!-- رأس الصفحة -->
+    <header class="page-header">
+        <div class="electric-wave"></div>
         <h1 class="main-title">
-            <span class="title-icon">⚡</span>
-            كهرباء عتق
-            <span class="title-icon">💡</span>
+            <i class="fas fa-bolt"></i> كهرباء عتق
         </h1>
-        <p class="sub-title">المنصة الذكية لمتابعة خدمات الكهرباء في مدينة عتق</p>
+        <p class="subtitle">المنصة الذكية لمتابعة خدمات الكهرباء في مدينة عتق</p>
         
-        <!-- شريط حالة الكهرباء -->
-        <div class="status-bar">
-            <div class="status-item">
-                <i class="fas fa-bolt"></i>
-                <span>الحالة: <span id="current-status">مستقرة</span></span>
+        <!-- شريط الحالة السريع -->
+        <div class="status-quickview">
+            <div class="status-badge">
+                <i class="fas fa-power-off"></i>
+                <span id="currentStatus">الحالة: مستقرة</span>
             </div>
-            <div class="status-item">
+            <div class="status-badge">
                 <i class="fas fa-clock"></i>
-                <span>آخر تحديث: <span id="last-update">قبل قليل</span></span>
-            </div>
-            <div class="status-item">
-                <i class="fas fa-user"></i>
-                <span>مطور المنصة: م/ماجد قاسم</span>
+                <span id="lastUpdate">آخر تحديث: الآن</span>
             </div>
         </div>
     </header>
 
-    <!-- بطاقة الأذكار المتطورة -->
-    <div class="zekr-card">
-        <div class="zekr-title">
-            <i class="fas fa-star"></i>
-            ✨ أذكار اليوم ✨
-            <i class="fas fa-star"></i>
+    <!-- بطاقة الأذكار -->
+    <section class="zekr-container">
+        <div class="zekr-card">
+            <h3 class="zekr-title">
+                <i class="fas fa-star"></i> أذكار اليوم
+            </h3>
+            <p id="zekr-text" class="loading-skeleton" style="height: 60px;"></p>
+            <div class="zekr-timer">
+                <i class="fas fa-sync-alt"></i>
+                <span id="timer">5</span> ثانية للتغيير
+            </div>
         </div>
-        <p id="zekr">استغفر الله</p>
-        <div class="zekr-timer" id="zekr-timer">يتغير بعد: <span id="timer">5</span> ثواني</div>
-    </div>
+    </section>
 
-    <!-- شبكة الخدمات الكهربائية -->
-    <main class="grid-container">
-        <div class="grid">
+    <!-- التنبيهات العاجلة -->
+    <section class="urgent-alerts">
+        <h3 class="alert-title">تنبيه مهم</h3>
+        <div class="alert-content">
+            <span id="urgentAlert">لا توجد تنبيهات عاجلة حالياً. الكهرباء تعمل بشكل طبيعي في جميع أحياء المدينة.</span>
+        </div>
+    </section>
+
+    <!-- القائمة الرئيسية -->
+    <section class="main-menu">
+        <h3 class="menu-title">
+            <i class="fas fa-th-large"></i> الخدمات الرئيسية
+        </h3>
+        
+        <div class="services-grid">
             <!-- آخر تنبيه -->
-            <a href="alerts.html" class="service-card">
-                <div class="card-icon">🔔</div>
-                <h3 class="card-title">آخر تنبيه</h3>
-                <div id="alerts" class="card-value"></div>
-                <div class="card-footer">
-                    <div class="card-badge">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>مهم</span>
-                    </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
+            <a href="alerts.html" class="service-card" aria-label="آخر تنبيه">
+                <div class="card-badge">مهم</div>
+                <div class="card-icon">
+                    <i class="fas fa-bell"></i>
                 </div>
+                <h4 class="card-title">آخر تنبيه</h4>
+                <p class="card-desc" id="alertDesc">لا توجد انقطاعات حالياً</p>
+            </a>
+
+            <!-- جدول التشغيل -->
+            <a href="schedule.html" class="service-card" aria-label="جدول التشغيل">
+                <div class="card-badge" style="background: rgba(255, 153, 0, 0.2); color: var(--warning); border-color: rgba(255, 153, 0, 0.3);">
+                    اليوم
+                </div>
+                <div class="card-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h4 class="card-title">جدول التشغيل</h4>
+                <p class="card-desc" id="scheduleDesc">24 ساعة متواصلة</p>
             </a>
 
             <!-- سبب الانقطاع -->
-            <a href="reasons.html" class="service-card">
-                <div class="card-icon">⚡</div>
-                <h3 class="card-title">سبب الانقطاع</h3>
-                <div id="reasons" class="card-value"></div>
-                <div class="card-footer">
-                    <div class="card-badge">
-                        <i class="fas fa-info-circle"></i>
-                        <span>معلومات</span>
-                    </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
+            <a href="reasons.html" class="service-card" aria-label="سبب الانقطاع">
+                <div class="card-icon">
+                    <i class="fas fa-info-circle"></i>
                 </div>
-            </a>
-
-            <!-- جدول اليوم -->
-            <a href="schedule.html" class="service-card">
-                <div class="card-icon">📅</div>
-                <h3 class="card-title">جدول التشغيل</h3>
-                <div id="schedule-mini" class="card-value"></div>
-                <div class="card-footer">
-                    <div class="card-badge">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>جدول</span>
-                    </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
-                </div>
+                <h4 class="card-title">سبب الانقطاع</h4>
+                <p class="card-desc" id="reasonDesc">لا توجد أعطال</p>
             </a>
 
             <!-- البلاغات -->
-            <a href="reports.html" class="service-card">
-                <div class="card-icon">📢</div>
-                <h3 class="card-title">البلاغات</h3>
-                <div id="reports" class="card-value"></div>
-                <div class="card-footer">
-                    <div class="card-badge">
-                        <i class="fas fa-flag"></i>
-                        <span>إبلاغ</span>
-                    </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
+            <a href="reports.html" class="service-card" aria-label="البلاغات">
+                <div class="card-badge" style="background: rgba(0, 204, 102, 0.2); color: var(--success); border-color: rgba(0, 204, 102, 0.3);">
+                    نشط
                 </div>
+                <div class="card-icon">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <h4 class="card-title">البلاغات</h4>
+                <p class="card-desc" id="reportDesc">الإبلاغ عن عطل</p>
             </a>
         </div>
-    </main>
+    </section>
 
-    <!-- الفوتر المتطور -->
+    <!-- التحديثات الحية -->
+    <section class="live-updates">
+        <h3 class="menu-title">
+            <i class="fas fa-broadcast-tower"></i> تحديثات حية
+        </h3>
+
+        <div class="update-item">
+            <div class="update-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="update-content">
+                <h4>استهلاك الطاقة</h4>
+                <p>مستوى الاستهلاك الحالي ضمن المعدلات الطبيعية</p>
+                <div class="update-time">قبل 5 دقائق</div>
+            </div>
+        </div>
+
+        <div class="update-item">
+            <div class="update-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="update-content">
+                <h4>فريق الصيانة</h4>
+                <p>الفريق جاهز للاستجابة السريعة لأي طارئ</p>
+                <div class="update-time">قبل 15 دقيقة</div>
+            </div>
+        </div>
+
+        <div class="update-item">
+            <div class="update-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="update-content">
+                <h4>خدمة العملاء</h4>
+                <p>مستوى رضا العملاء: 94% هذا الشهر</p>
+                <div class="update-time">قبل 30 دقيقة</div>
+            </div>
+        </div>
+    </section>
+
+   
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <a href="#home" class="nav-item active" aria-label="الرئيسية">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">الرئيسية</span>
+        </a>
+        <a href="alerts.html" class="nav-item" aria-label="التنبيهات">
+            <i class="fas fa-bell nav-icon"></i>
+            <span class="nav-label">التنبيهات</span>
+        </a>
+        <a href="reports.html" class="nav-item" aria-label="البلاغات">
+            <i class="fas fa-flag nav-icon"></i>
+            <span class="nav-label">البلاغات</span>
+        </a>
+        <a href="about.html" class="nav-item" aria-label="المساعدة">
+            <i class="fas fa-question-circle nav-icon"></i>
+            <span class="nav-label">المساعدة</span>
+        </a>
+    </nav>
+
+    <!-- الفوتر -->
     <footer class="footer">
-        <div class="footer-content">
-            <h3 class="footer-title">كهرباء عتق الذكية</h3>
-            <p class="footer-text">منصة متكاملة لمتابعة خدمات الكهرباء في مدينة عتق، تقدم معلومات دقيقة وآنية مع تصميم عصري متكامل 100% للجوال.</p>
-            
-            <div class="tech-stack">
-                <div class="tech-item">واجهة متجاوبة</div>
-                <div class="tech-item">تحديث آني</div>
-                <div class="tech-item">تصميم تكنولوجي</div>
-                <div class="tech-item">أداء فائق</div>
-            </div>
-            
-            <div class="copyright">
-                <p>تطوير: م/ماجد قاسم حسن مبارك بن عمرو</p>
-                <p>© 2025 – منصة كهرباء عتق | جميع الحقوق محفوظة</p>
-            </div>
+        <div class="footer-logo">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <h3 class="footer-title">كهرباء عتق الذكية</h3>
+        <p class="footer-subtitle">
+            منصة متكاملة لمتابعة خدمات الكهرباء في مدينة عتق، تقدم معلومات دقيقة وآنية 
+            مع تصميم عصري متكامل 100% للجوال.
+        </p>
+
+        <div class="developer-info">
+            <div class="developer-name">م/ماجد قاسم حسن مبارك بن عمرو</div>
+            <div class="developer-role">مطور ومؤسس المنصة</div>
+        </div>
+
+        <div class="copyright">
+            <p>© 2025 – منصة كهرباء عتق</p>
+            <p>جميع الحقوق محفوظة | صمم بكل فخر لخدمة أبناء محافظة شبوة</p>
         </div>
     </footer>
 
     <script>
+        // تهيئة الصفحة للجوال
         document.addEventListener('DOMContentLoaded', function() {
+            // ضبط ارتفاع الصفحة ليتناسب مع الشاشة
+            function setViewportHeight() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            setViewportHeight();
+            window.addEventListener('resize', setViewportHeight);
+            window.addEventListener('orientationchange', setViewportHeight);
+
             // بيانات الأذكار
             const azkar = [
-                "استغفر الله",
+                "استغفر الله العظيم",
                 "سبحان الله وبحمده، سبحان الله العظيم",
                 "اللهم صل وسلم على نبينا محمد",
-                "لا إله إلا الله",
-                "الحمد لله",
-                "الله أكبر",
-                "سبحان الله",
-                "لا حول ولا قوة إلا بالله",
-                "اللهم اغفر لي ولوالدي",
-                "اللهم إني اسألك الجنة وأعوذ بك من النار",
-                "اللهم ارزقني حسن الخاتمة",
-                "اللهم اكفني بحلالك عن حرامك",
-                "أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه",
-                "اللهم إني أسألك العفو والعافية",
-                "اللهم اجعل هذا اليوم خيراً وبركة",
-                "اللهم يسر أمري واشرح صدري",
-                "اللهم إني وكلتك أمري فدبره لي",
-                "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته",
-                "اللهم آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار",
-                "اللهم ثبت قلبي على دينك"
+                "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير",
+                "الحمد لله الذي بنعمته تتم الصالحات",
+                "الله أكبر كبيراً، والحمد لله كثيراً، وسبحان الله بكرة وأصيلاً",
+                "سبحان الله والحمد لله ولا إله إلا الله والله أكبر",
+                "لا حول ولا قوة إلا بالله العلي العظيم",
+                "اللهم إني أسألك علماً نافعاً، ورزقاً طيباً، وعملاً متقبلاً",
+                "اللهم اكفني بحلالك عن حرامك، وأغنني بفضلك عمن سواك",
+                "اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والجبن والبخل، وغلبة الدين وقهر الرجال",
+                "اللهم افتح لي أبواب رحمتك",
+                "اللهم لا سهل إلا ما جعلته سهلاً، وأنت تجعل الحزن إذا شئت سهلاً"
             ];
 
+            // متغيرات الأذكار
             let zekrIndex = 0;
-            const zekrEl = document.getElementById("zekr");
-            const timerEl = document.getElementById("timer");
             let countdown = 5;
+            const zekrText = document.getElementById('zekr-text');
+            const timerEl = document.getElementById('timer');
 
-            // أول ظهور
+            // عرض أول ذكر
             setTimeout(() => {
-                zekrEl.style.opacity = 1;
-            }, 300);
+                zekrText.textContent = azkar[0];
+                zekrText.classList.remove('loading-skeleton');
+                zekrText.classList.add('show');
+            }, 500);
 
-            // تحديث عداد الأذكار
+            // تحديث العداد
             function updateTimer() {
                 if (countdown > 0) {
                     countdown--;
@@ -703,76 +882,139 @@
                 }
             }
 
-            setInterval(updateTimer, 1000);
-
-            // تغيير الأذكار كل 5 ثواني
-            setInterval(() => {
-                zekrEl.style.opacity = 0;
-
+            // تغيير الأذكار
+            function changeZekr() {
+                zekrText.classList.remove('show');
+                
                 setTimeout(() => {
                     zekrIndex = (zekrIndex + 1) % azkar.length;
-                    zekrEl.textContent = azkar[zekrIndex];
-                    zekrEl.style.opacity = 1;
+                    zekrText.textContent = azkar[zekrIndex];
+                    zekrText.classList.add('show');
                     countdown = 5;
                     timerEl.textContent = countdown;
-                }, 1000);
+                }, 300);
+            }
 
-            }, 5000);
+            // تشغيل المؤقتات
+            setInterval(updateTimer, 1000);
+            setInterval(changeZekr, 5000);
 
-            // تحديث حالة الكهرباء
-            const statuses = ["مستقرة", "جيدة", "ممتازة", "قوية"];
-            const times = ["قبل قليل", "منذ 5 دقائق", "منذ 10 دقائق", "منذ 15 دقيقة"];
             
             let statusIndex = 0;
-            let timeIndex = 0;
-            
-            setInterval(() => {
-                document.getElementById('current-status').textContent = statuses[statusIndex];
-                document.getElementById('last-update').textContent = times[timeIndex];
+            let updateIndex = 0;
+
+            // تحديث حالة الكهرباء
+            function updateStatus() {
+                const currentStatus = statuses[statusIndex];
+                document.getElementById('currentStatus').textContent = `الحالة: ${currentStatus.status}`;
+                document.getElementById('currentStatus').style.color = currentStatus.color;
+                
+                document.getElementById('lastUpdate').textContent = `آخر تحديث: ${updates[updateIndex]}`;
                 
                 statusIndex = (statusIndex + 1) % statuses.length;
-                timeIndex = (timeIndex + 1) % times.length;
-            }, 8000);
+                updateIndex = (updateIndex + 1) % updates.length;
+            }
 
-            let alertIndex = 0, reasonIndex = 0, scheduleIndex = 0, reportIndex = 0;
+            setInterval(updateStatus, 8000);
+
             
-            // تحديث بيانات الكروت بشكل دوري
-            setInterval(() => {
-                document.getElementById('alerts').textContent = alertsData[alertIndex];
-                document.getElementById('reasons').textContent = reasonsData[reasonIndex];
-                document.getElementById('schedule-mini').textContent = scheduleData[scheduleIndex];
-                document.getElementById('reports').textContent = reportsData[reportIndex];
-                
-                alertIndex = (alertIndex + 1) % alertsData.length;
-                reasonIndex = (reasonIndex + 1) % reasonsData.length;
-                scheduleIndex = (scheduleIndex + 1) % scheduleData.length;
-                reportIndex = (reportIndex + 1) % reportsData.length;
-            }, 10000);
+            
 
-            // تأثيرات الضغط على الكروت للجوال
-            const cards = document.querySelectorAll('.service-card');
+            let serviceIndex = 0;
+
+            // تحديث بيانات الخدمات
+            function updateServices() {
+                document.getElementById('alertDesc').textContent = servicesData.alerts[serviceIndex % 4];
+                document.getElementById('scheduleDesc').textContent = servicesData.schedule[serviceIndex % 4];
+                document.getElementById('reasonDesc').textContent = servicesData.reasons[serviceIndex % 4];
+                document.getElementById('reportDesc').textContent = servicesData.reports[serviceIndex % 4];
+                
+                serviceIndex++;
+            }
+
+            // تحديث فوري ثم كل 10 ثواني
+            updateServices();
+            setInterval(updateServices, 10000);
+
+            // التنبيهات العاجلة
+            const urgentAlerts = [
+                "لا توجد تنبيهات عاجلة حالياً. الكهرباء تعمل بشكل طبيعي في جميع أحياء المدينة.",
+                "تنبيه: سيتم إجراء صيانة وقائية في منطقة وسط المدينة يوم الخميس القادم من الساعة 10 صباحاً حتى 12 ظهراً.",
+                "جميع الفرق الفنية في حالة استنفار لضمان استمرارية الخدمة في جميع الظروف.",
+                "ننصح بترشيد استهلاك الكهرباء خلال ساعات الذروة (6 مساءً - 10 مساءً)."
+            ];
+
+            let alertIndex = 0;
+
+            function updateUrgentAlert() {
+                document.getElementById('urgentAlert').textContent = urgentAlerts[alertIndex];
+                alertIndex = (alertIndex + 1) % urgentAlerts.length;
+            }
+
+            setInterval(updateUrgentAlert, 15000);
+
+            // زر الطوارئ
+            document.getElementById('emergencyBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.transform = 'translateX(-50%) scale(0.9)';
+                
+                setTimeout(() => {
+                    this.style.transform = 'translateX(-50%) scale(1)';
+                    alert('تم إرسال بلاغك العاجل. فريق الصيانة سيتواصل معك خلال 15 دقيقة.');
+                }, 150);
+                
+                // هنا يمكن إضافة كود إرسال البلاغ
+                console.log('تم إرسال بلاغ عاجل');
+            });
+
+            // تحسينات اللمس
+            const cards = document.querySelectorAll('.service-card, .update-item, .nav-item');
             cards.forEach(card => {
                 card.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
+                    this.style.opacity = '0.8';
                 });
                 
                 card.addEventListener('touchend', function() {
-                    this.style.transform = '';
+                    this.style.opacity = '1';
                 });
             });
 
-            // تأثيرات دخول الصفحة
-            setTimeout(() => {
-                document.body.style.opacity = 1;
-            }, 100);
+            // منع التمرير الجانبي
+            let startX, startY;
+            document.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!startX || !startY) return;
+                
+                let diffX = e.touches[0].clientX - startX;
+                let diffY = e.touches[0].clientY - startY;
+                
+                // منع التمرير الجانبي إذا كان التمرير العامودي أكثر
+                if (Math.abs(diffY) > Math.abs(diffX)) {
+                    e.preventDefault();
+                }
+                
+                startX = null;
+                startY = null;
+            }, { passive: false });
+
+            // إضافة فئة الجوال للتحسينات
+            document.body.classList.add('mobile-optimized');
         });
-        
-        // تحسين التمرير على الأجهزة المحمولة
-        document.addEventListener('touchmove', function(e) {
-            if (e.scale !== 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+
+        // دعم Service Worker للتطبيقات التقدمية (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
