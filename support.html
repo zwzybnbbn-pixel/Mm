@@ -10,8 +10,8 @@
   :root {
     --primary: #1976D2;
     --primary-dark: #0D47A1;
-    --secondary: #4CAF50;
-    --secondary-dark: #388E3C;
+    --secondary: #25D366;
+    --secondary-dark: #128C7E;
     --dark: #333;
     --light: #fff;
     --gray: #f7f7f7;
@@ -218,12 +218,12 @@
   }
 
   .btn-whatsapp {
-    background: #25D366;
+    background: var(--secondary);
     color: white;
   }
 
   .btn-whatsapp:hover {
-    background: #128C7E;
+    background: var(--secondary-dark);
   }
 
   .btn-email {
@@ -272,94 +272,6 @@
     }
   }
 
-  /* نافذة التأكيد */
-  .confirm-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .confirm-modal.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .confirm-box {
-    background: white;
-    padding: 30px;
-    border-radius: var(--radius);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: modalIn 0.3s ease;
-  }
-
-  @keyframes modalIn {
-    from {
-      transform: scale(0.9);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  .confirm-box h3 {
-    margin-bottom: 15px;
-    color: var(--dark);
-  }
-
-  .confirm-box p {
-    margin-bottom: 25px;
-    color: #666;
-    line-height: 1.6;
-  }
-
-  .confirm-buttons {
-    display: flex;
-    gap: 15px;
-  }
-
-  .confirm-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .confirm-btn.yes {
-    background: var(--primary);
-    color: white;
-  }
-
-  .confirm-btn.yes:hover {
-    background: var(--primary-dark);
-  }
-
-  .confirm-btn.no {
-    background: #f0f0f0;
-    color: var(--dark);
-  }
-
-  .confirm-btn.no:hover {
-    background: #e0e0e0;
-  }
-
   /* تحسينات للجوال */
   @media (max-width: 480px) {
     .support-box {
@@ -385,46 +297,22 @@
       padding: 16px;
       font-size: 16px;
     }
-    
-    .confirm-buttons {
-      flex-direction: column;
-    }
   }
 
   /* تأثير الضغط على الأزرار */
-  .btn:active, .confirm-btn:active {
+  .btn:active {
     transform: scale(0.98);
-  }
-
-  /* منع التحديد */
-  .no-select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
   }
 </style>
 </head>
 
-<body class="no-select">
+<body>
 
 <!-- زر الرجوع -->
 <a href="index.html" class="back-btn">
   <i class="fas fa-arrow-right"></i>
   العودة للرئيسية
 </a>
-
-<!-- نافذة التأكيد -->
-<div class="confirm-modal" id="confirmModal">
-  <div class="confirm-box">
-    <h3>تأكيد الإرسال</h3>
-    <p id="confirmMessage">هل أنت متأكد من إرسال رسالتك عبر واتساب؟</p>
-    <div class="confirm-buttons">
-      <button class="confirm-btn yes" id="confirmYes">نعم، أرسل</button>
-      <button class="confirm-btn no" id="confirmNo">لا، عد للخلف</button>
-    </div>
-  </div>
-</div>
 
 <!-- الرسالة العائمة -->
 <div class="alert" id="alertMessage" style="display: none;">
@@ -467,13 +355,13 @@
 
     <div class="buttons-grid">
       <!-- زر واتساب -->
-      <button class="btn btn-whatsapp" onclick="confirmSend('whatsapp')">
+      <button class="btn btn-whatsapp" onclick="sendWhatsApp()">
         <i class="fab fa-whatsapp"></i>
         إرسال عبر واتساب
       </button>
 
       <!-- زر البريد -->
-      <button class="btn btn-email" onclick="confirmSend('email')">
+      <button class="btn btn-email" onclick="sendEmail()">
         <i class="fas fa-envelope"></i>
         إرسال عبر البريد
       </button>
@@ -482,97 +370,58 @@
 </div>
 
 <script>
-  // بيانات التواصل
-  const contactInfo = {
-    whatsapp: {
-      number: '967776503890',
-      format: 'https://wa.me/{number}?text={message}'
-    },
-    email: {
-      address: 'magedgasem55558@gmail.com',
-      format: 'mailto:{email}?subject={subject}&body={body}'
-    }
-  };
-
-  let currentMethod = '';
-
-  // فتح نافذة التأكيد
-  function confirmSend(method) {
-    currentMethod = method;
-    const modal = document.getElementById('confirmModal');
-    const message = document.getElementById('confirmMessage');
-    const issueText = document.getElementById('issue').value.trim();
+  // إرسال عبر واتساب
+  function sendWhatsApp() {
+    const issue = document.getElementById("issue").value.trim();
     
-    if (!issueText) {
-      showAlert('يرجى كتابة وصف المشكلة أولاً', 'warning');
-      document.getElementById('issue').focus();
+    if (!issue) {
+      showAlert('يرجى كتابة وصف المشكلة أولاً');
+      document.getElementById("issue").focus();
       return;
     }
     
-    const methodName = method === 'whatsapp' ? 'واتساب' : 'البريد الإلكتروني';
-    message.textContent = `هل أنت متأكد من إرسال رسالتك عبر ${methodName}؟`;
+    // رسالة مبسطة بدون وقت أو معلومات الجهاز
+    const text = `طلب دعم فني:\n\n${issue}`;
+    const url = `https://wa.me/967776503890?text=${encodeURIComponent(text)}`;
     
-    modal.classList.add('active');
-  }
-
-  // إرسال عبر واتساب
-  function sendWhatsApp() {
-    const issue = document.getElementById('issue').value.trim();
-    if (!issue) return;
-    
-    const text = `🌟 طلب دعم فني 🌟\n\n📝 المشكلة:\n${issue}\n\n⏰ الوقت: ${new Date().toLocaleString('ar-SA')}\n📱 الجهاز: ${navigator.userAgent}`;
-    const url = contactInfo.whatsapp.format
-      .replace('{number}', contactInfo.whatsapp.number)
-      .replace('{message}', encodeURIComponent(text));
-    
+    // فتح واتساب في نافذة جديدة
     window.open(url, '_blank');
-    showAlert('جارٍ فتح واتساب... سيتم إرسال رسالتك تلقائياً');
+    showAlert('جارٍ فتح واتساب...');
     
-    // حفظ في localStorage
-    saveSupportRequest('whatsapp', issue);
+    // إعادة تعيين حقل النص بعد الإرسال
+    document.getElementById("issue").value = '';
   }
 
   // إرسال عبر البريد
   function sendEmail() {
-    const issue = document.getElementById('issue').value.trim();
-    if (!issue) return;
+    const issue = document.getElementById("issue").value.trim();
     
+    if (!issue) {
+      showAlert('يرجى كتابة وصف المشكلة أولاً');
+      document.getElementById("issue").focus();
+      return;
+    }
+    
+    // عنوان البريد الإلكتروني
+    const email = 'magedgasem55558@gmail.com';
+    
+    // عنوان ورسالة مبسطة
     const subject = 'طلب دعم فني - دليل شبوة';
-    const body = `طلب دعم فني\n\nالتفاصيل:\n${issue}\n\nالتاريخ: ${new Date().toLocaleString('ar-SA')}\n\nيرجى الرد في أقرب وقت ممكن.`;
+    const body = `طلب دعم فني:\n\n${issue}`;
     
-    const url = contactInfo.email.format
-      .replace('{email}', contactInfo.email.address)
-      .replace('{subject}', encodeURIComponent(subject))
-      .replace('{body}', encodeURIComponent(body));
+    // إنشاء رابط البريد الإلكتروني
+    const url = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
+    // فتح عميل البريد الإلكتروني
     window.location.href = url;
-    showAlert('جارٍ فتح بريدك الإلكتروني... سيتم إرسال الرسالة تلقائياً');
+    showAlert('جارٍ فتح بريدك الإلكتروني...');
     
-    // حفظ في localStorage
-    saveSupportRequest('email', issue);
-  }
-
-  // حفظ طلب الدعم
-  function saveSupportRequest(method, issue) {
-    const requests = JSON.parse(localStorage.getItem('supportRequests') || '[]');
-    requests.push({
-      id: Date.now(),
-      method: method,
-      issue: issue,
-      timestamp: new Date().toISOString(),
-      status: 'pending'
-    });
-    localStorage.setItem('supportRequests', JSON.stringify(requests));
-    
-    console.log('تم حفظ طلب الدعم:', {
-      method,
-      issue: issue.substring(0, 50) + '...',
-      timestamp: new Date().toLocaleString()
-    });
+    // إعادة تعيين حقل النص بعد الإرسال
+    document.getElementById("issue").value = '';
   }
 
   // عرض رسالة تأكيد
-  function showAlert(message, type = 'success') {
+  function showAlert(message) {
     const alertDiv = document.getElementById('alertMessage');
     const alertText = document.getElementById('alertText');
     
@@ -591,56 +440,23 @@
     }, 3000);
   }
 
-  // إغلاق النافذة بالضغط خارجها
-  document.getElementById('confirmModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-    }
-  });
-
-  // أحداث أزرار التأكيد
-  document.getElementById('confirmYes').addEventListener('click', function() {
-    const modal = document.getElementById('confirmModal');
-    modal.classList.remove('active');
-    
-    if (currentMethod === 'whatsapp') {
-      sendWhatsApp();
-    } else if (currentMethod === 'email') {
-      sendEmail();
-    }
-    
-    // إعادة تعيين حقل النص بعد التأكيد
-    document.getElementById('issue').value = '';
-  });
-
-  document.getElementById('confirmNo').addEventListener('click', function() {
-    document.getElementById('confirmModal').classList.remove('active');
-  });
-
-  // إغلاق النافذة بالضغط على ESC
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      document.getElementById('confirmModal').classList.remove('active');
-    }
-  });
-
-  // حفظ المسودة تلقائياً
+  // حفظ المسودة تلقائياً أثناء الكتابة
   let saveTimer;
   document.getElementById('issue').addEventListener('input', function() {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       localStorage.setItem('supportDraft', this.value);
-    }, 1000);
+    }, 500);
   });
 
-  // استعادة المسودة المحفوظة
+  // استعادة المسودة المحفوظة عند تحميل الصفحة
   window.addEventListener('load', function() {
     const savedDraft = localStorage.getItem('supportDraft');
     if (savedDraft) {
       document.getElementById('issue').value = savedDraft;
     }
     
-    // إضافة تأثيرات للصفحة
+    // تأثير ظهور الصفحة
     document.body.style.opacity = '0';
     setTimeout(() => {
       document.body.style.transition = 'opacity 0.5s ease';
@@ -649,11 +465,20 @@
   });
 
   // مسح المسودة عند إرسال ناجح
-  window.addEventListener('beforeunload', function() {
-    if (document.getElementById('issue').value.trim()) {
-      localStorage.setItem('supportDraft', document.getElementById('issue').value);
-    }
-  });
+  function clearDraft() {
+    localStorage.removeItem('supportDraft');
+  }
+
+  // عند الإرسال الناجح، مسح المسودة
+  window.sendWhatsApp = function() {
+    sendWhatsApp();
+    clearDraft();
+  };
+
+  window.sendEmail = function() {
+    sendEmail();
+    clearDraft();
+  };
 </script>
 
 </body>
