@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم توزيع المياه</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Cairo',sans-serif; margin:0; background:#f0f0f0; }
+header { background:#0099ff; color:white; text-align:center; padding:1rem; }
+main { max-width:1000px; margin:2rem auto; padding:1rem; background:white; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+input, button, select { padding:0.5rem; margin:0.2rem 0; border-radius:6px; border:1px solid #ccc; font-size:1rem; }
+button { background:#0099ff; color:white; border:none; cursor:pointer; transition:0.3s;}
+button:hover { background:#007acc; }
+table { width:100%; border-collapse:collapse; margin-top:1rem; }
+th, td { border:1px solid #ccc; padding:0.5rem; text-align:center; }
+th { background:#0099ff; color:white; }
+.message-box { background:#f0faff; padding:1rem 1.5rem; border-radius:10px; margin-bottom:1rem; font-size:1.1rem;}
+</style>
+</head>
+<body>
+<header>
+  <h1>لوحة تحكم توزيع المياه</h1>
+</header>
+
+<main>
+  <!-- تسجيل الدخول -->
+  <div id="authSection">
+    <input type="email" id="email" placeholder="البريد الإلكتروني">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button id="loginBtn">تسجيل الدخول</button>
+  </div>
+
+  <!-- لوحة التحكم بعد تسجيل الدخول -->
+  <div id="dashboard" style="display:none;">
+    <div class="user-info" id="userInfo" style="margin-bottom:1rem; padding:0.5rem; background:#e6f2ff; border-radius:6px;"></div>
+
+    <h3>تحديث الرسالة العامة</h3>
+    <input type="text" id="newMessage" placeholder="أدخل الرسالة هنا" style="width:70%;"/>
+    <button id="updateMessageBtn">تحديث الرسالة</button>
+
+    <h3>جدول التوزيع</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>التاريخ</th>
+          <th>الساعة</th>
+          <th>الحي</th>
+          <th>الحالة</th>
+          <th>الحي التالي</th>
+          <th>ملاحظة</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="tablesContainer"></tbody>
+    </table>
+
+    <h3>إضافة توزيع جديد</h3>
+    <input type="date" id="newDate">
+    <input type="time" id="newTime">
+    <input type="text" id="newArea" placeholder="الحي الحالي">
+    <select id="newStatus">
+      <option value="نشط">نشط</option>
+      <option value="متوقف">متوقف</option>
+      <option value="محدود">محدود</option>
+    </select>
+    <input type="text" id="newNextArea" placeholder="الحي التالي">
+    <input type="text" id="newNote" placeholder="ملاحظة">
+    <button id="addBtn">إضافة التوزيع</button>
+    <button id="logoutBtn" style="background:#ff4d4d;">تسجيل الخروج</button>
+  </div>
+</main>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+// إعداد Supabase - نفس البيانات المستخدمة في صفحة العرض
+const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const authSection = document.getElementById("authSection");
+const dashboard = document.getElementById("dashboard");
+const userInfo = document.getElementById("userInfo");
+
+// تحقق من حالة تسجيل الدخول عند التحميل
+checkAuth();
+
+async function checkAuth() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    showDashboard(session.user);
+  }
+}
+
+// تسجيل الدخول
+document.getElementById("loginBtn").addEventListener("click", async ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  
+  const { data, error } = await supabase.auth.signInWithPassword({ 
+    email, 
+    password 
+  });
+  
+  if(error) return alert("خطأ في تسجيل الدخول: " + error.message);
+  
+  showDashboard(data.user);
+});
+
+function showDashboard(user) {
+  authSection.style.display = "none";
+  dashboard.style.display = "block";
+  userInfo.innerHTML = `👤 مسجل دخول كـ: <strong>${user.email}</strong>`;
+  loadDistributions();
+  loadGeneralMessage();
+}
+
+// تسجيل الخروج
+document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+  const { error } = await supabase.auth.signOut();
+  if(error) alert("خطأ في تسجيل الخروج: " + error.message);
+  
+  authSection.style.display = "block";
+  dashboard.style.display = "none";
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+});
+
+// تحديث الرسالة العامة - تتطابق مع صفحة العرض
+document.getElementById("updateMessageBtn").addEventListener("click", async ()=>{
+  const message = document.getElementById("newMessage").value;
+  if(!message) return alert("أدخل رسالة صحيحة");
+
+  const { error } = await supabase
+    .from('general_message')
+    .upsert({ id: 1, message }, { onConflict: 'id' })
+    .select();
+    
+  if(error) {
+    alert("خطأ: " + error.message);
+  } else {
+    alert("تم تحديث الرسالة بنجاح!");
+    loadGeneralMessage();
+  }
+});
+
+// تحميل الرسالة العامة - تتطابق مع صفحة العرض
+async function loadGeneralMessage() {
+  const { data, error } = await supabase
+    .from('general_message')
+    .select('message')
+    .eq('id', 1)
+    .single();
+    
+  if(data && !error) {
+    document.getElementById("newMessage").value = data.message || "";
+  }
+}
+
+// تحميل وعرض الجداول - هيكل مطابق لصفحة العرض
+const tablesContainer = document.getElementById("tablesContainer");
+async function loadDistributions(){
+  const { data, error } = await supabase
+    .from('water_distribution')
+    .select('*')
+    .order('date', { ascending: true }); // نفس ترتيب صفحة العرض
+    
+  if(error) {
+    console.error("خطأ في تحميل البيانات:", error);
+    return;
+  }
+  
+  tablesContainer.innerHTML = "";
+
+  data.forEach(r=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.date}</td>
+      <td>${r.time}</td>
+      <td>${r.area}</td>
+      <td>${r.status}</td>
+      <td>${r.next_area || ''}</td>
+      <td>${r.note || ''}</td>
+      <td>
+        <button onclick="editDistribution('${r.id}')">تعديل كامل</button>
+        <button onclick="deleteRow('${r.id}')">حذف</button>
+      </td>
+    `;
+    tablesContainer.appendChild(tr);
+  });
+}
+
+// إضافة توزيع جديد - هيكل مطابق لصفحة العرض
+document.getElementById("addBtn").addEventListener("click", async ()=>{
+  const date = document.getElementById("newDate").value;
+  const time = document.getElementById("newTime").value;
+  const area = document.getElementById("newArea").value;
+  const status = document.getElementById("newStatus").value;
+  const next_area = document.getElementById("newNextArea").value;
+  const note = document.getElementById("newNote").value;
+  
+  if(!date || !time || !area) {
+    return alert("الرجاء ملء جميع الحقول الأساسية (التاريخ، الساعة، الحي)");
+  }
+
+  const { error } = await supabase
+    .from('water_distribution')
+    .insert([{
+      date, time, area, status, next_area, note,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }])
+    .select();
+    
+  if(error) {
+    alert("خطأ: " + error.message);
+  } else {
+    alert("تم إضافة التوزيع بنجاح!");
+    
+    // تفريغ الحقول
+    document.getElementById("newDate").value = "";
+    document.getElementById("newTime").value = "";
+    document.getElementById("newArea").value = "";
+    document.getElementById("newNextArea").value = "";
+    document.getElementById("newNote").value = "";
+    
+    loadDistributions();
+  }
+});
+
+// دوال تعديل وحذف
+window.deleteRow = async (id)=>{
+  if(!confirm("هل تريد حذف هذا التوزيع؟")) return;
+  
+  const { error } = await supabase
+    .from('water_distribution')
+    .delete()
+    .eq('id', id)
+    .select();
+    
+  if(error) {
+    alert("خطأ: " + error.message);
+  } else {
+    alert("تم الحذف بنجاح");
+    loadDistributions();
+  }
+};
+
+// دالة تعديل كاملة بمربع حوار مخصص
+window.editDistribution = async (id) => {
+  // جلب البيانات الحالية
+  const { data, error: fetchError } = await supabase
+    .from('water_distribution')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (fetchError) return alert('خطأ في جلب البيانات: ' + fetchError.message);
+  if (!data) return alert('لم يتم العثور على السجل');
+
+  // إنشاء عنصر dialog للتعديل
+  const dialog = document.createElement('dialog');
+  dialog.style.cssText = `
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #0099ff;
+    direction: rtl;
+    text-align: right;
+  `;
+
+  dialog.innerHTML = `
+    <h3 style="margin-top:0; color:#0099ff;">تعديل توزيع المياه</h3>
+    
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px;">التاريخ:</label>
+      <input type="date" id="editDate" value="${data.date}" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    </div>
+    
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px;">الوقت:</label>
+      <input type="text" id="editTime" value="${data.time}" placeholder="مثال: صباحاً" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    </div>
+    
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px;">اسم الحي:</label>
+      <input type="text" id="editArea" value="${data.area}" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    </div>
+    
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px;">الحالة:</label>
+      <select id="editStatus" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+        <option value="نشط" ${data.status === 'نشط' ? 'selected' : ''}>نشط</option>
+        <option value="متوقف" ${data.status === 'متوقف' ? 'selected' : ''}>متوقف</option>
+        <option value="محدود" ${data.status === 'محدود' ? 'selected' : ''}>محدود</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px;">الحي التالي:</label>
+      <input type="text" id="editNextArea" value="${data.next_area || ''}" placeholder="(اختياري)" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="display:block; margin-bottom:5px;">ملاحظات:</label>
+      <textarea id="editNote" rows="3" placeholder="(اختياري)" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">${data.note || ''}</textarea>
+    </div>
+    
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button id="cancelEdit" style="padding:10px 20px; background:#ccc; border:none; border-radius:5px; cursor:pointer;">إلغاء</button>
+      <button id="saveEdit" style="padding:10px 20px; background:#0099ff; color:white; border:none; border-radius:5px; cursor:pointer;">حفظ التعديلات</button>
+    </div>
+  `;
+
+  // إضافة dialog إلى الصفحة
+  document.body.appendChild(dialog);
+  dialog.showModal();
+
+  // أحداث الأزرار
+  document.getElementById('cancelEdit').onclick = () => {
+    dialog.close();
+    dialog.remove();
+  };
+
+  document.getElementById('saveEdit').onclick = async () => {
+    const updatedData = {
+      date: document.getElementById('editDate').value,
+      time: document.getElementById('editTime').value,
+      area: document.getElementById('editArea').value,
+      status: document.getElementById('editStatus').value,
+      next_area: document.getElementById('editNextArea').value || null,
+      note: document.getElementById('editNote').value || null,
+      updated_at: new Date().toISOString()
+    };
+
+    // التحقق من البيانات
+    if (!updatedData.date || !updatedData.time || !updatedData.area || !updatedData.status) {
+      alert('الرجاء ملء جميع الحقول الأساسية');
+      return;
+    }
+
+    // تنفيذ التحديث
+    const { error } = await supabase
+      .from('water_distribution')
+      .update(updatedData)
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      alert('خطأ في التحديث: ' + error.message);
+    } else {
+      alert('✅ تم التعديل بنجاح!');
+      dialog.close();
+      dialog.remove();
+      loadDistributions();
+    }
+  };
+};
+// تحميل الرسالة عند بدء التشغيل
+document.addEventListener('DOMContentLoaded', () => {
+  loadGeneralMessage();
+});
+</script>
+</body>
+</html>
