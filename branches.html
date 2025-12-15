@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>الفروع</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+  body{background:#eef3f3;display:flex;justify-content:center;}
+  .container{width:100%;max-width:380px;padding:15px;}
+
+  .back-btn{
+    display:inline-block;background:#444;color:#fff;
+    padding:8px 14px;border-radius:10px;text-decoration:none;
+    font-size:15px;margin-bottom:12px;
+  }
+
+  h1{text-align:center;color:#00695C;margin-bottom:20px;font-size:24px;font-weight:800;}
+
+  .branch-card{
+    background:white;padding:15px;border-radius:14px;margin-bottom:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s;
+  }
+  .branch-card:hover{transform:translateY(-3px);}
+  .branch-title{font-size:18px;font-weight:700;color:#00695C;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <a class="back-btn" href="index.html">⬅ الرئيسية</a>
+
+  <h1>الفروع</h1>
+
+  <div class="branch-card" onclick="go('hospitals.html')">
+    <div class="branch-title">🏥 المستشفيات</div>
+  </div>
+
+  <div class="branch-card" onclick="go('clinics.html')">
+    <div class="branch-title">🏨 العيادات</div>
+  </div>
+
+  <div class="branch-card" onclick="go('labs.html')">
+    <div class="branch-title">🧪 المختبرات</div>
+  </div>
+
+  <div class="branch-card" onclick="go('emergency.html')">
+    <div class="branch-title">🚑 الطوارئ</div>
+  </div>
+
+</div>
+
+<script>
+  function go(page){
+    window.location.href = page;
+  }
+</script>
+
+</body>
+</html>
