@@ -4,182 +4,119 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>سبب الانقطاع – كهرباء عتق</title>
-<!-- Content Security Policy Meta Tag -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.supabase.co https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co; img-src 'self' data: https:;">
-
-<!-- Security Headers Equivalent -->
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://*.supabase.co; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co;">
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-<!-- Same-origin preconnect for performance -->
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Cairo', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+
+body{
+  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
+  min-height:100vh;
+  color:white;
+  padding:15px;
 }
 
-/* نفس خلفية الرئيسية */
-body {
-  background: linear-gradient(to bottom, #0a0a0a, #111, #1a1a1a, #222);
-  min-height: 100vh;
-  color: white;
-  padding: 15px;
-  position: relative;
+header{
+  text-align:center;
+  margin-bottom:25px;
 }
 
-/* طبقة حماية ضد عمليات الاستخراج */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  -webkit-user-select: none;
+header h2{
+  font-size:32px;
+  font-weight:800;
+  color:#1f6feb;
 }
 
-/* عنوان الصفحة */
-header {
-  text-align: center;
-  margin-bottom: 25px;
-  position: relative;
+#reason-box{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  max-width:650px;
+  margin:0 auto;
 }
 
-header h2 {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1f6feb;
+.item{
+  background:rgba(255,255,255,0.07);
+  padding:18px;
+  border-radius:16px;
+  backdrop-filter:blur(5px);
+  box-shadow:0 6px 18px rgba(0,0,0,0.45);
+  border:1px solid #30363d;
+  transition:0.25s;
 }
 
-header p {
-  text-align: center;
-  opacity: 0.8;
-  margin-top: 10px;
+.item:hover{
+  background:rgba(255,255,255,0.12);
+  transform:translateY(-3px);
 }
 
-/* صندوق عرض الأسباب */
-#reason-box {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 650px;
-  margin: 0 auto;
-  position: relative;
+.item p{
+  font-size:18px;
+  margin-bottom:8px;
+  line-height:1.6;
 }
 
-/* نفس تصميم الكروت في الرئيسية */
-.item {
-  background: rgba(255, 255, 255, 0.07);
-  padding: 18px;
-  border-radius: 16px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-  border: 1px solid #30363d;
-  transition: 0.25s;
-  position: relative;
-  overflow-wrap: break-word;
-  word-break: break-word;
+.item strong{
+  color:#1f6feb;
+  font-weight:700;
 }
 
-.item:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-3px);
+.item small{
+  font-size:14px;
+  opacity:.8;
+  display:block;
+  margin-top:10px;
+  color:#aaa;
 }
 
-.item p {
-  font-size: 18px;
-  margin-bottom: 8px;
-  line-height: 1.6;
+.back-btn{
+  display:block;
+  width:100%;
+  max-width:250px;
+  margin:25px auto;
+  background:#1f6feb;
+  color:white;
+  text-align:center;
+  padding:12px;
+  font-size:18px;
+  text-decoration:none;
+  font-weight:700;
+  border-radius:14px;
+  transition:0.2s;
+  border:none;
+  cursor:pointer;
 }
 
-.item strong {
-  color: #1f6feb;
-  font-weight: 700;
+.back-btn:hover{
+  background:#2b7fff;
+  transform:scale(1.05);
 }
 
-.item small {
-  font-size: 14px;
-  opacity: 0.8;
-  display: block;
-  margin-top: 10px;
-  color: #aaa;
+.no-data{
+  text-align:center;
+  padding:30px;
+  font-size:18px;
+  color:#aaa;
+  background:rgba(255,255,255,0.05);
+  border-radius:12px;
+  border:1px dashed #444;
 }
 
-/* زر العودة */
-.back-btn {
-  display: block;
-  width: 100%;
-  max-width: 250px;
-  margin: 25px auto;
-  background: #1f6feb;
-  color: white;
-  text-align: center;
-  padding: 12px;
-  font-size: 18px;
-  text-decoration: none;
-  font-weight: 700;
-  border-radius: 14px;
-  transition: 0.2s;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 100;
+.error-message{
+  text-align:center;
+  padding:30px;
+  font-size:18px;
+  color:#ff6b6b;
+  background:rgba(255,107,107,0.1);
+  border-radius:12px;
+  border:1px solid #ff6b6b;
 }
 
-.back-btn:hover {
-  background: #2b7fff;
-  transform: scale(1.05);
-}
-
-.no-data {
-  text-align: center;
-  padding: 30px;
-  font-size: 18px;
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px dashed #444;
-}
-
-.error-message {
-  text-align: center;
-  padding: 30px;
-  font-size: 18px;
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
-  border-radius: 12px;
-  border: 1px solid #ff6b6b;
-}
-
-/* حماية إضافية ضد النسخ */
-.protected-text {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* حماية من أداة التطوير */
-@media screen and (max-width: 768px) {
-  .devtools-detect {
-    display: none !important;
-  }
-}
-
-/* مؤشر التحميل */
 .loader {
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.1);
   border-top: 4px solid #1f6feb;
+  border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
@@ -197,7 +134,7 @@ header p {
 
 <header>
   <h2>⚡ أسباب الانقطاع</h2>
-  <p>قائمة بأسباب انقطاع الكهرباء المعتمدة من الإدارة</p>
+  <p style="text-align:center; opacity:0.8; margin-top:10px;">قائمة بأسباب انقطاع الكهرباء المعتمدة من الإدارة</p>
 </header>
 
 <div id="reason-box">
@@ -207,348 +144,335 @@ header p {
 
 <a href="index2.html" class="back-btn">⬅ رجوع للرئيسية</a>
 
-<!-- حماية ضد أداة التطوير -->
-<div class="devtools-detect" style="display:none;"></div>
-
 <script type="module">
-// كشف فتح أدوات المطورين
-(function() {
-  const devtools = {
-    isOpen: false,
-    orientation: undefined
-  };
-  
-  const threshold = 160;
-  
-  const emitEvent = (isOpen, orientation) => {
-    if (isOpen && !devtools.isOpen) {
-      console.warn('⚠️ أدوات المطور مفتوحة. قد يؤثر هذا على أمان التطبيق.');
+// 🔒 نظام حماية متكامل ضد الهجمات
+const Security = {
+    // تطهير جميع النصوص من الهجمات XSS
+    sanitize: function(text) {
+        if (text === null || text === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
+    },
+
+    // التحقق من صحة بيانات السبب
+    validateReason: function(reason) {
+        if (!reason || typeof reason !== 'object') return false;
+        
+        // التحقق من الحقول الأساسية
+        if (!reason.text || typeof reason.text !== 'string') return false;
+        if (!reason.updated_at || typeof reason.updated_at !== 'string') return false;
+        
+        // التحقق من الطول للحماية من هجمات البيانات الضخمة
+        if (reason.text.length > 1000) return false;
+        if (reason.details && reason.details.length > 2000) return false;
+        if (reason.affected_areas && reason.affected_areas.length > 500) return false;
+        
+        return true;
+    },
+
+    // منع هجمات حقن SQL/NoSQL (طبقة دفاعية)
+    sanitizeForDatabase: function(data) {
+        const dangerousPatterns = [
+            /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXECUTE|MERGE|TRUNCATE)\b)/gi,
+            /(\b(OR|AND)\s+['"]?\d+['"]?\s*[=<>]+\s*['"]?\d+['"]?)/gi,
+            /(\b(true|false|null)\b)/gi,
+            /(['";\\])/g,
+            /(\-\-)|(#)/g
+        ];
+        
+        let sanitized = String(data);
+        dangerousPatterns.forEach(pattern => {
+            sanitized = sanitized.replace(pattern, '');
+        });
+        
+        return sanitized.trim();
+    },
+
+    // حماية من هجمات CSRF
+    generateCSRFToken: function() {
+        const token = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+        sessionStorage.setItem('csrf_token', token);
+        return token;
+    },
+
+    // التحقق من توكن CSRF
+    verifyCSRFToken: function(token) {
+        const storedToken = sessionStorage.getItem('csrf_token');
+        return storedToken && storedToken === token;
     }
-    devtools.isOpen = isOpen;
-    devtools.orientation = orientation;
-  };
-  
-  setInterval(() => {
-    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-    const orientation = widthThreshold ? 'vertical' : 'horizontal';
-    
-    if (!(heightThreshold && widthThreshold) &&
-      ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-        widthThreshold || heightThreshold)) {
-      emitEvent(true, orientation);
-    } else {
-      emitEvent(false, undefined);
-    }
-  }, 500);
-})();
+};
 
 // استيراد Supabase من الملف الخارجي
 import { supabase } from './supabase.js';
 
 const box = document.getElementById("reason-box");
 
-// دالة لتنظيف النص من الهجمات XSS
-function sanitizeText(text) {
-  if (!text) return "";
-  
-  // تحويل النص إلى سلسلة أولاً
-  const str = String(text);
-  
-  // إزالة أو استبدال الأحرف الخطرة
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
-    .replace(/`/g, "&#96;")
-    .replace(/\$/g, "&#36;")
-    .replace(/\(/g, "&#40;")
-    .replace(/\)/g, "&#41;")
-    .replace(/\{/g, "&#123;")
-    .replace(/\}/g, "&#125;")
-    .replace(/\[/g, "&#91;")
-    .replace(/\]/g, "&#93;");
-}
-
-// دالة لتحويل التاريخ إلى تنسيق عربي
+// دالة لتحويل التاريخ إلى تنسيق عربي - آمنة
 function formatDate(dateString) {
-  if (!dateString) return "—";
-  
-  try {
-    const date = new Date(dateString);
+    if (!dateString) return "—";
     
-    // التحقق من أن التاريخ صالح
-    if (isNaN(date.getTime())) {
-      return "تاريخ غير صالح";
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return "—";
+        
+        return new Intl.DateTimeFormat('ar-EG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Africa/Cairo'
+        }).format(date);
+    } catch (error) {
+        console.error("Error formatting date:", error);
+        return "—";
     }
-    
-    // استخدام تنفيذ آمن لتنسيق التاريخ
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Africa/Cairo'
-    };
-    
-    return date.toLocaleDateString('ar-EG', options);
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return "—";
-  }
 }
 
-// دالة للتحقق من صحة البيانات المستلمة
-function validateReasonData(reason) {
-  if (!reason || typeof reason !== 'object') return false;
-  
-  // التحقق من الحقول المطلوبة
-  const requiredFields = ['text', 'updated_at'];
-  for (const field of requiredFields) {
-    if (!(field in reason)) return false;
-  }
-  
-  // التحقق من أنواع البيانات
-  if (typeof reason.text !== 'string') return false;
-  if (typeof reason.updated_at !== 'string') return false;
-  
-  // التحقق من طول النص (منع هجمات البيانات الضخمة)
-  if (reason.text.length > 1000) return false;
-  if (reason.details && reason.details.length > 2000) return false;
-  if (reason.affected_areas && reason.affected_areas.length > 500) return false;
-  
-  return true;
-}
-
-// دالة لتحميل وعرض أسباب الانقطاع
+// 🔒 دالة محمية لتحميل البيانات
 async function loadReasons() {
-  try {
-    // التحقق من اتصال الإنترنت
-    if (!navigator.onLine) {
-      throw new Error('لا يوجد اتصال بالإنترنت');
+    try {
+        // التحقق من اتصال الإنترنت
+        if (!navigator.onLine) {
+            throw new Error('لا يوجد اتصال بالإنترنت');
+        }
+
+        // إضافة مهلة للحماية من هجمات DDoS
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 10000);
+        });
+
+        // جلب البيانات مع حماية
+        const fetchPromise = supabase
+            .from('reasons')
+            .select('*')
+            .order('updated_at', { ascending: false })
+            .limit(100); // تحديد لعدد السجلات للحماية
+
+        const { data: reasons, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
+        if (error) throw error;
+
+        // التحقق من صحة البيانات
+        if (!reasons || !Array.isArray(reasons)) {
+            throw new Error('بيانات غير صالحة');
+        }
+
+        // تصفية البيانات غير الآمنة
+        const safeReasons = reasons.filter(Security.validateReason);
+
+        if (safeReasons.length === 0) {
+            showNoData();
+            return;
+        }
+
+        // عرض البيانات بطريقة آمنة
+        displaySafeReasons(safeReasons);
+
+    } catch (error) {
+        console.error("Error loading reasons:", error);
+        showError(error.message);
     }
+}
+
+// 🔒 عرض البيانات بطريقة آمنة (بدون innerHTML)
+function displaySafeReasons(reasons) {
+    box.innerHTML = '';
     
-    // إضافة تأخير قصير لتجنب هجمات DDoS
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // إنشاء عناصر DOM مباشرة (أكثر أماناً)
+    reasons.forEach((reason, index) => {
+        if (index === 1) {
+            const separator = document.createElement('div');
+            separator.textContent = '——— أسباب سابقة ———';
+            separator.style.cssText = 'text-align:center; margin:20px 0; color:#666; font-size:14px;';
+            box.appendChild(separator);
+        }
 
-    // جلب البيانات من جدول reasons في Supabase مع وقت انتظار
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-    
-    const { data: reasons, error } = await supabase
-      .from('reasons')
-      .select('*')
-      .order('updated_at', { ascending: false })
-      .limit(50); // تحديد عدد السجلات لمنع هجمات البيانات الكبيرة
-
-    clearTimeout(timeoutId);
-
-    if (error) {
-      throw error;
-    }
-
-    // التحقق من وجود بيانات
-    if (!reasons || !Array.isArray(reasons) || reasons.length === 0) {
-      box.innerHTML = `
-        <div class="no-data">
-          <p>📭 لا توجد أسباب مسجلة حالياً</p>
-          <small>سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة</small>
-        </div>
-      `;
-      return;
-    }
-
-    // تصفية البيانات غير الصالحة
-    const validReasons = reasons.filter(validateReasonData);
-    
-    if (validReasons.length === 0) {
-      box.innerHTML = `
-        <div class="no-data">
-          <p>⚠️ البيانات المستلمة غير صالحة</p>
-          <small>يرجى الاتصال بالدعم الفني</small>
-        </div>
-      `;
-      return;
-    }
-
-    // بناء واجهة البيانات مع تطهير المدخلات
-    let html = '';
-    let counter = 0;
-    
-    validReasons.forEach((reason, index) => {
-      // تطهير جميع البيانات
-      const safeText = sanitizeText(reason.text);
-      const safeDetails = reason.details ? sanitizeText(reason.details) : null;
-      const safeAreas = reason.affected_areas ? sanitizeText(reason.affected_areas) : null;
-      const safeTime = reason.estimated_time ? sanitizeText(reason.estimated_time) : null;
-      const safeStatus = reason.status ? sanitizeText(reason.status) : null;
-      
-      // إضافة فاصل للأسباب القديمة
-      if (index === 1) {
-        html += `<div style="text-align:center; margin:20px 0; color:#666; font-size:14px;">——— أسباب سابقة ———</div>`;
-      }
-      
-      // تحديد لون الحالة
-      let statusColor = '#f39c12'; // لون افتراضي
-      if (safeStatus === 'تم الحل') statusColor = '#2ecc71';
-      if (safeStatus === 'معلق') statusColor = '#e74c3c';
-      if (safeStatus === 'قيد المعالجة') statusColor = '#3498db';
-      
-      html += `
-        <div class="item protected-text">
-          <p><strong>السبب:</strong> ${safeText}</p>
-          ${safeDetails ? `<p style="margin-top:8px;"><strong>التفاصيل:</strong> ${safeDetails}</p>` : ''}
-          ${safeAreas ? `<p style="margin-top:8px;"><strong>المناطق المتأثرة:</strong> ${safeAreas}</p>` : ''}
-          ${safeTime ? `<p style="margin-top:8px; color:#4ecdc4;"><strong>الوقت المتوقع للإصلاح:</strong> ${safeTime}</p>` : ''}
-          <small><strong>آخر تحديث:</strong> ${formatDate(reason.updated_at)}</small>
-          ${safeStatus ? `<small style="color:${statusColor}"><strong>الحالة:</strong> ${safeStatus}</small>` : ''}
-        </div>
-      `;
-      
-      counter++;
+        const item = document.createElement('div');
+        item.className = 'item';
+        
+        // السبب الرئيسي
+        const reasonText = document.createElement('p');
+        const strongReason = document.createElement('strong');
+        strongReason.textContent = 'السبب: ';
+        reasonText.appendChild(strongReason);
+        reasonText.appendChild(document.createTextNode(Security.sanitize(reason.text)));
+        item.appendChild(reasonText);
+        
+        // التفاصيل
+        if (reason.details) {
+            const details = document.createElement('p');
+            details.style.marginTop = '8px';
+            const strongDetails = document.createElement('strong');
+            strongDetails.textContent = 'التفاصيل: ';
+            details.appendChild(strongDetails);
+            details.appendChild(document.createTextNode(Security.sanitize(reason.details)));
+            item.appendChild(details);
+        }
+        
+        // المناطق المتأثرة
+        if (reason.affected_areas) {
+            const areas = document.createElement('p');
+            areas.style.marginTop = '8px';
+            const strongAreas = document.createElement('strong');
+            strongAreas.textContent = 'المناطق المتأثرة: ';
+            areas.appendChild(strongAreas);
+            areas.appendChild(document.createTextNode(Security.sanitize(reason.affected_areas)));
+            item.appendChild(areas);
+        }
+        
+        // الوقت المتوقع
+        if (reason.estimated_time) {
+            const time = document.createElement('p');
+            time.style.marginTop = '8px';
+            time.style.color = '#4ecdc4';
+            const strongTime = document.createElement('strong');
+            strongTime.textContent = 'الوقت المتوقع للإصلاح: ';
+            time.appendChild(strongTime);
+            time.appendChild(document.createTextNode(Security.sanitize(reason.estimated_time)));
+            item.appendChild(time);
+        }
+        
+        // تاريخ التحديث
+        const updateDate = document.createElement('small');
+        const strongUpdate = document.createElement('strong');
+        strongUpdate.textContent = 'آخر تحديث: ';
+        updateDate.appendChild(strongUpdate);
+        updateDate.appendChild(document.createTextNode(formatDate(reason.updated_at)));
+        item.appendChild(updateDate);
+        
+        // الحالة
+        if (reason.status) {
+            const status = document.createElement('small');
+            status.style.display = 'block';
+            status.style.color = reason.status === 'تم الحل' ? '#2ecc71' : 
+                               reason.status === 'قيد المعالجة' ? '#f39c12' : '#e74c3c';
+            const strongStatus = document.createElement('strong');
+            strongStatus.textContent = 'الحالة: ';
+            status.appendChild(strongStatus);
+            status.appendChild(document.createTextNode(Security.sanitize(reason.status)));
+            item.appendChild(status);
+        }
+        
+        box.appendChild(item);
     });
-
-    // إضافة عدد السجلات المعروضة
-    html += `<div style="text-align:center; margin-top:20px; font-size:14px; color:#666;">
-              عرض ${counter} من ${validReasons.length} سبب
-            </div>`;
-    
-    box.innerHTML = html;
-
-  } catch (error) {
-    console.error("Error loading reasons:", error);
-    
-    let errorMessage = '⚠️ خطأ في الاتصال بقاعدة البيانات';
-    let errorDetails = 'يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى';
-    
-    if (error.message === 'لا يوجد اتصال بالإنترنت') {
-      errorMessage = '📶 لا يوجد اتصال بالإنترنت';
-      errorDetails = 'يرجى التحقق من اتصالك ثم المحاولة مرة أخرى';
-    } else if (error.name === 'AbortError') {
-      errorMessage = '⏱️ تجاوز وقت الانتظار';
-      errorDetails = 'الخادم يستغرق وقتاً طويلاً للاستجابة';
-    }
-    
-    box.innerHTML = `
-      <div class="error-message">
-        <p>${sanitizeText(errorMessage)}</p>
-        <small>${sanitizeText(errorDetails)}</small>
-        <button onclick="window.location.reload()" style="margin-top:15px; padding:8px 16px; background:#1f6feb; color:white; border:none; border-radius:8px; cursor:pointer;">
-          إعادة المحاولة
-        </button>
-      </div>
-    `;
-  }
 }
 
-// دالة للاشتراك في التحديثات المباشرة مع حماية
+function showNoData() {
+    const noDataDiv = document.createElement('div');
+    noDataDiv.className = 'no-data';
+    
+    const message = document.createElement('p');
+    message.textContent = '📭 لا توجد أسباب مسجلة حالياً';
+    noDataDiv.appendChild(message);
+    
+    const subMessage = document.createElement('small');
+    subMessage.textContent = 'سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة';
+    noDataDiv.appendChild(subMessage);
+    
+    box.innerHTML = '';
+    box.appendChild(noDataDiv);
+}
+
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    
+    const errorMsg = document.createElement('p');
+    errorMsg.textContent = '⚠️ ' + (message || 'خطأ في الاتصال بقاعدة البيانات');
+    errorDiv.appendChild(errorMsg);
+    
+    const subMsg = document.createElement('small');
+    subMsg.textContent = 'يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى';
+    errorDiv.appendChild(subMsg);
+    
+    const retryBtn = document.createElement('button');
+    retryBtn.textContent = 'إعادة المحاولة';
+    retryBtn.style.cssText = 'margin-top:15px; padding:8px 16px; background:#1f6feb; color:white; border:none; border-radius:8px; cursor:pointer;';
+    retryBtn.onclick = loadReasons;
+    errorDiv.appendChild(retryBtn);
+    
+    box.innerHTML = '';
+    box.appendChild(errorDiv);
+}
+
+// 🔒 دالة آمنة للاشتراك في التحديثات
 function subscribeToRealtimeUpdates() {
-  try {
-    // التحقق من دعم WebSocket
-    if (!('WebSocket' in window) && !('MozWebSocket' in window)) {
-      console.warn('المتصفح لا يدعم التحديثات المباشرة');
-      return;
+    try {
+        const channel = supabase
+            .channel('reasons-updates')
+            .on('postgres_changes', 
+                { event: '*', schema: 'public', table: 'reasons' },
+                (payload) => {
+                    // التحقق من صحة البيانات قبل التحميل
+                    if (payload && Security.validateReason(payload.new || payload.old)) {
+                        console.log('تم تحديث البيانات، إعادة التحميل...');
+                        loadReasons();
+                    }
+                }
+            )
+            .subscribe();
+            
+        return channel;
+    } catch (error) {
+        console.error("Error in realtime updates:", error);
+        return null;
     }
-    
-    const channel = supabase
-      .channel('reasons-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'reasons'
-        },
-        (payload) => {
-          // التحقق من صحة البيانات الواردة
-          if (payload && payload.new && validateReasonData(payload.new)) {
-            console.log('تم تحديث البيانات، إعادة التحميل...');
-            loadReasons();
-          } else {
-            console.warn('بيانات غير صالحة مستلمة من التحديث المباشر');
-          }
-        }
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ تم الاشتراك في التحديثات المباشرة');
-        }
-      });
-
-  } catch (error) {
-    console.error("Error setting up realtime subscription:", error);
-  }
 }
 
-// تحميل البيانات عند فتح الصفحة
+// 🔒 تحميل البيانات عند فتح الصفحة
 window.addEventListener('DOMContentLoaded', () => {
-  // إضافة تأخير بسيط لتحسين الأداء
-  setTimeout(() => {
-    loadReasons();
-    subscribeToRealtimeUpdates();
-  }, 100);
+    // مهلة بسيطة لتحسين الأداء
+    setTimeout(loadReasons, 100);
+    
+    // تفعيل التحديثات المباشرة
+    const channel = subscribeToRealtimeUpdates();
+    
+    // تحميل البيانات عند العودة للصفحة
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            loadReasons();
+        }
+    });
 });
 
-// تحديث البيانات عند العودة إلى الصفحة
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) {
-    loadReasons();
-  }
-});
-
-// تحديث البيانات كل دقيقة بدلاً من 30 ثانية لتقليل الحمل
-let refreshInterval = setInterval(() => {
-  if (!document.hidden) {
-    loadReasons();
-  }
-}, 60000);
+// 🔒 تحديث البيانات كل دقيقة (بدلاً من 30 ثانية لتقليل الحمل)
+let refreshInterval = setInterval(loadReasons, 60000);
 
 // إيقاف التحديث عند ترك الصفحة
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    clearInterval(refreshInterval);
-  } else {
-    refreshInterval = setInterval(() => {
-      loadReasons();
-    }, 60000);
-  }
+    if (document.hidden) {
+        clearInterval(refreshInterval);
+    } else {
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(loadReasons, 60000);
+    }
 });
 
-// منع حقن السكربتات عبر console
-(function() {
-  const originalLog = console.log;
-  const originalError = console.error;
-  const originalWarn = console.warn;
-  
-  console.log = function(...args) {
-    originalLog.apply(console, args);
-  };
-  
-  console.error = function(...args) {
-    originalError.apply(console, args);
-  };
-  
-  console.warn = function(...args) {
-    originalWarn.apply(console, args);
-  };
-})();
-
-// حماية الروابط
-document.addEventListener('click', function(e) {
-  if (e.target.tagName === 'A') {
-    const href = e.target.getAttribute('href');
-    // التحقق من أن الرابط محلي
-    if (href && !href.startsWith('#') && !href.startsWith('/') && 
-        !href.startsWith('index2.html') && !href.startsWith('.')) {
-      e.preventDefault();
-      console.warn('تم منع رابط خارجي:', href);
-    }
-  }
+// 🔒 حماية إضافية ضد الهجمات
+document.addEventListener('DOMContentLoaded', () => {
+    // منع فتح أدوات المطور
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    
+    // منع النسخ غير المصرح به
+    document.addEventListener('copy', e => {
+        if (!window.confirm('هل تريد نسخ النص؟')) {
+            e.preventDefault();
+        }
+    });
+    
+    // حماية الروابط
+    document.addEventListener('click', e => {
+        if (e.target.tagName === 'A') {
+            const href = e.target.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.includes('index2.html')) {
+                e.preventDefault();
+                window.location.href = 'index2.html';
+            }
+        }
+    });
 });
 </script>
-
 </body>
-</html>
+  </html>
