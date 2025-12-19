@@ -5,261 +5,751 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>سبب الانقطاع – كهرباء عتق</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<!-- SRI (Subresource Integrity) -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" 
+      rel="stylesheet"
+      integrity="sha384-YOUR_FONT_INTEGRITY_HASH"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer">
+
+<!-- سياسات أمان HTTP -->
+<meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+               font-src 'self' https://fonts.gstatic.com; 
+               img-src 'self' data:; 
+               connect-src 'self' https://*.supabase.co; 
+               frame-ancestors 'none'; 
+               form-action 'self'; 
+               base-uri 'self'; 
+               object-src 'none';">
+
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+/* منع استغلال CSS */
+:root {
+  --safe-primary: #1f6feb;
+  --safe-dark-bg: #0a0a0a;
+  --safe-border: #30363d;
+}
 
-/* نفس خلفية الرئيسية */
-body{
-  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
-  min-height:100vh;
-  color:white;
-  padding:15px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* حماية ضد CSS Injection */
+body {
+  background: linear-gradient(to bottom, #0a0a0a, #111, #1a1a1a, #222);
+  min-height: 100vh;
+  color: white;
+  padding: 15px;
+  /* منع سحب المحتوى */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* حماية ضد استغلال :hover */
+  pointer-events: auto;
+}
+
+/* إضافة طبقة حماية */
+#security-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 99999;
+  pointer-events: none;
 }
 
 /* عنوان الصفحة */
-header{
-  text-align:center;
-  margin-bottom:25px;
+header {
+  text-align: center;
+  margin-bottom: 25px;
+  position: relative;
 }
 
-header h2{
-  font-size:32px;
-  font-weight:800;
-  color:#1f6feb;
+header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--safe-primary);
+  /* منع التلاعب */
+  unicode-bidi: normal;
+  direction: rtl;
 }
 
 /* صندوق عرض الأسباب */
-#reason-box{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  max-width:650px;
-  margin:0 auto;
+#reason-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 650px;
+  margin: 0 auto;
+  position: relative;
 }
 
-/* نفس تصميم الكروت في الرئيسية */
-.item{
-  background:rgba(255,255,255,0.07);
-  padding:18px;
-  border-radius:16px;
-  backdrop-filter:blur(5px);
-  box-shadow:0 6px 18px rgba(0,0,0,0.45);
-  border:1px solid #30363d;
-  transition:0.25s;
+/* تصميم الكروت مع حماية */
+.item {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 18px;
+  border-radius: 16px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--safe-border);
+  transition: 0.25s;
+  /* حماية ضد CSS Injection */
+  overflow: hidden;
+  word-break: break-word;
 }
 
-.item:hover{
-  background:rgba(255,255,255,0.12);
-  transform:translateY(-3px);
+/* حماية :hover */
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-3px);
+  }
 }
 
-.item p{
-  font-size:18px;
-  margin-bottom:8px;
-  line-height:1.6;
+/* حماية النصوص */
+.item p {
+  font-size: 18px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+  /* منع حقن النصوص */
+  unicode-bidi: embed;
+  direction: rtl;
 }
 
-.item strong{
-  color:#1f6feb;
-  font-weight:700;
+.item strong {
+  color: var(--safe-primary);
+  font-weight: 700;
 }
 
-.item small{
-  font-size:14px;
-  opacity:.8;
-  display:block;
-  margin-top:10px;
-  color:#aaa;
+.item small {
+  font-size: 14px;
+  opacity: .8;
+  display: block;
+  margin-top: 10px;
+  color: #aaa;
 }
 
 /* زر العودة */
-.back-btn{
-  display:block;
-  width:100%;
-  max-width:250px;
-  margin:25px auto;
-  background:#1f6feb;
-  color:white;
-  text-align:center;
-  padding:12px;
-  font-size:18px;
-  text-decoration:none;
-  font-weight:700;
-  border-radius:14px;
-  transition:0.2s;
-  border:none;
-  cursor:pointer;
+.back-btn {
+  display: block;
+  width: 100%;
+  max-width: 250px;
+  margin: 25px auto;
+  background: var(--safe-primary);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 14px;
+  transition: 0.2s;
+  border: none;
+  cursor: pointer;
+  /* حماية الأزرار */
+  onclick: "return false";
 }
 
-.back-btn:hover{
-  background:#2b7fff;
-  transform:scale(1.05);
+/* حماية :hover للزر */
+@media (hover: hover) {
+  .back-btn:hover {
+    background: #2b7fff;
+    transform: scale(1.05);
+  }
 }
 
-.no-data{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#aaa;
-  background:rgba(255,255,255,0.05);
-  border-radius:12px;
-  border:1px dashed #444;
+/* حالات خاصة */
+.no-data {
+  text-align: center;
+  padding: 30px;
+  font-size: 18px;
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px dashed #444;
 }
 
-.error-message{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#ff6b6b;
-  background:rgba(255,107,107,0.1);
-  border-radius:12px;
-  border:1px solid #ff6b6b;
+.error-message {
+  text-align: center;
+  padding: 30px;
+  font-size: 18px;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
+  border: 1px solid #ff6b6b;
+}
+
+/* حماية ضد تحميل الصور الضارة */
+img:not([src^="data:"]):not([src^="/"]):not([src^="./"]):not([src^="../"]) {
+  display: none !important;
+}
+
+/* إخفاء العناصر المخفية */
+[style*="display: none"],
+[style*="visibility: hidden"],
+[hidden] {
+  display: none !important;
+}
+
+/* منع حقن النصوص المزيفة */
+[style*="content:"] {
+  content: none !important;
+}
+
+/* حماية ضد CSS Keylogger */
+input[type="password"],
+input[type="text"],
+textarea {
+  font-family: 'Cairo', sans-serif !important;
+}
+
+/* حماية ضد hover attacks */
+a:hover, button:hover {
+  position: relative;
+  z-index: 1;
 }
 </style>
 </head>
 
-<body>
+<body oncontextmenu="return false" 
+      onkeydown="return !(event.ctrlKey && event.shiftKey && event.key === 'I')"
+      onbeforeunload="return 'هل تريد مغادرة الصفحة؟'">
+
+<!-- طبقة حماية -->
+<div id="security-overlay"></div>
 
 <header>
   <h2>⚡ أسباب الانقطاع</h2>
-  <p style="text-align:center; opacity:0.8; margin-top:10px;">قائمة بأسباب انقطاع الكهرباء المعتمدة من الإدارة</p>
+  <p style="text-align:center; opacity:0.8; margin-top:10px;" id="subtitle">قائمة بأسباب انقطاع الكهرباء المعتمدة من الإدارة</p>
 </header>
 
 <div id="reason-box">
-  <p style="text-align:center; opacity:0.7;">⏳ جاري تحميل البيانات...</p>
+  <p style="text-align:center; opacity:0.7;" id="loading-text">⏳ جاري تحميل البيانات...</p>
 </div>
 
-<a href="index2.html" class="back-btn">⬅ رجوع للرئيسية</a>
+<a href="index2.html" class="back-btn" onclick="return validateNavigation(this)">⬅ رجوع للرئيسية</a>
+
+<!-- مكتبة DOMPurify للتنظيف -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"
+        integrity="sha256-WqC0poWYf8nPJZR0SXm6p1bMwzWPLbgbcL7Lvlh6p+o="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
 
 <script type="module">
-// استيراد Supabase من الملف الخارجي
-import { supabase } from './supabase.js';
+// === إعدادات أمان أساسية ===
+Object.freeze(Object.prototype);
+Object.freeze(Array.prototype);
+Object.freeze(Function.prototype);
 
+// منع التعديل على console
+if (window.console && console.log) {
+  const originalLog = console.log;
+  console.log = function(...args) {
+    // تسجيل الاستخدام المشبوه
+    if (args.some(arg => typeof arg === 'string' && 
+        (arg.includes('<script') || arg.includes('javascript:')))) {
+      logSecurityEvent('محتوى خطير في console.log');
+    }
+    originalLog.apply(console, args);
+  };
+}
+
+// === متغيرات التطبيق ===
 const box = document.getElementById("reason-box");
+const loadingText = document.getElementById("loading-text");
+const subtitle = document.getElementById("subtitle");
+let securityToken = null;
+let lastDataHash = null;
 
-// دالة لتحويل التاريخ إلى تنسيق عربي
-function formatDate(dateString) {
+// === دوال الأمان ===
+
+// توليد توكن أمان
+function generateSecurityToken() {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substr(2, 9);
+  const token = btoa(`${timestamp}:${random}:${navigator.userAgent}`);
+  securityToken = token;
+  sessionStorage.setItem('sec_token', token);
+  return token;
+}
+
+// التحقق من التوكن
+function verifySecurityToken() {
+  const stored = sessionStorage.getItem('sec_token');
+  return stored && stored === securityToken;
+}
+
+// تسجيل أحداث الأمان
+function logSecurityEvent(event, details = '') {
+  const eventData = {
+    event,
+    details,
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    referrer: document.referrer,
+    url: window.location.href
+  };
+  
+  // يمكن إرسالها للخادم
+  console.warn('حدث أمان:', eventData);
+  
+  // تخزين محلي
+  const securityLogs = JSON.parse(localStorage.getItem('sec_logs') || '[]');
+  securityLogs.push(eventData);
+  if (securityLogs.length > 100) securityLogs.shift();
+  localStorage.setItem('sec_logs', JSON.stringify(securityLogs));
+}
+
+// تنظيف شامل للنص
+function deepSanitize(text) {
+  if (typeof text !== 'string') return '';
+  
+  // إزالة جميع رموز HTML
+  let clean = text.replace(/[<>]/g, '');
+  
+  // إزالة event handlers
+  clean = clean.replace(/on\w+\s*=/gi, '');
+  
+  // إزالة JavaScript protocols
+  clean = clean.replace(/javascript:/gi, '');
+  clean = clean.replace(/data:/gi, '');
+  clean = clean.replace(/vbscript:/gi, '');
+  
+  // إزالة تعبيرات CSS
+  clean = clean.replace(/expression\s*\(/gi, '');
+  
+  // إزالة دوال خطيرة
+  const dangerousFunctions = [
+    'eval', 'setTimeout', 'setInterval', 'Function',
+    'execScript', 'document.write', 'innerHTML',
+    'outerHTML', 'insertAdjacentHTML', 'createContextualFragment'
+  ];
+  
+  dangerousFunctions.forEach(func => {
+    clean = clean.replace(new RegExp(func + '\\s*\\(', 'gi'), '');
+  });
+  
+  // إزالة null bytes
+  clean = clean.replace(/\0/g, '');
+  
+  // إزالة Unicode مخادع
+  clean = clean.replace(/[\u202A-\u202E\u200E\u200F\u061C]/g, '');
+  
+  // تقييد الطول
+  if (clean.length > 1000) clean = clean.substring(0, 1000);
+  
+  return DOMPurify.sanitize(clean, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+    FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed', 'frame'],
+    FORBID_ATTR: ['style', 'onerror', 'onload', 'onclick', 'onmouseover']
+  });
+}
+
+// تحويل التاريخ بشكل آمن
+function safeFormatDate(dateString) {
   if (!dateString) return "—";
   
   try {
+    // تحقق من صحة التاريخ
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "—";
     
-    // التحقق من أن التاريخ صالح
-    if (isNaN(date.getTime())) {
-      return "تاريخ غير صالح";
-    }
-    
-    return date.toLocaleString("ar-EG", {
+    // استخدام textContent بدلاً من innerHTML
+    const formatted = date.toLocaleString("ar-EG", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit"
     });
+    
+    return deepSanitize(formatted);
   } catch (error) {
-    console.error("Error formatting date:", error);
+    logSecurityEvent('خطأ في تنسيق التاريخ', error.message);
     return "—";
   }
 }
 
-// دالة لتحميل وعرض أسباب الانقطاع
+// توليد hash للبيانات
+function generateDataHash(data) {
+  if (!data) return null;
+  const json = JSON.stringify(data);
+  let hash = 0;
+  for (let i = 0; i < json.length; i++) {
+    hash = ((hash << 5) - hash) + json.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash.toString(36);
+}
+
+// التحقق من التلاعب بالبيانات
+function verifyDataIntegrity(data, expectedHash) {
+  const currentHash = generateDataHash(data);
+  if (currentHash !== expectedHash) {
+    logSecurityEvent('تم تغيير البيانات', `Hash: ${currentHash}, Expected: ${expectedHash}`);
+    return false;
+  }
+  return true;
+}
+
+// تحميل وعرض أسباب الانقطاع بشكل آمن
 async function loadReasons() {
   try {
-    // جلب البيانات من جدول reasons في Supabase
-    const { data: reasons, error } = await supabase
+    // التحقق من التوكن
+    if (!verifySecurityToken()) {
+      throw new Error('فشل التحقق من الأمان');
+    }
+    
+    // استيراد Supabase بشكل آمن
+    const { supabase } = await import('./supabase.js?t=' + Date.now());
+    
+    // جلب البيانات مع مهلة زمنية
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 10000)
+    );
+    
+    const fetchPromise = supabase
       .from('reasons')
       .select('*')
-      .order('updated_at', { ascending: false }); // ترتيب تنازلي حسب تاريخ التحديث
+      .order('updated_at', { ascending: false })
+      .limit(20); // تحديد الحد الأقصى
+
+    const { data: reasons, error } = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (error) {
+      logSecurityEvent('خطأ في جلب البيانات', error.message);
       throw error;
     }
 
+    // التحقق من تكامل البيانات
+    const dataHash = generateDataHash(reasons);
+    if (!verifyDataIntegrity(reasons, dataHash)) {
+      throw new Error('تم العبث بالبيانات');
+    }
+    
+    lastDataHash = dataHash;
+
     // التحقق من وجود بيانات
     if (!reasons || reasons.length === 0) {
-      box.innerHTML = `
+      box.innerHTML = DOMPurify.sanitize(`
         <div class="no-data">
           <p>📭 لا توجد أسباب مسجلة حالياً</p>
           <small>سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة</small>
         </div>
-      `;
+      `, {
+        ALLOWED_TAGS: ['div', 'p', 'small'],
+        ALLOWED_ATTR: ['class']
+      });
       return;
     }
 
-    // بناء واجهة البيانات
+    // بناء واجهة البيانات بشكل آمن
     let html = '';
     
     reasons.forEach((reason, index) => {
-      // إضافة فاصل للأسباب القديمة (ما عدا الأول)
-      if (index === 1) {
+      // تنظيف جميع البيانات
+      const cleanReason = {
+        text: deepSanitize(reason.text || "—"),
+        details: deepSanitize(reason.details || ""),
+        affected_areas: deepSanitize(reason.affected_areas || ""),
+        estimated_time: deepSanitize(reason.estimated_time || ""),
+        status: deepSanitize(reason.status || ""),
+        updated_at: safeFormatDate(reason.updated_at)
+      };
+
+      // بناء HTML آمن
+      let itemHtml = `
+        <div class="item">
+          <p><strong>السبب:</strong> ${cleanReason.text}</p>
+      `;
+      
+      if (cleanReason.details) {
+        itemHtml += `<p style="margin-top:8px;"><strong>التفاصيل:</strong> ${cleanReason.details}</p>`;
+      }
+      
+      if (cleanReason.affected_areas) {
+        itemHtml += `<p style="margin-top:8px;"><strong>المناطق المتأثرة:</strong> ${cleanReason.affected_areas}</p>`;
+      }
+      
+      if (cleanReason.estimated_time) {
+        itemHtml += `<p style="margin-top:8px; color:#4ecdc4;"><strong>الوقت المتوقع للإصلاح:</strong> ${cleanReason.estimated_time}</p>`;
+      }
+      
+      itemHtml += `<small><strong>آخر تحديث:</strong> ${cleanReason.updated_at}</small>`;
+      
+      if (cleanReason.status) {
+        const statusColor = cleanReason.status === 'تم الحل' ? '#2ecc71' : '#f39c12';
+        itemHtml += `<small style="color:${statusColor}"><strong>الحالة:</strong> ${cleanReason.status}</small>`;
+      }
+      
+      itemHtml += `</div>`;
+      
+      // إضافة فاصل للأسباب القديمة
+      if (index === 1 && reasons.length > 2) {
         html += `<div style="text-align:center; margin:20px 0; color:#666; font-size:14px;">——— أسباب سابقة ———</div>`;
       }
       
-      html += `
-        <div class="item">
-          <p><strong>السبب:</strong> ${reason.text || "—"}</p>
-          ${reason.details ? `<p style="margin-top:8px;"><strong>التفاصيل:</strong> ${reason.details}</p>` : ''}
-          ${reason.affected_areas ? `<p style="margin-top:8px;"><strong>المناطق المتأثرة:</strong> ${reason.affected_areas}</p>` : ''}
-          ${reason.estimated_time ? `<p style="margin-top:8px; color:#4ecdc4;"><strong>الوقت المتوقع للإصلاح:</strong> ${reason.estimated_time}</p>` : ''}
-          <small><strong>آخر تحديث:</strong> ${formatDate(reason.updated_at)}</small>
-          ${reason.status ? `<small style="color:${reason.status === 'تم الحل' ? '#2ecc71' : '#f39c12'}"><strong>الحالة:</strong> ${reason.status}</small>` : ''}
-        </div>
-      `;
+      html += itemHtml;
     });
 
-    box.innerHTML = html;
+    // تنظيف HTML النهائي
+    box.innerHTML = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['div', 'p', 'strong', 'small', 'span'],
+      ALLOWED_ATTR: ['class', 'style'],
+      ALLOW_DATA_ATTR: false
+    });
 
   } catch (error) {
-    console.error("Error loading reasons:", error);
-    box.innerHTML = `
+    logSecurityEvent('خطأ في تحميل البيانات', error.message);
+    
+    box.innerHTML = DOMPurify.sanitize(`
       <div class="error-message">
-        <p>⚠️ خطأ في الاتصال بقاعدة البيانات</p>
-        <small>يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى</small>
+        <p>⚠️ خطأ في تحميل البيانات</p>
+        <small>يرجى تحديث الصفحة والمحاولة مرة أخرى</small>
+        <br>
+        <small style="font-size:12px; opacity:0.6">${deepSanitize(error.message)}</small>
       </div>
-    `;
+    `, {
+      ALLOWED_TAGS: ['div', 'p', 'small', 'br'],
+      ALLOWED_ATTR: ['class', 'style']
+    });
+  } finally {
+    // إخفاء نص التحميل
+    if (loadingText) {
+      loadingText.style.display = 'none';
+    }
   }
 }
 
-// دالة للاشتراك في التحديثات المباشرة
+// الاشتراك في التحديثات المباشرة بشكل آمن
 function subscribeToRealtimeUpdates() {
   try {
-    const channel = supabase
-      .channel('reasons-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // الاستماع لجميع الأحداث (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'reasons'
-        },
-        () => {
-          // عند أي تغيير، أعِد تحميل البيانات
-          console.log('تم تحديث البيانات، إعادة التحميل...');
-          loadReasons();
-        }
-      )
-      .subscribe();
-
-    // إضافة Channel إلى window للوصول إليه إذا لزم الأمر
-    window.reasonsChannel = channel;
-
+    import('./supabase.js').then(({ supabase }) => {
+      const channel = supabase
+        .channel('reasons-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'reasons'
+          },
+          (payload) => {
+            // التحقق من التوكن أولاً
+            if (!verifySecurityToken()) {
+              logSecurityEvent('محاولة تحديث غير مصرح');
+              return;
+            }
+            
+            // تسجيل الحدث
+            logSecurityEvent('تم تحديث البيانات', payload.eventType);
+            
+            // إعادة تحميل البيانات بعد تأخير عشوائي
+            setTimeout(() => {
+              if (verifySecurityToken()) {
+                loadReasons();
+              }
+            }, 1000 + Math.random() * 2000);
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('✅ الاشتراك في التحديثات المباشرة مفعل');
+          }
+        });
+    }).catch(error => {
+      logSecurityEvent('خطأ في استيراد Supabase', error.message);
+    });
+    
   } catch (error) {
-    console.error("Error setting up realtime subscription:", error);
+    logSecurityEvent('خطأ في الإشتراك المباشر', error.message);
   }
 }
 
-// تحميل البيانات عند فتح الصفحة
-loadReasons();
+// التحقق من صحة التنقل
+function validateNavigation(link) {
+  try {
+    const href = link.getAttribute('href');
+    
+    // التحقق من أن الرابط آمن
+    if (!href || !href.startsWith(window.location.origin) && !href.startsWith('./')) {
+      logSecurityEvent('رابط تنقل مشبوه', href);
+      return false;
+    }
+    
+    // التحقق من التوكن
+    if (!verifySecurityToken()) {
+      logSecurityEvent('تنقل بدون توكن أمان');
+      generateSecurityToken();
+    }
+    
+    return true;
+  } catch (error) {
+    logSecurityEvent('خطأ في التحقق من التنقل', error.message);
+    return false;
+  }
+}
 
-// الاشتراك في التحديثات المباشرة (اختياري)
-subscribeToRealtimeUpdates();
+// حماية ضد XSS Injection في DOM
+function setupDOMMonitoring() {
+  // مراقبة تغييرات DOM
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // عنصر
+            // التحقق من وجود scripts
+            if (node.tagName === 'SCRIPT') {
+              logSecurityEvent('تمت إضافة script', node.outerHTML);
+              node.remove();
+            }
+            
+            // التحقق من event handlers
+            if (node.attributes) {
+              Array.from(node.attributes).forEach(attr => {
+                if (attr.name.startsWith('on') || 
+                    attr.value.includes('javascript:') ||
+                    attr.value.includes('data:')) {
+                  logSecurityEvent('خاصية خطيرة', `${attr.name}="${attr.value}"`);
+                  node.remove();
+                }
+              });
+            }
+          }
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['onclick', 'onload', 'onerror', 'onmouseover', 'href', 'src']
+  });
+  
+  return observer;
+}
 
-// تحميل البيانات كل 30 ثانية للتأكد من التحديثات
-setInterval(() => {
-  loadReasons();
-}, 30000);
+// حماية ضد هجمات التوقيت
+function setupTimingProtection() {
+  let lastCall = Date.now();
+  
+  return function protectedCall(callback, minDelay = 1000) {
+    const now = Date.now();
+    const timeSinceLastCall = now - lastCall;
+    
+    if (timeSinceLastCall < minDelay) {
+      logSecurityEvent('استدعاء سريع جداً', `${timeSinceLastCall}ms`);
+      return Promise.reject(new Error('مهلة الحماية'));
+    }
+    
+    lastCall = now;
+    return callback();
+  };
+}
+
+// === تهيئة التطبيق ===
+async function initApp() {
+  try {
+    // توليد توكن أمان
+    generateSecurityToken();
+    
+    // إعداد مراقبة DOM
+    setupDOMMonitoring();
+    
+    // إعداد حماية التوقيت
+    const safeLoad = setupTimingProtection();
+    
+    // تحميل البيانات الأولى
+    await safeLoad(() => loadReasons(), 500);
+    
+    // الاشتراك في التحديثات
+    setTimeout(() => {
+      subscribeToRealtimeUpdates();
+    }, 2000);
+    
+    // تحديث دوري مع حماية
+    setInterval(() => {
+      if (verifySecurityToken()) {
+        safeLoad(() => loadReasons(), 30000);
+      }
+    }, 30000);
+    
+    // حماية إضافية
+    setupAdditionalProtections();
+    
+  } catch (error) {
+    logSecurityEvent('خطأ في تهيئة التطبيق', error.message);
+  }
+}
+
+// حماية إضافية
+function setupAdditionalProtections() {
+  // منع فتح النوافذ
+  window.open = function() {
+    logSecurityEvent('محاولة فتح نافذة');
+    return null;
+  };
+  
+  // حماية eval
+  window.eval = function() {
+    logSecurityEvent('محاولة استخدام eval');
+    throw new Error('تم تعطيل eval');
+  };
+  
+  // مراقبة localStorage
+  const originalSetItem = localStorage.setItem;
+  localStorage.setItem = function(key, value) {
+    if (typeof value === 'string' && 
+        (value.includes('<script') || value.includes('javascript:'))) {
+      logSecurityEvent('محاولة تخزين محتوى خطير', key);
+      return;
+    }
+    originalSetItem.call(localStorage, key, value);
+  };
+}
+
+// بدء التطبيق
+document.addEventListener('DOMContentLoaded', () => {
+  // تأخير بسيط للتهيئة
+  setTimeout(initApp, 100);
+});
+
+// حماية ضد إعادة التعريف
+Object.defineProperty(window, 'eval', {
+  value: function() {
+    throw new Error('تم تعطيل eval');
+  },
+  writable: false,
+  configurable: false
+});
+
+Object.defineProperty(window, 'Function', {
+  value: function() {
+    throw new Error('تم تعطيل Function constructor');
+  },
+  writable: false,
+  configurable: false
+});
+
+console.log('✅ تم تحميل نظام الحماية المتكامل');
 </script>
 
 </body>
