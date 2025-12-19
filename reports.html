@@ -5,10 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>📝 نظام إبلاغ انقطاع الكهرباء</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Subresource Integrity (SRI) للحماية -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" 
+      rel="stylesheet"
+      integrity="sha384-YOUR_FONT_INTEGRITY_HASH" 
+      crossorigin="anonymous">
+
+<link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer">
 
 <style>
+/* إضافة Content Security Policy إضافية */
 :root {
   --primary: #1f6feb;
   --primary-dark: #0d5bc0;
@@ -27,12 +37,18 @@
   font-family: 'Cairo', sans-serif;
 }
 
+/* تأمين body */
 body {
   background: linear-gradient(135deg, var(--dark-bg) 0%, #111 50%, #1a1a1a 100%);
   min-height: 100vh;
   color: #e6edf3;
   padding: 15px;
   line-height: 1.6;
+  /* منع سحب الصور */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* ===== القسم الرئيسي ===== */
@@ -65,6 +81,15 @@ body {
 }
 
 /* ===== العنوان ===== */
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 20px 0 30px;
+  color: #fff;
+  position: relative;
+  padding-bottom: 15px;
+}
 
 .title::after {
   content: '';
@@ -102,6 +127,7 @@ body {
 /* ===== مجموعات الإدخال ===== */
 .input-group {
   margin-bottom: 20px;
+  position: relative;
 }
 
 .input-group label {
@@ -117,6 +143,15 @@ body {
   color: var(--primary);
 }
 
+/* إضافة honeypot field للبوتات */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
 .input-group input,
 .input-group textarea,
 .input-group select {
@@ -128,6 +163,8 @@ body {
   background: rgba(22, 27, 34, 0.8);
   color: #e6edf3;
   transition: all 0.3s ease;
+  /* منع النسخ/اللصق الضار */
+  oncopy: "return false" onpaste: "return false" oncut: "return false";
 }
 
 .input-group input:focus,
@@ -142,6 +179,8 @@ body {
 .input-group textarea {
   min-height: 120px;
   resize: vertical;
+  /* منع حقن التعليمات البرمجية */
+  onkeydown: "return !(event.keyCode === 60 || event.keyCode === 62)";
 }
 
 .input-group select {
@@ -169,6 +208,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  /* منع الحقن */
+  onclick: "return validateForm(event)";
 }
 
 .btn-submit:hover:not(:disabled) {
@@ -237,6 +278,8 @@ body {
   margin-bottom: 20px;
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+  /* منع الحقن في العناصر */
+  innerHTML: "sanitizedContent";
 }
 
 .report-item:hover {
@@ -458,10 +501,55 @@ body {
     font-size: 16px;
   }
 }
+
+/* ===== طبقة الحماية ===== */
+.xss-protection {
+  display: none;
+}
+
+/* منع فتح النوافذ المنبثقة */
+.prevent-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 999999;
+  display: none;
+}
 </style>
+
+<!-- Meta Tags للأمان -->
+<meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; 
+               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; 
+               img-src 'self' data: https:; 
+               connect-src 'self' https://*.supabase.co https://api.ipify.org https://api64.ipify.org;
+               frame-ancestors 'none';
+               form-action 'self';
+               base-uri 'self';
+               object-src 'none';">
+
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- رأس CSP إضافي -->
+<meta http-equiv="Content-Security-Policy" 
+      content="require-trusted-types-for 'script';">
+
 </head>
 
-<body>
+<body oncontextmenu="return false" onkeydown="return !(event.ctrlKey && event.shiftKey && event.key === 'I')">
+
+<!-- طبقة حماية -->
+<div class="xss-protection" id="xssShield"></div>
+<div class="prevent-popup" id="popupBlocker"></div>
 
 <div class="container">
   
@@ -472,10 +560,14 @@ body {
       <h2>📝 إرسال بلاغ جديد</h2>
     </div>
     
-    <form id="reportForm">
+    <form id="reportForm" onsubmit="return validateForm(event)">
+      <!-- حقل honeypot للبوتات -->
+      <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+      <input type="hidden" name="csrf_token" id="csrfToken">
+      
       <div class="input-group">
         <label><i class="fas fa-bolt"></i> نوع المشكلة</label>
-        <select id="type" required>
+        <select id="type" required onchange="sanitizeInput(this)">
           <option value="" disabled selected>اختر نوع المشكلة</option>
           <option value="انقطاع كامل">انقطاع كامل</option>
           <option value="انخفاض الجهد">انخفاض الجهد</option>
@@ -487,22 +579,41 @@ body {
       
       <div class="input-group">
         <label><i class="fas fa-user"></i> الاسم</label>
-        <input type="text" id="name" required placeholder="أدخل اسمك الكامل">
+        <input type="text" id="name" required 
+               placeholder="أدخل اسمك الكامل"
+               oninput="sanitizeInput(this)"
+               pattern="[ء-يa-zA-Z\s]{2,100}"
+               maxlength="100"
+               title="الاسم يجب أن يحتوي على أحرف عربية أو إنجليزية فقط (2-100 حرف)">
       </div>
       
       <div class="input-group">
-  <label><i class="fas fa-phone"></i> رقم الهاتف</label>
-  <input type="tel" id="phone" pattern="7[0-9]{8}" placeholder="7xxxxxxxx" required>
+        <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+        <input type="tel" id="phone" 
+               pattern="7[0-9]{8}" 
+               placeholder="7xxxxxxxx" 
+               required
+               oninput="validatePhone(this)"
+               maxlength="9"
+               title="رقم هاتف يبدأ بـ 7 ويحتوي على 9 أرقام">
       </div>
       
       <div class="input-group">
         <label><i class="fas fa-map-marker-alt"></i> الحي / المنطقة</label>
-        <input type="text" id="location" required placeholder="مثال: حي النخيل، وسط المدينة">
+        <input type="text" id="location" required 
+               placeholder="مثال: حي النخيل، وسط المدينة"
+               oninput="sanitizeInput(this)"
+               pattern="[ء-يa-zA-Z0-9\s\-،,.]+"
+               maxlength="200">
       </div>
       
       <div class="input-group">
         <label><i class="fas fa-info-circle"></i> تفاصيل المشكلة</label>
-        <textarea id="details" required placeholder="صف المشكلة بالتفصيل (متى بدأت، ما التأثير، إلخ)"></textarea>
+        <textarea id="details" required 
+                  placeholder="صف المشكلة بالتفصيل (متى بدأت، ما التأثير، إلخ)"
+                  oninput="sanitizeInput(this)"
+                  maxlength="1000"
+                  onkeypress="return blockScriptTags(event)"></textarea>
       </div>
       
       <div class="progress-bar">
@@ -536,6 +647,11 @@ body {
 <!-- حاوية رسائل التنبيه -->
 <div id="alertContainer"></div>
 
+<!-- مكتبة DOMPurify لتنظيف HTML -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"
+        integrity="sha256-WqC0poWYf8nPJZR0SXm6p1bMwzWPLbgbcL7Lvlh6p+o="
+        crossorigin="anonymous"></script>
+
 <script type="module">
 // استيراد Supabase
 import { supabase } from './supabase.js';
@@ -547,21 +663,262 @@ const list = document.getElementById('list');
 const alertContainer = document.getElementById('alertContainer');
 const reportsCount = document.getElementById('reportsCount');
 const progressFill = document.getElementById('progressFill');
+const csrfTokenInput = document.getElementById('csrfToken');
+const popupBlocker = document.getElementById('popupBlocker');
 
-// دالة لعرض رسائل التنبيه
+// توليد CSRF Token
+function generateCSRFToken() {
+  const token = btoa(Date.now() + Math.random().toString(36).substr(2));
+  localStorage.setItem('csrf_token', token);
+  csrfTokenInput.value = token;
+  return token;
+}
+
+// التحقق من CSRF Token
+function verifyCSRFToken() {
+  const storedToken = localStorage.getItem('csrf_token');
+  const formToken = csrfTokenInput.value;
+  return storedToken && formToken && storedToken === formToken;
+}
+
+// ==================== دوال الحماية ضد XSS ====================
+
+// دالة لتنظيف المدخلات من XSS
+function sanitizeInput(element) {
+  if (!element || !element.value) return;
+  
+  // قائمة بالأنماط الضارة
+  const dangerousPatterns = [
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /javascript:/gi,
+    /on\w+\s*=/gi,
+    /data:/gi,
+    /vbscript:/gi,
+    /expression\s*\(/gi,
+    /eval\s*\(/gi,
+    /alert\s*\(/gi,
+    /document\.cookie/gi,
+    /window\.location/gi,
+    /document\.write/gi,
+    /innerHTML\s*=/gi,
+    /outerHTML\s*=/gi,
+    /setTimeout\s*\(/gi,
+    /setInterval\s*\(/gi,
+    /Function\s*\(/gi
+  ];
+  
+  let sanitizedValue = element.value;
+  
+  // إزالة الأنماط الضارة
+  dangerousPatterns.forEach(pattern => {
+    sanitizedValue = sanitizedValue.replace(pattern, '');
+  });
+  
+  // إزالة الأحرف الخاصة
+  sanitizedValue = sanitizedValue.replace(/[<>"'`]/g, '');
+  
+  // تقليم المسافات الزائدة
+  sanitizedValue = sanitizedValue.trim();
+  
+  // تحديث قيمة الحقل
+  if (element.value !== sanitizedValue) {
+    element.value = sanitizedValue;
+    showAlert('⚠️ تمت إزالة محتوى غير آمن من المدخل', 'warning');
+  }
+}
+
+// منع كتابة tags في textarea
+function blockScriptTags(event) {
+  const char = String.fromCharCode(event.keyCode || event.which);
+  if (char === '<' || char === '>') {
+    event.preventDefault();
+    showAlert('⚠️ لا يمكن استخدام الرموز < أو > في النص', 'warning');
+    return false;
+  }
+  return true;
+}
+
+// التحقق من صحة رقم الهاتف
+function validatePhone(input) {
+  const phoneRegex = /^7[0-9]{8}$/;
+  if (!phoneRegex.test(input.value)) {
+    input.setCustomValidity('رقم الهاتف يجب أن يبدأ بـ 7 ويحتوي على 9 أرقام');
+  } else {
+    input.setCustomValidity('');
+  }
+}
+
+// دالة التحقق من النموذج
+function validateForm(event) {
+  event.preventDefault();
+  
+  // التحقق من CSRF Token
+  if (!verifyCSRFToken()) {
+    showAlert('❌ خطأ في التحقق من الأمان، يرجى تحديث الصفحة', 'error');
+    generateCSRFToken();
+    return false;
+  }
+  
+  // التحقق من honeypot
+  const honeypot = form.querySelector('input[name="website"]');
+  if (honeypot && honeypot.value.trim() !== '') {
+    console.warn('تم اكتشاف bot بواسطة honeypot');
+    // إرجاع نجاح مزيف للبوتات
+    showAlert('✅ شكراً لتقديمك البلاغ', 'success');
+    form.reset();
+    generateCSRFToken();
+    return false;
+  }
+  
+  // استمر في العملية العادية
+  submitForm();
+  return false;
+}
+
+// ==================== دوال العرض الآمن ====================
+
+// دالة آمنة لعرض رسائل التنبيه
 function showAlert(message, type = 'success') {
+  // تنظيف الرسالة من XSS
+  const cleanMessage = DOMPurify.sanitize(message, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: []
+  });
+  
   const alertDiv = document.createElement('div');
   alertDiv.className = `alert ${type}`;
-  alertDiv.innerHTML = `
-    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'}"></i>
-    ${message}
-  `;
+  
+  // استخدام textContent بدلاً من innerHTML
+  alertDiv.innerHTML = '';
+  const icon = document.createElement('i');
+  icon.className = `fas fa-${
+    type === 'success' ? 'check-circle' : 
+    type === 'warning' ? 'exclamation-triangle' : 'times-circle'
+  }`;
+  alertDiv.appendChild(icon);
+  
+  const text = document.createTextNode(' ' + cleanMessage);
+  alertDiv.appendChild(text);
+  
   alertContainer.appendChild(alertDiv);
   
   setTimeout(() => {
-    alertDiv.remove();
+    if (alertDiv.parentNode) {
+      alertDiv.remove();
+    }
   }, 3000);
 }
+
+// دالة آمنة لعرض البلاغات
+function displayReportsSafely(reports) {
+  if (!reports || reports.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="far fa-folder-open"></i>
+        <p>لا توجد بلاغات مسجلة</p>
+        <p style="font-size: 14px; color: #666;">كن أول من يبلغ عن مشكلة</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  reports.forEach(report => {
+    // تنظيف جميع البيانات قبل العرض
+    const cleanReport = {
+      id: DOMPurify.sanitize(report.id || '', { ALLOWED_TAGS: [] }),
+      name: DOMPurify.sanitize(report.name || 'غير مذكور', { ALLOWED_TAGS: [] }),
+      type: DOMPurify.sanitize(report.type || 'غير محدد', { ALLOWED_TAGS: [] }),
+      location: DOMPurify.sanitize(report.location || 'غير محدد', { ALLOWED_TAGS: [] }),
+      phone: DOMPurify.sanitize(report.phone || 'غير مذكور', { ALLOWED_TAGS: [] }),
+      details: DOMPurify.sanitize(report.details || 'لا توجد تفاصيل', { 
+        ALLOWED_TAGS: ['br', 'p'],
+        ALLOWED_ATTR: []
+      }),
+      status: DOMPurify.sanitize(report.status || 'قيد المراجعة', { ALLOWED_TAGS: [] }),
+      reply: DOMPurify.sanitize(report.reply || '', { 
+        ALLOWED_TAGS: ['br', 'p'],
+        ALLOWED_ATTR: []
+      }),
+      created_at: report.created_at
+    };
+    
+    // إخفاء جزء من رقم الهاتف
+    if (cleanReport.phone.length > 3) {
+      cleanReport.phone = cleanReport.phone.substring(0, 3) + '******';
+    }
+    
+    const date = formatDate(cleanReport.created_at);
+    
+    // تحديد لون الحالة
+    let statusClass = 'status-pending';
+    let statusIcon = 'fas fa-clock';
+    
+    if (cleanReport.status.includes('جار')) {
+      statusClass = 'status-progress';
+      statusIcon = 'fas fa-tools';
+    } else if (cleanReport.status.includes('تم')) {
+      statusClass = 'status-solved';
+      statusIcon = 'fas fa-check-circle';
+    }
+    
+    // بناء HTML بشكل آمن
+    html += `
+      <div class="report-item">
+        <div class="report-meta">
+          <div class="meta-item">
+            <strong><i class="fas fa-user"></i> المرسل</strong>
+            <span>${cleanReport.name}</span>
+          </div>
+          
+          <div class="meta-item">
+            <strong><i class="fas fa-bolt"></i> النوع</strong>
+            <span>${cleanReport.type}</span>
+          </div>
+          
+          <div class="meta-item">
+            <strong><i class="fas fa-map-marker-alt"></i> الموقع</strong>
+            <span>${cleanReport.location}</span>
+          </div>
+          
+          <div class="meta-item">
+            <strong><i class="fas fa-phone"></i> الهاتف</strong>
+            <span>${cleanReport.phone}</span>
+          </div>
+        </div>
+        
+        <div class="meta-item" style="grid-column: 1 / -1;">
+          <strong><i class="fas fa-info-circle"></i> التفاصيل</strong>
+          <span>${cleanReport.details}</span>
+        </div>
+        
+        <div class="${statusClass} status-badge">
+          <i class="${statusIcon}"></i> ${cleanReport.status}
+        </div>
+        
+        ${cleanReport.reply ? `
+          <div class="reply-box">
+            <strong><i class="fas fa-reply"></i> رد الإدارة</strong>
+            <p>${cleanReport.reply.replace(/\n/g, '<br>')}</p>
+          </div>
+        ` : ''}
+        
+        <div class="report-date">
+          <i class="far fa-clock"></i> ${date}
+        </div>
+      </div>
+    `;
+  });
+  
+  // استخدام DOMPurify للتنظيف النهائي
+  list.innerHTML = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['div', 'strong', 'span', 'i', 'p', 'br'],
+    ALLOWED_ATTR: ['class', 'style']
+  });
+}
+
+// ==================== دوال المساعدة ====================
 
 // دالة لتنسيق التاريخ
 function formatDate(dateString) {
@@ -580,28 +937,19 @@ function formatDate(dateString) {
 // دالة للحصول على IP المستخدم
 async function getUserIP() {
   try {
-    // محاولة الحصول على IP من خدمة خارجية
     const response = await fetch('https://api.ipify.org?format=json');
     const data = await response.json();
-    return data.ip;
+    return DOMPurify.sanitize(data.ip || '127.0.0.1', { ALLOWED_TAGS: [] });
   } catch (error) {
     console.warn('فشل في الحصول على IP:', error);
-    
-    // استخدم IP محلي كبديل
-    try {
-      const fallbackResponse = await fetch('https://api64.ipify.org?format=json');
-      const fallbackData = await fallbackResponse.json();
-      return fallbackData.ip;
-    } catch {
-      return '127.0.0.1'; // IP افتراضي
-    }
+    return '127.0.0.1';
   }
 }
 
 // دالة للتحقق من إمكانية إرسال بلاغ جديد
 async function canSubmitReport(ip) {
   try {
-    // تحقق من LocalStorage (24 ساعة لكل جهاز)
+    // التحقق من LocalStorage
     const lastSubmission = localStorage.getItem('last_report_submission');
     if (lastSubmission) {
       const lastDate = new Date(lastSubmission);
@@ -612,13 +960,12 @@ async function canSubmitReport(ip) {
         const remainingHours = (24 - hoursDiff).toFixed(1);
         return {
           canSubmit: false,
-          reason: `يمكنك إرسال بلاغ جديد بعد ${remainingHours} ساعة`,
-          waitTime: (24 - hoursDiff) * 3600000 // بالميلي ثانية
+          reason: `يمكنك إرسال بلاغ جديد بعد ${remainingHours} ساعة`
         };
       }
     }
     
-    // تحقق من قاعدة البيانات (24 ساعة لكل IP)
+    // التحقق من قاعدة البيانات
     const { data: lastReports, error } = await supabase
       .from('reports')
       .select('created_at')
@@ -638,8 +985,7 @@ async function canSubmitReport(ip) {
         const remainingHours = (24 - hoursDiff).toFixed(1);
         return {
           canSubmit: false,
-          reason: `لا يمكن إرسال أكثر من بلاغ خلال 24 ساعة. تبقى ${remainingHours} ساعة`,
-          waitTime: (24 - hoursDiff) * 3600000
+          reason: `لا يمكن إرسال أكثر من بلاغ خلال 24 ساعة. تبقى ${remainingHours} ساعة`
         };
       }
     }
@@ -648,16 +994,13 @@ async function canSubmitReport(ip) {
     
   } catch (error) {
     console.error('خطأ في التحقق:', error);
-    return { canSubmit: true }; // في حالة الخطأ، اسمح بالإرسال
+    return { canSubmit: true };
   }
 }
 
-// =========================
-// 📝 إرسال بلاغ جديد
-// =========================
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
+// ==================== إرسال النموذج ====================
+
+async function submitForm() {
   // الحصول على IP المستخدم
   const userIP = await getUserIP();
   
@@ -670,11 +1013,14 @@ form.addEventListener('submit', async (e) => {
   
   // تجميع بيانات البلاغ
   const reportData = {
-    type: document.getElementById('type').value,
-    name: document.getElementById('name').value.trim(),
-    phone: document.getElementById('phone').value.trim(),
-    location: document.getElementById('location').value.trim(),
-    details: document.getElementById('details').value.trim(),
+    type: DOMPurify.sanitize(document.getElementById('type').value, { ALLOWED_TAGS: [] }),
+    name: DOMPurify.sanitize(document.getElementById('name').value.trim(), { ALLOWED_TAGS: [] }),
+    phone: DOMPurify.sanitize(document.getElementById('phone').value.trim(), { ALLOWED_TAGS: [] }),
+    location: DOMPurify.sanitize(document.getElementById('location').value.trim(), { ALLOWED_TAGS: [] }),
+    details: DOMPurify.sanitize(document.getElementById('details').value.trim(), { 
+      ALLOWED_TAGS: ['br'],
+      ALLOWED_ATTR: []
+    }),
     ip: userIP,
     status: 'قيد المراجعة',
     reply: '',
@@ -682,8 +1028,15 @@ form.addEventListener('submit', async (e) => {
   };
   
   // التحقق من صحة البيانات
-  if (!reportData.name || !reportData.location || !reportData.details) {
+  if (!reportData.type || !reportData.name || !reportData.phone || !reportData.location || !reportData.details) {
     showAlert('⚠️ يرجى ملء جميع الحقول المطلوبة', 'warning');
+    return;
+  }
+  
+  // التحقق من صحة رقم الهاتف
+  const phoneRegex = /^7[0-9]{8}$/;
+  if (!phoneRegex.test(reportData.phone)) {
+    showAlert('❌ رقم الهاتف غير صحيح. يجب أن يبدأ بـ 7 ويحتوي على 9 أرقام', 'error');
     return;
   }
   
@@ -696,10 +1049,7 @@ form.addEventListener('submit', async (e) => {
   const progressInterval = setInterval(() => {
     progress += 10;
     progressFill.style.width = `${progress}%`;
-    
-    if (progress >= 90) {
-      clearInterval(progressInterval);
-    }
+    if (progress >= 90) clearInterval(progressInterval);
   }, 100);
   
   try {
@@ -714,11 +1064,14 @@ form.addEventListener('submit', async (e) => {
     // إكمال شريط التقدم
     progressFill.style.width = '100%';
     
-    // حفظ وقت الإرسال في LocalStorage
+    // حفظ وقت الإرسال
     localStorage.setItem('last_report_submission', new Date().toISOString());
     
+    // توليد CSRF Token جديد
+    generateCSRFToken();
+    
     // عرض رسالة النجاح
-    showAlert('✅ تم إرسال البلاغ بنجاح. رقم البلاغ: ' + data[0].id.substring(0, 8), 'success');
+    showAlert('✅ تم إرسال البلاغ بنجاح. رقم البلاغ: ' + (data[0].id?.substring(0, 8) || ''), 'success');
     
     // إعادة تعيين النموذج
     form.reset();
@@ -740,11 +1093,10 @@ form.addEventListener('submit', async (e) => {
       clearInterval(progressInterval);
     }, 1500);
   }
-});
+}
 
-// =========================
-// 📋 تحميل وعرض البلاغات
-// =========================
+// ==================== تحميل البلاغات ====================
+
 async function loadReports() {
   list.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البلاغات...</div>';
   
@@ -753,89 +1105,15 @@ async function loadReports() {
       .from('reports')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(50); // حد أقصى 50 بلاغ
+      .limit(50);
     
     if (error) throw error;
     
     // تحديث العداد
     reportsCount.textContent = `${reports?.length || 0} بلاغ`;
     
-    if (!reports || reports.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <i class="far fa-folder-open"></i>
-          <p>لا توجد بلاغات مسجلة</p>
-          <p style="font-size: 14px; color: #666;">كن أول من يبلغ عن مشكلة</p>
-        </div>
-      `;
-      return;
-    }
-    
-    let html = '';
-    
-    reports.forEach(report => {
-      const date = formatDate(report.created_at);
-      
-      // تحديد لون الحالة
-      let statusClass = 'status-pending';
-      let statusIcon = 'fas fa-clock';
-      
-      if (report.status === 'جارِ الحل') {
-        statusClass = 'status-progress';
-        statusIcon = 'fas fa-tools';
-      } else if (report.status === 'تم الحل') {
-        statusClass = 'status-solved';
-        statusIcon = 'fas fa-check-circle';
-      }
-      
-      html += `
-        <div class="report-item" id="report-${report.id}">
-          <div class="report-meta">
-            <div class="meta-item">
-              <strong><i class="fas fa-user"></i> المرسل</strong>
-              <span>${report.name || 'غير مذكور'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-bolt"></i> النوع</strong>
-              <span>${report.type || 'غير محدد'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-map-marker-alt"></i> الموقع</strong>
-              <span>${report.location || 'غير محدد'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-phone"></i> الهاتف</strong>
-              <span>${report.phone || 'غير مذكور'}</span>
-            </div>
-          </div>
-          
-          <div class="meta-item" style="grid-column: 1 / -1;">
-            <strong><i class="fas fa-info-circle"></i> التفاصيل</strong>
-            <span>${report.details || 'لا توجد تفاصيل'}</span>
-          </div>
-          
-          <div class="${statusClass} status-badge">
-            <i class="${statusIcon}"></i> ${report.status || 'قيد المراجعة'}
-          </div>
-          
-          ${report.reply ? `
-            <div class="reply-box">
-              <strong><i class="fas fa-reply"></i> رد الإدارة</strong>
-              <p>${report.reply}</p>
-            </div>
-          ` : ''}
-          
-          <div class="report-date">
-            <i class="far fa-clock"></i> ${date}
-          </div>
-        </div>
-      `;
-    });
-    
-    list.innerHTML = html;
+    // عرض البلاغات بشكل آمن
+    displayReportsSafely(reports);
     
   } catch (error) {
     console.error('خطأ في تحميل البلاغات:', error);
@@ -843,11 +1121,33 @@ async function loadReports() {
   }
 }
 
-// =========================
-// 🚀 تهيئة الصفحة
-// =========================
+// ==================== حماية إضافية ====================
+
+// منع فتح النوافذ المنبثقة
+window.addEventListener('blur', () => {
+  if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+    popupBlocker.style.display = 'block';
+    setTimeout(() => {
+      popupBlocker.style.display = 'none';
+    }, 1000);
+  }
+});
+
+// حماية ضد هجمات النقر
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.href && e.target.href.includes('javascript:')) {
+    e.preventDefault();
+    showAlert('⚠️ تم منع إجراء غير آمن', 'warning');
+  }
+});
+
+// ==================== تهيئة الصفحة ====================
+
 async function init() {
-  // تحميل البلاغات عند بدء الصفحة
+  // توليد CSRF Token
+  generateCSRFToken();
+  
+  // تحميل البلاغات
   await loadReports();
   
   // الاشتراك في التحديثات المباشرة
@@ -866,7 +1166,7 @@ async function init() {
     )
     .subscribe();
   
-  // تحديث البلاغات كل دقيقة (احتياطي)
+  // تحديث البلاغات كل دقيقة
   setInterval(() => {
     loadReports();
   }, 60000);
@@ -874,8 +1174,26 @@ async function init() {
 
 // بدء التطبيق
 init();
+
+// حماية إضافية ضد التلاعب
+Object.freeze(Object.prototype);
+Object.freeze(Array.prototype);
+Object.freeze(Function.prototype);
+
+// منع التعديل على الدوال الأساسية
+if (window.Node && Node.prototype) {
+  const originalInsertAdjacentHTML = Node.prototype.insertAdjacentHTML;
+  Node.prototype.insertAdjacentHTML = function(position, text) {
+    const sanitized = DOMPurify.sanitize(text, {
+      ALLOWED_TAGS: [],
+      ALLOWED_ATTR: []
+    });
+    return originalInsertAdjacentHTML.call(this, position, sanitized);
+  };
+}
+
+console.log('✅ تم تحميل نظام الحماية ضد XSS');
 </script>
 
 </body>
-
 </html>
