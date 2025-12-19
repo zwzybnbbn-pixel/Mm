@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💧 برنامج توزيع المياه - مؤسسة مياه عتق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===========================
+     إعدادات عامة
+=========================== */
+:root {
+  --primary: #1a5276;
+  --primary-dark: #154360;
+  --primary-light: #2e86c1;
+  --secondary: #d4a76a;
+  --secondary-light: #e6c9a0;
+  --light-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.98);
+  --text-color: #333;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --water-blue: #4aa3ff;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 50%, #e8f5e9 100%);
+  min-height: 100vh;
+  color: var(--text-color);
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* ===========================
+         العنوان
+=========================== */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(26, 82, 118, 0.3);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231a5276' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+header i {
+  color: var(--secondary-light);
+  margin-left: 10px;
+}
+
+/* ===========================
+        صندوق المحتوى
+=========================== */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section {
+  background: var(--light-bg);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+       صندوق الرسالة
+=========================== */
+.message-box {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border-right: 5px solid var(--secondary);
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.message-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+}
+
+.message-box strong {
+  color: var(--primary);
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.message-box i {
+  color: var(--primary);
+  margin-left: 10px;
+}
+
+/* ===========================
+       شريط المعلومات
+=========================== */
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-bar h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.last-update {
+  font-size: 14px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.last-update i {
+  margin-left: 5px;
+  color: var(--primary);
+}
+
+/* ===========================
+        عناصر الجدول
+=========================== */
+.distribution-list {
+  display: grid;
+  gap: 25px;
+}
+
+.distribution-item {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.distribution-item:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(26, 82, 118, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(26, 82, 118, 0.15);
+}
+
+.distribution-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary), var(--water-blue));
+}
+
+.distribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.distribution-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.area-badge {
+  background: rgba(26, 82, 118, 0.1);
+  color: var(--primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid rgba(26, 82, 118, 0.2);
+}
+
+/* ===========================
+      معلومات التوزيع
+=========================== */
+.distribution-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(240, 248, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(212, 167, 106, 0.2);
+}
+
+.info-row i {
+  font-size: 1.2rem;
+  color: var(--primary);
+  width: 28px;
+  text-align: center;
+}
+
+.info-row div {
+  flex: 1;
+}
+
+.info-row strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.info-row span {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* ===========================
+       حالات التوزيع
+=========================== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.status-active {
+  background: rgba(39, 174, 96, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.status-stopped {
+  background: rgba(231, 76, 60, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.status-limited {
+  background: rgba(243, 156, 18, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+/* ===========================
+        الملاحظات
+=========================== */
+.note-box {
+  margin-top: 20px;
+  padding: 18px;
+  background: rgba(240, 248, 255, 0.8);
+  border-radius: 12px;
+  border-right: 4px solid var(--primary);
+  border-left: 1px solid rgba(26, 82, 118, 0.1);
+}
+
+.note-box i {
+  color: var(--primary);
+  margin-left: 10px;
+}
+
+.note-box strong {
+  color: var(--primary);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ===========================
+        حالة التحميل
+=========================== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.loading i {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  display: block;
+  color: var(--primary);
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===========================
+       حالة فارغة
+=========================== */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  color: #ccc;
+  display: block;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* ===========================
+       فلتر المناطق
+=========================== */
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #555;
+  border: 1px solid var(--border-color);
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-btn:hover {
+  background: rgba(26, 82, 118, 0.1);
+  color: var(--primary);
+  border-color: rgba(26, 82, 118, 0.3);
+}
+
+.filter-btn.active {
+  background: rgba(26, 82, 118, 0.15);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ===========================
+       تحديث تلقائي
+=========================== */
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.auto-refresh i {
+  color: var(--primary);
+}
+
+/* ===========================
+       التذييل
+=========================== */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 25px;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+}
+
+footer i {
+  color: var(--primary);
+  margin: 0 5px;
+}
+
+/* ===========================
+      استجابة للجوال
+=========================== */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  
+  header {
+    padding: 25px 15px;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+  }
+  
+  .section {
+    padding: 20px;
+  }
+  
+  .distribution-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .filter-container {
+    justify-content: flex-start;
+  }
+  
+  .distribution-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .area-badge {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+  
+  header p {
+    font-size: 1rem;
+  }
+  
+  .distribution-item {
+    padding: 20px;
+  }
+  
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  
+  <!-- العنوان -->
+  <header>
+    <h1><i class="fas fa-water"></i> المؤسسة العامة للمياه - فرع عتق</h1>
+    <p><i class="fas fa-map-marker-alt"></i> برنامج توزيع المياه في أحياء مدينة عتق - محافظة شبوه</p>
+  </header>
+  
+  <!-- الرسالة العامة -->
+  <div class="section">
+    <div class="message-box" id="messageBox">
+      <strong><i class="fas fa-bullhorn"></i> رسالة من الإدارة:</strong>
+      <span id="generalMessage">جاري تحميل الرسالة...</span>
+    </div>
+  </div>
+  
+  <!-- جدول التوزيع -->
+  <div class="section">
+    <div class="info-bar">
+      <h2><i class="fas fa-calendar-alt"></i> جدول توزيع المياه</h2>
+      <div class="last-update" id="lastUpdate">
+        <i class="fas fa-clock"></i> آخر تحديث: <span id="updateTime">--:--</span>
+      </div>
+    </div>
+    
+    <!-- فلتر المناطق -->
+    <div class="filter-container" id="filterContainer">
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> جميع الأحياء
+      </button>
+      <!-- سيتم إضافة الأزرار ديناميكياً -->
+    </div>
+    
+    <!-- قائمة الجدول -->
+    <div id="distributionList" class="loading">
+      <i class="fas fa-tint"></i> جاري تحميل جدول توزيع المياه...
+    </div>
+    
+    <!-- تحديث تلقائي -->
+    <div class="auto-refresh">
+      <i class="fas fa-sync-alt"></i>
+      <span>سيتم تحديث الجدول تلقائياً كل دقيقة</span>
+    </div>
+  </div>
+  
+  <!-- التذييل -->
+  <footer>
+    <p><i class="fas fa-copyright"></i> 2025 مؤسسة مياه محافظة شبوه - جميع الحقوق محفوظة</p>
+    <p><i class="fas fa-phone"></i> هاتف: 01-234567 | <i class="fas fa-envelope"></i> البريد الإلكتروني: water@shabwah.gov.ye</p>
+  </footer>
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+// ضع هنا روابط Supabase الخاصة بك
+const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI"; // ضع المفتاح العمومي (anon)
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// عناصر DOM
+const distributionList = document.getElementById('distributionList');
+const filterContainer = document.getElementById('filterContainer');
+const updateTime = document.getElementById('updateTime');
+const messageBox = document.getElementById('generalMessage');
+
+// متغيرات
+let allDistributions = [];
+let currentFilter = 'all';
+let uniqueAreas = [];
+
+// دالة للحصول على اسم اليوم
+function getDayName(dateString) {
+  const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const date = new Date(dateString);
+  return days[date.getDay()];
+}
+
+// دالة لتحديث وقت آخر تحديث
+function updateLastUpdateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  updateTime.textContent = timeString;
+}
+
+// دالة لتحميل الرسالة العامة
+async function loadGeneralMessage() {
+  try {
+    const { data: msgData } = await supabase
+      .from('general_message')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1);
+    
+    const generalMessage = msgData?.[0]?.message || "لا توجد رسائل حالياً";
+    messageBox.textContent = generalMessage;
+  } catch (error) {
+    console.error('❌ خطأ في تحميل الرسالة العامة:', error);
+    messageBox.textContent = "تعذر تحميل الرسالة. يرجى المحاولة لاحقاً.";
+  }
+}
+
+// دالة لإنشاء أزرار الفلتر ديناميكياً
+function createFilterButtons(areas) {
+  // أضف الأزرار لكل منطقة
+  areas.forEach(area => {
+    const button = document.createElement('button');
+    button.className = 'filter-btn';
+    button.dataset.filter = area;
+    button.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${area}`;
+    button.addEventListener('click', () => {
+      // إزالة النشط من جميع الأزرار
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // تفعيل الزر المختار
+      button.classList.add('active');
+      
+      // تطبيق الفلتر
+      currentFilter = area;
+      filterDistributions();
+    });
+    
+    filterContainer.appendChild(button);
+  });
+}
+
+// دالة لتصفية الجدول حسب المنطقة
+function filterDistributions() {
+  let filtered = [...allDistributions];
+  
+  if (currentFilter !== 'all') {
+    filtered = filtered.filter(distribution => distribution.area === currentFilter);
+  }
+  
+  displayDistributions(filtered);
+}
+
+// دالة لعرض جدول التوزيع
+function displayDistributions(distributions) {
+  if (!distributions || distributions.length === 0) {
+    distributionList.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-tint-slash"></i>
+        <p>لا توجد بيانات لجدول توزيع المياه</p>
+        <p style="font-size: 14px; color: #666;">${currentFilter !== 'all' ? `للحي: ${currentFilter}` : ''}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '<div class="distribution-list">';
+  
+  distributions.forEach(distribution => {
+    const { area, date, time, status, next_area, note } = distribution;
+    const dayName = getDayName(date);
+    
+    // تحديد أيقونة الحالة
+    let statusClass = 'status-limited';
+    let statusIcon = 'fas fa-exclamation-circle';
+    let statusText = status || 'محدود';
+    
+    if (status === 'نشط') {
+      statusClass = 'status-active';
+      statusIcon = 'fas fa-check-circle';
+      statusText = 'نشط';
+    } else if (status === 'متوقف') {
+      statusClass = 'status-stopped';
+      statusIcon = 'fas fa-times-circle';
+      statusText = 'متوقف';
+    }
+    
+    html += `
+      <div class="distribution-item">
+        <div class="distribution-header">
+          <h3><i class="fas fa-map-marked-alt"></i> ${area || 'غير محدد'}</h3>
+          <span class="area-badge">${area || '--'}</span>
+        </div>
+        
+        <div class="distribution-info">
+          <div class="info-row">
+            <i class="fas fa-calendar-day"></i>
+            <div>
+              <strong>اليوم</strong>
+              <span>${dayName || 'غير محدد'}</span>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <i class="fas fa-clock"></i>
+            <div>
+              <strong>التوقيت</strong>
+              <span>${time || 'غير محدد'}</span>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <strong>التاريخ</strong>
+              <span>${date || 'غير محدد'}</span>
+            </div>
+          </div>
+          
+          ${next_area ? `
+            <div class="info-row">
+              <i class="fas fa-arrow-right"></i>
+              <div>
+                <strong>الحي التالي</strong>
+                <span>${next_area}</span>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        
+        <div class="${statusClass} status-badge">
+          <i class="${statusIcon}"></i> ${statusText}
+        </div>
+        
+        ${note ? `
+          <div class="note-box">
+            <strong><i class="fas fa-sticky-note"></i> ملاحظات:</strong>
+            <span>${note}</span>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  distributionList.innerHTML = html;
+}
+
+// دالة لتحميل جدول التوزيع من Supabase
+async function loadDistribution() {
+  distributionList.innerHTML = '<div class="loading"><i class="fas fa-tint"></i> جاري تحميل جدول توزيع المياه...</div>';
+  
+  try {
+    const { data: distributions, error } = await supabase
+      .from('water_distribution')
+      .select('*')
+      .order('date', { ascending: true });
+    
+    if (error) throw error;
+    
+    console.log(`✅ تم تحميل ${distributions?.length || 0} منطقة`);
+    allDistributions = distributions || [];
+    
+    // استخراج المناطق الفريدة
+    uniqueAreas = [...new Set(allDistributions.map(d => d.area).filter(Boolean))];
+    
+    // تحديث أزرار الفلتر
+    filterContainer.innerHTML = `
+      <button class="filter-btn active" data-filter="all">
+        <i class="fas fa-list"></i> جميع الأحياء
+      </button>
+    `;
+    createFilterButtons(uniqueAreas);
+    
+    // تطبيق الفلتر الحالي
+    filterDistributions();
+    
+    // تحديث وقت آخر تحديث
+    updateLastUpdateTime();
+    
+  } catch (error) {
+    console.error('❌ خطأ في تحميل جدول توزيع المياه:', error);
+    distributionList.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>حدث خطأ في تحميل جدول توزيع المياه</p>
+        <p style="font-size: 14px; color: #e74c3c;">${error.message}</p>
+        <button onclick="loadDistribution()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600;">
+          <i class="fas fa-redo"></i> إعادة المحاولة
+        </button>
+      </div>
+    `;
+  }
+}
+
+// =========================
+// 🚀 تهيئة الصفحة
+// =========================
+async function init() {
+  console.log('🚀 بدء تحميل صفحة توزيع المياه...');
+  
+  // تحميل الرسالة العامة أولاً
+  await loadGeneralMessage();
+  
+  // تحميل البيانات أول مرة
+  await loadDistribution();
+  
+  // الاشتراك في التحديثات المباشرة
+  const channel = supabase
+    .channel('realtime-water-distribution')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'water_distribution'
+      },
+      (payload) => {
+        console.log('📡 تحديث مباشر لجدول توزيع المياه:', payload);
+        loadDistribution();
+      }
+    )
+    .subscribe((status) => {
+      console.log('📡 حالة اشتراك جدول توزيع المياه:', status);
+    });
+  
+  // تحديث تلقائي كل دقيقة
+  setInterval(() => {
+    loadDistribution();
+  }, 60000);
+  
+  // تحديث الرسالة العامة كل دقيقتين
+  setInterval(() => {
+    loadGeneralMessage();
+  }, 120000);
+  
+  // تحديث وقت العرض كل ثانية
+  setInterval(() => {
+    updateLastUpdateTime();
+  }, 1000);
+  
+  console.log('✅ تم تهيئة صفحة توزيع المياه بنجاح');
+}
+
+// بدء التطبيق
+init();
+
+// جعل الدالة متاحة للزر
+window.loadDistribution = loadDistribution;
+</script>
+
+</body>
+</html>
