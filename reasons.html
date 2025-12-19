@@ -4,132 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>سبب الانقطاع – كهرباء عتق</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://*.supabase.co; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co;">
 
+<!-- 🔧 CSP معدل - يسمح بما هو ضروري فقط -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  connect-src 'self' https://*.supabase.co;
+  img-src 'self' data:;
+  frame-src 'none';
+">
+
+<!-- رؤوس أمان أساسية -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-body{
-  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
-  min-height:100vh;
-  color:white;
-  padding:15px;
-}
-
-header{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-header h2{
-  font-size:32px;
-  font-weight:800;
-  color:#1f6feb;
-}
-
-#reason-box{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  max-width:650px;
-  margin:0 auto;
-}
-
-.item{
-  background:rgba(255,255,255,0.07);
-  padding:18px;
-  border-radius:16px;
-  backdrop-filter:blur(5px);
-  box-shadow:0 6px 18px rgba(0,0,0,0.45);
-  border:1px solid #30363d;
-  transition:0.25s;
-}
-
-.item:hover{
-  background:rgba(255,255,255,0.12);
-  transform:translateY(-3px);
-}
-
-.item p{
-  font-size:18px;
-  margin-bottom:8px;
-  line-height:1.6;
-}
-
-.item strong{
-  color:#1f6feb;
-  font-weight:700;
-}
-
-.item small{
-  font-size:14px;
-  opacity:.8;
-  display:block;
-  margin-top:10px;
-  color:#aaa;
-}
-
-.back-btn{
-  display:block;
-  width:100%;
-  max-width:250px;
-  margin:25px auto;
-  background:#1f6feb;
-  color:white;
-  text-align:center;
-  padding:12px;
-  font-size:18px;
-  text-decoration:none;
-  font-weight:700;
-  border-radius:14px;
-  transition:0.2s;
-  border:none;
-  cursor:pointer;
-}
-
-.back-btn:hover{
-  background:#2b7fff;
-  transform:scale(1.05);
-}
-
-.no-data{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#aaa;
-  background:rgba(255,255,255,0.05);
-  border-radius:12px;
-  border:1px dashed #444;
-}
-
-.error-message{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#ff6b6b;
-  background:rgba(255,107,107,0.1);
-  border-radius:12px;
-  border:1px solid #ff6b6b;
-}
-
-.loader {
-  border: 4px solid rgba(255,255,255,0.1);
-  border-top: 4px solid #1f6feb;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+body{background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);min-height:100vh;color:white;padding:15px;}
+header{text-align:center;margin-bottom:25px;}
+header h2{font-size:32px;font-weight:800;color:#1f6feb;}
+#reason-box{display:flex;flex-direction:column;gap:16px;max-width:650px;margin:0 auto;}
+.item{background:rgba(255,255,255,0.07);padding:18px;border-radius:16px;backdrop-filter:blur(5px);box-shadow:0 6px 18px rgba(0,0,0,0.45);border:1px solid #30363d;transition:0.25s;}
+.item:hover{background:rgba(255,255,255,0.12);transform:translateY(-3px);}
+.item p{font-size:18px;margin-bottom:8px;line-height:1.6;}
+.item strong{color:#1f6feb;font-weight:700;}
+.item small{font-size:14px;opacity:.8;display:block;margin-top:10px;color:#aaa;}
+.back-btn{display:block;width:100%;max-width:250px;margin:25px auto;background:#1f6feb;color:white;text-align:center;padding:12px;font-size:18px;text-decoration:none;font-weight:700;border-radius:14px;transition:0.2s;border:none;cursor:pointer;}
+.back-btn:hover{background:#2b7fff;transform:scale(1.05);}
+.no-data{text-align:center;padding:30px;font-size:18px;color:#aaa;background:rgba(255,255,255,0.05);border-radius:12px;border:1px dashed #444;}
+.error-message{text-align:center;padding:30px;font-size:18px;color:#ff6b6b;background:rgba(255,107,107,0.1);border-radius:12px;border:1px solid #ff6b6b;}
+.loader{border:4px solid rgba(255,255,255,0.1);border-top:4px solid #1f6feb;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:20px auto;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.error-btn{background:#1f6feb;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:15px;font-family:inherit;}
+.debug-panel{background:rgba(0,0,0,0.3);padding:10px;border-radius:5px;margin-top:10px;font-size:12px;}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -144,335 +58,337 @@ header h2{
 
 <a href="index2.html" class="back-btn">⬅ رجوع للرئيسية</a>
 
-<script type="module">
-// 🔒 نظام حماية متكامل ضد الهجمات
-const Security = {
-    // تطهير جميع النصوص من الهجمات XSS
-    sanitize: function(text) {
-        if (text === null || text === undefined) return '';
-        const div = document.createElement('div');
-        div.textContent = String(text);
-        return div.innerHTML;
-    },
+<script>
+// ==================== التهيئة الآمنة ====================
+console.log('🚀 بدء تحميل التطبيق...');
 
-    // التحقق من صحة بيانات السبب
-    validateReason: function(reason) {
-        if (!reason || typeof reason !== 'object') return false;
-        
-        // التحقق من الحقول الأساسية
-        if (!reason.text || typeof reason.text !== 'string') return false;
-        if (!reason.updated_at || typeof reason.updated_at !== 'string') return false;
-        
-        // التحقق من الطول للحماية من هجمات البيانات الضخمة
-        if (reason.text.length > 1000) return false;
-        if (reason.details && reason.details.length > 2000) return false;
-        if (reason.affected_areas && reason.affected_areas.length > 500) return false;
-        
-        return true;
-    },
-
-    // منع هجمات حقن SQL/NoSQL (طبقة دفاعية)
-    sanitizeForDatabase: function(data) {
-        const dangerousPatterns = [
-            /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXECUTE|MERGE|TRUNCATE)\b)/gi,
-            /(\b(OR|AND)\s+['"]?\d+['"]?\s*[=<>]+\s*['"]?\d+['"]?)/gi,
-            /(\b(true|false|null)\b)/gi,
-            /(['";\\])/g,
-            /(\-\-)|(#)/g
-        ];
-        
-        let sanitized = String(data);
-        dangerousPatterns.forEach(pattern => {
-            sanitized = sanitized.replace(pattern, '');
-        });
-        
-        return sanitized.trim();
-    },
-
-    // حماية من هجمات CSRF
-    generateCSRFToken: function() {
-        const token = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-        sessionStorage.setItem('csrf_token', token);
-        return token;
-    },
-
-    // التحقق من توكن CSRF
-    verifyCSRFToken: function(token) {
-        const storedToken = sessionStorage.getItem('csrf_token');
-        return storedToken && storedToken === token;
-    }
+// بيانات Supabase - استخدم بياناتك الخاصة
+const SUPABASE_CONFIG = {
+    url: 'https://gxuumjhtutkipvkljjhj.supabase.co',
+    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI'
 };
 
-// استيراد Supabase من الملف الخارجي
-import { supabase } from './supabase.js';
+const box = document.getElementById('reason-box');
+let supabaseClient = null;
 
-const box = document.getElementById("reason-box");
+// 🔧 نظام تشخيص
+function logStatus(message, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : '🔍';
+    console.log(`${icon} [${timestamp}] ${message}`);
+}
 
-// دالة لتحويل التاريخ إلى تنسيق عربي - آمنة
-function formatDate(dateString) {
-    if (!dateString) return "—";
-    
+// 🔧 تهيئة Supabase
+async function initializeSupabase() {
     try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return "—";
+        logStatus('التحقق من مكتبة Supabase...');
         
-        return new Intl.DateTimeFormat('ar-EG', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'Africa/Cairo'
-        }).format(date);
+        if (!window.supabase || !window.supabase.createClient) {
+            logStatus('مكتبة Supabase غير محملة، جاري الانتظار...');
+            
+            // انتظر 3 ثواني لتحميل المكتبة
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            if (!window.supabase) {
+                throw new Error('فشل تحميل مكتبة Supabase. تأكد من اتصال الإنترنت.');
+            }
+        }
+        
+        logStatus('مكتبة Supabase جاهزة، جاري إنشاء العميل...');
+        
+        const { createClient } = window.supabase;
+        supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
+        
+        logStatus('✅ تم إنشاء عميل Supabase بنجاح');
+        return true;
+        
     } catch (error) {
-        console.error("Error formatting date:", error);
-        return "—";
+        logStatus(`خطأ في تهيئة Supabase: ${error.message}`, 'error');
+        return false;
     }
 }
 
-// 🔒 دالة محمية لتحميل البيانات
+// 🔧 دالة آمنة لتطهير النص
+function sanitizeText(text) {
+    if (!text) return '';
+    
+    // استخدام textContent لمنع XSS
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    
+    // إزالة الكود الخبيث الإضافي
+    return div.innerHTML
+        .replace(/javascript:/gi, '')
+        .replace(/data:/gi, '')
+        .replace(/on\w+\s*=/gi, '');
+}
+
+// 🔧 تحميل البيانات
 async function loadReasons() {
     try {
-        // التحقق من اتصال الإنترنت
+        logStatus('بدء تحميل البيانات...');
+        
+        // التحقق من الاتصال
         if (!navigator.onLine) {
             throw new Error('لا يوجد اتصال بالإنترنت');
         }
-
-        // إضافة مهلة للحماية من هجمات DDoS
-        const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 10000);
-        });
-
-        // جلب البيانات مع حماية
-        const fetchPromise = supabase
-            .from('reasons')
-            .select('*')
-            .order('updated_at', { ascending: false })
-            .limit(100); // تحديد لعدد السجلات للحماية
-
-        const { data: reasons, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-        if (error) throw error;
-
-        // التحقق من صحة البيانات
-        if (!reasons || !Array.isArray(reasons)) {
-            throw new Error('بيانات غير صالحة');
+        
+        // التحقق من Supabase
+        if (!supabaseClient) {
+            const initialized = await initializeSupabase();
+            if (!initialized) {
+                throw new Error('تعذر الاتصال بقاعدة البيانات');
+            }
         }
-
-        // تصفية البيانات غير الآمنة
-        const safeReasons = reasons.filter(Security.validateReason);
-
-        if (safeReasons.length === 0) {
-            showNoData();
-            return;
+        
+        logStatus('جاري جلب البيانات من Supabase...');
+        
+        // إعداد مهلة للطلب
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        
+        try {
+            // جلب البيانات
+            const { data: reasons, error } = await supabaseClient
+                .from('reasons')
+                .select('*')
+                .order('updated_at', { ascending: false })
+                .limit(50);
+            
+            clearTimeout(timeoutId);
+            
+            if (error) {
+                logStatus(`خطأ من Supabase: ${error.message}`, 'error');
+                throw new Error(`خطأ في قاعدة البيانات: ${error.message}`);
+            }
+            
+            logStatus(`تم استلام ${reasons?.length || 0} سبب`);
+            
+            // عرض البيانات
+            displayReasons(reasons);
+            
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            throw fetchError;
         }
-
-        // عرض البيانات بطريقة آمنة
-        displaySafeReasons(safeReasons);
-
+        
     } catch (error) {
-        console.error("Error loading reasons:", error);
-        showError(error.message);
+        logStatus(`خطأ: ${error.message}`, 'error');
+        showError(error);
     }
 }
 
-// 🔒 عرض البيانات بطريقة آمنة (بدون innerHTML)
-function displaySafeReasons(reasons) {
+// 🔧 عرض البيانات (طريقة آمنة)
+function displayReasons(reasons) {
+    // مسح المحتوى القديم
     box.innerHTML = '';
     
-    // إنشاء عناصر DOM مباشرة (أكثر أماناً)
+    if (!reasons || reasons.length === 0) {
+        const noDataDiv = document.createElement('div');
+        noDataDiv.className = 'no-data';
+        
+        const message = document.createElement('p');
+        message.textContent = '📭 لا توجد أسباب مسجلة حالياً';
+        noDataDiv.appendChild(message);
+        
+        const subMessage = document.createElement('small');
+        subMessage.textContent = 'سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة';
+        noDataDiv.appendChild(subMessage);
+        
+        box.appendChild(noDataDiv);
+        return;
+    }
+    
+    // عرض كل سبب
     reasons.forEach((reason, index) => {
+        // إضافة فاصل
         if (index === 1) {
             const separator = document.createElement('div');
             separator.textContent = '——— أسباب سابقة ———';
             separator.style.cssText = 'text-align:center; margin:20px 0; color:#666; font-size:14px;';
             box.appendChild(separator);
         }
-
+        
+        // إنشاء العنصر
         const item = document.createElement('div');
         item.className = 'item';
         
         // السبب الرئيسي
-        const reasonText = document.createElement('p');
-        const strongReason = document.createElement('strong');
-        strongReason.textContent = 'السبب: ';
-        reasonText.appendChild(strongReason);
-        reasonText.appendChild(document.createTextNode(Security.sanitize(reason.text)));
-        item.appendChild(reasonText);
+        addField(item, 'السبب:', reason.text);
         
         // التفاصيل
         if (reason.details) {
-            const details = document.createElement('p');
-            details.style.marginTop = '8px';
-            const strongDetails = document.createElement('strong');
-            strongDetails.textContent = 'التفاصيل: ';
-            details.appendChild(strongDetails);
-            details.appendChild(document.createTextNode(Security.sanitize(reason.details)));
-            item.appendChild(details);
+            addField(item, 'التفاصيل:', reason.details, 'details');
         }
         
         // المناطق المتأثرة
         if (reason.affected_areas) {
-            const areas = document.createElement('p');
-            areas.style.marginTop = '8px';
-            const strongAreas = document.createElement('strong');
-            strongAreas.textContent = 'المناطق المتأثرة: ';
-            areas.appendChild(strongAreas);
-            areas.appendChild(document.createTextNode(Security.sanitize(reason.affected_areas)));
-            item.appendChild(areas);
+            addField(item, 'المناطق المتأثرة:', reason.affected_areas, 'areas');
         }
         
         // الوقت المتوقع
         if (reason.estimated_time) {
-            const time = document.createElement('p');
-            time.style.marginTop = '8px';
-            time.style.color = '#4ecdc4';
-            const strongTime = document.createElement('strong');
-            strongTime.textContent = 'الوقت المتوقع للإصلاح: ';
-            time.appendChild(strongTime);
-            time.appendChild(document.createTextNode(Security.sanitize(reason.estimated_time)));
-            item.appendChild(time);
+            const timeField = document.createElement('p');
+            timeField.style.cssText = 'margin-top:8px; color:#4ecdc4;';
+            
+            const strong = document.createElement('strong');
+            strong.textContent = 'الوقت المتوقع للإصلاح: ';
+            timeField.appendChild(strong);
+            
+            const text = document.createTextNode(sanitizeText(reason.estimated_time));
+            timeField.appendChild(text);
+            
+            item.appendChild(timeField);
         }
         
         // تاريخ التحديث
-        const updateDate = document.createElement('small');
-        const strongUpdate = document.createElement('strong');
-        strongUpdate.textContent = 'آخر تحديث: ';
-        updateDate.appendChild(strongUpdate);
-        updateDate.appendChild(document.createTextNode(formatDate(reason.updated_at)));
-        item.appendChild(updateDate);
+        const updateField = document.createElement('small');
+        const updateStrong = document.createElement('strong');
+        updateStrong.textContent = 'آخر تحديث: ';
+        updateField.appendChild(updateStrong);
+        
+        try {
+            const date = new Date(reason.updated_at);
+            updateField.appendChild(document.createTextNode(
+                date.toLocaleString('ar-EG', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            ));
+        } catch {
+            updateField.appendChild(document.createTextNode('—'));
+        }
+        item.appendChild(updateField);
         
         // الحالة
         if (reason.status) {
-            const status = document.createElement('small');
-            status.style.display = 'block';
-            status.style.color = reason.status === 'تم الحل' ? '#2ecc71' : 
-                               reason.status === 'قيد المعالجة' ? '#f39c12' : '#e74c3c';
-            const strongStatus = document.createElement('strong');
-            strongStatus.textContent = 'الحالة: ';
-            status.appendChild(strongStatus);
-            status.appendChild(document.createTextNode(Security.sanitize(reason.status)));
-            item.appendChild(status);
+            const statusField = document.createElement('small');
+            statusField.style.display = 'block';
+            
+            // تحديد اللون
+            const colors = {
+                'تم الحل': '#2ecc71',
+                'قيد المعالجة': '#3498db',
+                'معلق': '#e74c3c',
+                'تحت الدراسة': '#9b59b6'
+            };
+            
+            statusField.style.color = colors[reason.status] || '#f39c12';
+            
+            const statusStrong = document.createElement('strong');
+            statusStrong.textContent = 'الحالة: ';
+            statusField.appendChild(statusStrong);
+            
+            statusField.appendChild(document.createTextNode(sanitizeText(reason.status)));
+            item.appendChild(statusField);
         }
         
         box.appendChild(item);
     });
+    
+    // إضافة عدد السجلات
+    const counter = document.createElement('div');
+    counter.style.cssText = 'text-align:center; margin-top:20px; color:#666; font-size:14px;';
+    counter.textContent = `عرض ${reasons.length} سبب`;
+    box.appendChild(counter);
 }
 
-function showNoData() {
-    const noDataDiv = document.createElement('div');
-    noDataDiv.className = 'no-data';
+// 🔧 دالة مساعدة لإضافة حقول
+function addField(container, label, value, className = '') {
+    if (!value) return;
     
-    const message = document.createElement('p');
-    message.textContent = '📭 لا توجد أسباب مسجلة حالياً';
-    noDataDiv.appendChild(message);
+    const field = document.createElement('p');
+    if (className) field.className = className;
+    field.style.marginTop = '8px';
     
-    const subMessage = document.createElement('small');
-    subMessage.textContent = 'سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة';
-    noDataDiv.appendChild(subMessage);
+    const strong = document.createElement('strong');
+    strong.textContent = label + ' ';
+    field.appendChild(strong);
     
-    box.innerHTML = '';
-    box.appendChild(noDataDiv);
+    field.appendChild(document.createTextNode(sanitizeText(value)));
+    container.appendChild(field);
 }
 
-function showError(message) {
+// 🔧 عرض الخطأ
+function showError(error) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     
-    const errorMsg = document.createElement('p');
-    errorMsg.textContent = '⚠️ ' + (message || 'خطأ في الاتصال بقاعدة البيانات');
-    errorDiv.appendChild(errorMsg);
+    const title = document.createElement('p');
+    title.textContent = '⚠️ خطأ في تحميل البيانات';
+    errorDiv.appendChild(title);
     
-    const subMsg = document.createElement('small');
-    subMsg.textContent = 'يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى';
-    errorDiv.appendChild(subMsg);
+    const message = document.createElement('small');
+    message.textContent = error.message || 'حدث خطأ غير معروف';
+    errorDiv.appendChild(message);
     
     const retryBtn = document.createElement('button');
-    retryBtn.textContent = 'إعادة المحاولة';
-    retryBtn.style.cssText = 'margin-top:15px; padding:8px 16px; background:#1f6feb; color:white; border:none; border-radius:8px; cursor:pointer;';
-    retryBtn.onclick = loadReasons;
+    retryBtn.className = 'error-btn';
+    retryBtn.textContent = '🔄 إعادة المحاولة';
+    retryBtn.onclick = () => {
+        box.innerHTML = '<div class="loader"></div><p style="text-align:center; opacity:0.7;">⏳ جاري تحميل البيانات...</p>';
+        setTimeout(loadReasons, 1000);
+    };
     errorDiv.appendChild(retryBtn);
+    
+    // لوحة تشخيص
+    const debugPanel = document.createElement('div');
+    debugPanel.className = 'debug-panel';
+    debugPanel.innerHTML = `
+        <strong>معلومات التشخيص:</strong><br>
+        • الاتصال: ${navigator.onLine ? '✅' : '❌'}<br>
+        • Supabase: ${supabaseClient ? '✅' : '❌'}<br>
+        • الوقت: ${new Date().toLocaleTimeString()}
+    `;
+    errorDiv.appendChild(debugPanel);
     
     box.innerHTML = '';
     box.appendChild(errorDiv);
 }
 
-// 🔒 دالة آمنة للاشتراك في التحديثات
-function subscribeToRealtimeUpdates() {
-    try {
-        const channel = supabase
-            .channel('reasons-updates')
-            .on('postgres_changes', 
-                { event: '*', schema: 'public', table: 'reasons' },
-                (payload) => {
-                    // التحقق من صحة البيانات قبل التحميل
-                    if (payload && Security.validateReason(payload.new || payload.old)) {
-                        console.log('تم تحديث البيانات، إعادة التحميل...');
-                        loadReasons();
-                    }
-                }
-            )
-            .subscribe();
-            
-        return channel;
-    } catch (error) {
-        console.error("Error in realtime updates:", error);
-        return null;
-    }
-}
-
-// 🔒 تحميل البيانات عند فتح الصفحة
-window.addEventListener('DOMContentLoaded', () => {
-    // مهلة بسيطة لتحسين الأداء
-    setTimeout(loadReasons, 100);
+// ==================== بدء التطبيق ====================
+document.addEventListener('DOMContentLoaded', async () => {
+    logStatus('الصفحة جاهزة، بدء التهيئة...');
     
-    // تفعيل التحديثات المباشرة
-    const channel = subscribeToRealtimeUpdates();
+    // تهيئة Supabase أولاً
+    const initialized = await initializeSupabase();
     
-    // تحميل البيانات عند العودة للصفحة
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-            loadReasons();
-        }
-    });
-});
-
-// 🔒 تحديث البيانات كل دقيقة (بدلاً من 30 ثانية لتقليل الحمل)
-let refreshInterval = setInterval(loadReasons, 60000);
-
-// إيقاف التحديث عند ترك الصفحة
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        clearInterval(refreshInterval);
-    } else {
-        clearInterval(refreshInterval);
-        refreshInterval = setInterval(loadReasons, 60000);
-    }
-});
-
-// 🔒 حماية إضافية ضد الهجمات
-document.addEventListener('DOMContentLoaded', () => {
-    // منع فتح أدوات المطور
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    
-    // منع النسخ غير المصرح به
-    document.addEventListener('copy', e => {
-        if (!window.confirm('هل تريد نسخ النص؟')) {
-            e.preventDefault();
-        }
-    });
-    
-    // حماية الروابط
-    document.addEventListener('click', e => {
-        if (e.target.tagName === 'A') {
-            const href = e.target.getAttribute('href');
-            if (href && !href.startsWith('#') && !href.includes('index2.html')) {
-                e.preventDefault();
-                window.location.href = 'index2.html';
+    if (initialized) {
+        // تحميل البيانات بعد تهيئة ناجحة
+        setTimeout(loadReasons, 500);
+        
+        // تحديث دوري
+        setInterval(() => {
+            if (!document.hidden && navigator.onLine) {
+                loadReasons();
             }
-        }
-    });
+        }, 60000); // كل دقيقة
+    } else {
+        showError(new Error('فشل تهيئة النظام'));
+    }
 });
+
+// تحديث عند العودة للصفحة
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && supabaseClient) {
+        logStatus('الصفحة أصبحت مرئية، تحديث البيانات...');
+        loadReasons();
+    }
+});
+
+// تصدير للاستخدام الخارجي
+window.App = {
+    loadReasons,
+    sanitizeText,
+    getStatus: () => ({
+        online: navigator.onLine,
+        supabase: !!supabaseClient,
+        url: SUPABASE_CONFIG.url ? '✅' : '❌'
+    })
+};
 </script>
 </body>
-  </html>
+</html>
