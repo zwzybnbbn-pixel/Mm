@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://esm.sh;
-  script-src-elem 'self' https://cdn.jsdelivr.net https://unpkg.com https://esm.sh;
+  script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://esm.sh;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com;
-  style-src-elem 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com;
+  style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com;
   font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
   img-src 'self' data: https:;
   connect-src 'self' https://api.ipify.org https://api64.ipify.org https://*.supabase.co;
@@ -19,6 +19,7 @@
   form-action 'self';
   block-all-mixed-content;
 ">
+
 
 
 <title>📝 نظام إبلاغ انقطاع الكهرباء</title>
@@ -895,4 +896,5 @@ init();
 
 </body>
 </html>  
+
 
