@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+/* جميع أنماط CSS تبقى كما هي */
 :root {
   --primary: #ff6b6b;
   --primary-dark: #ff4757;
@@ -68,7 +69,15 @@ body {
   color: var(--primary);
 }
 
-
+h2 {
+  text-align: center;
+  margin: 20px 0 30px;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  padding-bottom: 15px;
+}
 
 h2::after {
   content: '';
@@ -486,6 +495,7 @@ function updateStatistics(alerts) {
   const urgent = alerts.filter(a => a.urgent).length;
   const inactive = alerts.filter(a => !a.active).length;
   
+  // استخدام textContent بدلاً من innerHTML
   stats.total.textContent = total;
   stats.active.textContent = active;
   stats.urgent.textContent = urgent;
@@ -508,86 +518,198 @@ function filterAlerts() {
   updateStatistics(filtered);
 }
 
+// دالة لإنشاء عنصر تنبيه
+function createAlertElement(alert) {
+  const { id, title, content, active, urgent, priority, created_at, updated_at } = alert;
+  
+  // تحديد فئة الحالة
+  let statusClass = 'status-inactive';
+  let statusIcon = 'fas fa-clock';
+  let statusText = 'منتهي';
+  
+  if (urgent) {
+    statusClass = 'status-urgent';
+    statusIcon = 'fas fa-exclamation-circle';
+    statusText = 'عاجل';
+  } else if (active) {
+    statusClass = 'status-active';
+    statusIcon = 'fas fa-bolt';
+    statusText = 'نشط';
+  }
+  
+  // تحديد لون الأولوية
+  let priorityColor = '#ff6b6b';
+  if (priority === 'medium') priorityColor = '#ffa726';
+  if (priority === 'low') priorityColor = '#4db8ff';
+  
+  // إنشاء العناصر باستخدام DOM API بدلاً من innerHTML
+  const alertItem = document.createElement('div');
+  alertItem.className = 'alert-item';
+  alertItem.style.borderRightColor = priorityColor;
+  
+  // رأس التنبيه
+  const alertHeader = document.createElement('div');
+  alertHeader.className = 'alert-header';
+  
+  const titleEl = document.createElement('h3');
+  const icon = document.createElement('i');
+  icon.className = 'fas fa-exclamation-triangle';
+  titleEl.appendChild(icon);
+  titleEl.appendChild(document.createTextNode(' ' + (title || 'تنبيه')));
+  
+  const alertId = document.createElement('span');
+  alertId.className = 'alert-id';
+  alertId.textContent = '#' + id.substring(0, 8);
+  
+  alertHeader.appendChild(titleEl);
+  alertHeader.appendChild(alertId);
+  
+  // محتوى التنبيه
+  const alertContent = document.createElement('div');
+  alertContent.className = 'alert-content';
+  alertContent.textContent = content || 'لا يوجد محتوى';
+  
+  // البيانات الوصفية
+  const alertMeta = document.createElement('div');
+  alertMeta.className = 'alert-meta';
+  
+  // الأولوية
+  const priorityItem = document.createElement('div');
+  priorityItem.className = 'meta-item';
+  
+  const priorityLabel = document.createElement('strong');
+  const priorityIcon = document.createElement('i');
+  priorityIcon.className = 'fas fa-info-circle';
+  priorityLabel.appendChild(priorityIcon);
+  priorityLabel.appendChild(document.createTextNode(' الأولوية'));
+  
+  const priorityValue = document.createElement('span');
+  priorityValue.style.color = priorityColor;
+  priorityValue.textContent = priority === 'high' ? 'عالية' : priority === 'medium' ? 'متوسطة' : 'منخفضة';
+  
+  priorityItem.appendChild(priorityLabel);
+  priorityItem.appendChild(priorityValue);
+  
+  // تاريخ الإضافة
+  const createdItem = document.createElement('div');
+  createdItem.className = 'meta-item';
+  
+  const createdLabel = document.createElement('strong');
+  const createdIcon = document.createElement('i');
+  createdIcon.className = 'fas fa-calendar-plus';
+  createdLabel.appendChild(createdIcon);
+  createdLabel.appendChild(document.createTextNode(' تاريخ الإضافة'));
+  
+  const createdValue = document.createElement('span');
+  createdValue.textContent = formatDate(created_at);
+  
+  createdItem.appendChild(createdLabel);
+  createdItem.appendChild(createdValue);
+  
+  // آخر تحديث
+  const updatedItem = document.createElement('div');
+  updatedItem.className = 'meta-item';
+  
+  const updatedLabel = document.createElement('strong');
+  const updatedIcon = document.createElement('i');
+  updatedIcon.className = 'fas fa-calendar-check';
+  updatedLabel.appendChild(updatedIcon);
+  updatedLabel.appendChild(document.createTextNode(' آخر تحديث'));
+  
+  const updatedValue = document.createElement('span');
+  updatedValue.textContent = formatDate(updated_at);
+  
+  updatedItem.appendChild(updatedLabel);
+  updatedItem.appendChild(updatedValue);
+  
+  alertMeta.appendChild(priorityItem);
+  alertMeta.appendChild(createdItem);
+  alertMeta.appendChild(updatedItem);
+  
+  // حالة التنبيه
+  const statusBadge = document.createElement('div');
+  statusBadge.className = `${statusClass} status-badge`;
+  
+  const statusIconEl = document.createElement('i');
+  statusIconEl.className = statusIcon;
+  statusBadge.appendChild(statusIconEl);
+  statusBadge.appendChild(document.createTextNode(' ' + statusText));
+  
+  // تجميع جميع العناصر
+  alertItem.appendChild(alertHeader);
+  alertItem.appendChild(alertContent);
+  alertItem.appendChild(alertMeta);
+  alertItem.appendChild(statusBadge);
+  
+  return alertItem;
+}
+
 // دالة لعرض التنبيهات
 function displayAlerts(alerts) {
   if (!alerts || alerts.length === 0) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <i class="far fa-bell-slash"></i>
-        <p>لا توجد تنبيهات ${currentFilter !== 'all' ? `بالفلتر: ${currentFilter}` : ''}</p>
-        <p style="font-size: 14px; color: #666;">جميع الأنظمة تعمل بشكل طبيعي</p>
-      </div>
-    `;
+    // استخدام DOM API لإنشاء حالة فارغة
+    const emptyState = document.createElement('div');
+    emptyState.className = 'empty-state';
+    
+    const icon = document.createElement('i');
+    icon.className = 'far fa-bell-slash';
+    
+    const message = document.createElement('p');
+    message.textContent = `لا توجد تنبيهات ${currentFilter !== 'all' ? `بالفلتر: ${currentFilter}` : ''}`;
+    
+    const subMessage = document.createElement('p');
+    subMessage.style.fontSize = '14px';
+    subMessage.style.color = '#666';
+    subMessage.textContent = 'جميع الأنظمة تعمل بشكل طبيعي';
+    
+    emptyState.appendChild(icon);
+    emptyState.appendChild(message);
+    emptyState.appendChild(subMessage);
+    
+    // تفريغ القائمة وإضافة العنصر الجديد
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+    list.appendChild(emptyState);
     return;
   }
   
-  let html = '<div class="alerts-container">';
+  // إنشاء الحاوية
+  const container = document.createElement('div');
+  container.className = 'alerts-container';
   
+  // إضافة كل تنبيه
   alerts.forEach(alert => {
-    const { id, title, content, active, urgent, priority, created_at, updated_at } = alert;
-    
-    // تحديد فئة الحالة
-    let statusClass = 'status-inactive';
-    let statusIcon = 'fas fa-clock';
-    let statusText = 'منتهي';
-    
-    if (urgent) {
-      statusClass = 'status-urgent';
-      statusIcon = 'fas fa-exclamation-circle';
-      statusText = 'عاجل';
-    } else if (active) {
-      statusClass = 'status-active';
-      statusIcon = 'fas fa-bolt';
-      statusText = 'نشط';
-    }
-    
-    // تحديد لون الأولوية
-    let priorityColor = '#ff6b6b';
-    if (priority === 'medium') priorityColor = '#ffa726';
-    if (priority === 'low') priorityColor = '#4db8ff';
-    
-    html += `
-      <div class="alert-item" style="border-right-color: ${priorityColor}">
-        <div class="alert-header">
-          <h3><i class="fas fa-exclamation-triangle"></i> ${title || 'تنبيه'}</h3>
-          <span class="alert-id">#${id.substring(0, 8)}</span>
-        </div>
-        
-        <div class="alert-content">
-          ${content || 'لا يوجد محتوى'}
-        </div>
-        
-        <div class="alert-meta">
-          <div class="meta-item">
-            <strong><i class="fas fa-info-circle"></i> الأولوية</strong>
-            <span style="color: ${priorityColor}">${priority === 'high' ? 'عالية' : priority === 'medium' ? 'متوسطة' : 'منخفضة'}</span>
-          </div>
-          
-          <div class="meta-item">
-            <strong><i class="fas fa-calendar-plus"></i> تاريخ الإضافة</strong>
-            <span>${formatDate(created_at)}</span>
-          </div>
-          
-          <div class="meta-item">
-            <strong><i class="fas fa-calendar-check"></i> آخر تحديث</strong>
-            <span>${formatDate(updated_at)}</span>
-          </div>
-        </div>
-        
-        <div class="${statusClass} status-badge">
-          <i class="${statusIcon}"></i> ${statusText}
-        </div>
-      </div>
-    `;
+    const alertElement = createAlertElement(alert);
+    container.appendChild(alertElement);
   });
   
-  html += '</div>';
-  list.innerHTML = html;
+  // تفريغ القائمة وإضافة الحاوية الجديدة
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+  list.appendChild(container);
 }
 
 // دالة لتحميل التنبيهات من Supabase
 async function loadAlerts() {
-  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل التنبيهات...</div>';
+  // عرض حالة التحميل باستخدام DOM API
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'loading';
+  
+  const spinner = document.createElement('i');
+  spinner.className = 'fas fa-spinner';
+  
+  const message = document.createElement('span');
+  message.textContent = ' جاري تحميل التنبيهات...';
+  
+  loadingDiv.appendChild(spinner);
+  loadingDiv.appendChild(message);
+  
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+  list.appendChild(loadingDiv);
   
   try {
     const { data: alerts, error } = await supabase
@@ -605,16 +727,47 @@ async function loadAlerts() {
     
   } catch (error) {
     console.error('❌ خطأ في تحميل التنبيهات:', error);
-    list.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-exclamation-triangle"></i>
-        <p>حدث خطأ في تحميل التنبيهات</p>
-        <p style="font-size: 14px; color: #e74c3c;">${error.message}</p>
-        <button onclick="loadAlerts()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600;">
-          <i class="fas fa-redo"></i> إعادة المحاولة
-        </button>
-      </div>
-    `;
+    
+    // عرض حالة الخطأ باستخدام DOM API
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'empty-state';
+    
+    const errorIcon = document.createElement('i');
+    errorIcon.className = 'fas fa-exclamation-triangle';
+    
+    const errorMessage = document.createElement('p');
+    errorMessage.textContent = 'حدث خطأ في تحميل التنبيهات';
+    
+    const errorDetail = document.createElement('p');
+    errorDetail.style.fontSize = '14px';
+    errorDetail.style.color = '#e74c3c';
+    errorDetail.textContent = error.message;
+    
+    const retryButton = document.createElement('button');
+    retryButton.style.marginTop = '15px';
+    retryButton.style.padding = '10px 20px';
+    retryButton.style.background = 'var(--primary)';
+    retryButton.style.border = 'none';
+    retryButton.style.borderRadius = '10px';
+    retryButton.style.color = 'white';
+    retryButton.style.cursor = 'pointer';
+    retryButton.style.fontWeight = '600';
+    retryButton.onclick = loadAlerts;
+    
+    const buttonIcon = document.createElement('i');
+    buttonIcon.className = 'fas fa-redo';
+    retryButton.appendChild(buttonIcon);
+    retryButton.appendChild(document.createTextNode(' إعادة المحاولة'));
+    
+    errorDiv.appendChild(errorIcon);
+    errorDiv.appendChild(errorMessage);
+    errorDiv.appendChild(errorDetail);
+    errorDiv.appendChild(retryButton);
+    
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+    list.appendChild(errorDiv);
   }
 }
 
@@ -637,7 +790,7 @@ async function init() {
       // تفعيل الزر المختار
       button.classList.add('active');
       
-      // تحديث الفلتر
+      // تحديث الفلتر باستخدام textContent
       currentFilter = button.dataset.filter;
       
       // تطبيق الفلتر
@@ -679,5 +832,4 @@ window.loadAlerts = loadAlerts;
 </script>
 
 </body>
-
 </html>
