@@ -5,6 +5,21 @@
 <title>قائمة المستشفيات</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- رؤوس أمان HTTP -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://esm.sh;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https:;
+  connect-src 'self' https://gxuumjhtutkipvkljjhj.supabase.co;
+  frame-ancestors 'self';
+">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
@@ -88,7 +103,7 @@
     font-weight:600;
   }
 
- .hospital-imgcircle {
+  .hospital-imgcircle {
     width: 90px;
     height: 90px;
     border-radius: 50%;
@@ -96,73 +111,195 @@
     display: block;
     margin: 0 auto 10px auto;
     border: 3px solid #009688;
- }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+  }
+
+  .error {
+    text-align: center;
+    padding: 20px;
+    color: #d32f2f;
+    background: #ffebee;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+  }
+
+  .empty-state i {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+    display: block;
+  }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-
   <a href="index.html" class="back-btn">⬅ الرئيسية</a>
-
   <h1>🏥 قائمة المستشفيات</h1>
-
-  <div id="hospitals">جار التحميل...</div>
-
+  <div id="hospitals">
+    <div class="loading">
+      <i class="fas fa-spinner fa-spin"></i> جاري تحميل المستشفيات...
+    </div>
+  </div>
 </div>
 
+<!-- إضافة Font Awesome من CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
 <script type="module">
+import { supabase } from "./supabase.js";
 
-  import { supabase } from "./supabase.js";
+// دالة لإنشاء بطاقة مستشفى
+function createHospitalCard(hospital) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  
+  // صورة المستشفى
+  const img = document.createElement('img');
+  img.className = 'hospital-imgcircle';
+  img.src = hospital.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png';
+  img.alt = hospital.name || 'صورة المستشفى';
+  img.loading = 'lazy'; // تحسين الأداء
+  
+  // اسم المستشفى
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'hospital-name';
+  nameDiv.textContent = hospital.name || 'اسم غير معروف';
+  
+  // معلومات المستشفى
+  const cityInfo = document.createElement('p');
+  cityInfo.className = 'info';
+  const cityBold = document.createElement('b');
+  cityBold.textContent = 'المدينة: ';
+  cityInfo.appendChild(cityBold);
+  cityInfo.appendChild(document.createTextNode(hospital.city || 'غير محدد'));
+  
+  const phoneInfo = document.createElement('p');
+  phoneInfo.className = 'info';
+  const phoneBold = document.createElement('b');
+  phoneBold.textContent = 'الهاتف: ';
+  phoneInfo.appendChild(phoneBold);
+  phoneInfo.appendChild(document.createTextNode(hospital.phone || 'غير محدد'));
+  
+  const deptInfo = document.createElement('p');
+  deptInfo.className = 'info';
+  const deptBold = document.createElement('b');
+  deptBold.textContent = 'الأقسام: ';
+  deptInfo.appendChild(deptBold);
+  deptInfo.appendChild(document.createTextNode(hospital.department || 'غير محدد'));
+  
+  const descInfo = document.createElement('p');
+  descInfo.className = 'info';
+  const descBold = document.createElement('b');
+  descBold.textContent = 'الوصف: ';
+  descInfo.appendChild(descBold);
+  descInfo.appendChild(document.createTextNode(hospital.description || 'لا يوجد وصف'));
+  
+  // زر عرض التفاصيل
+  const link = document.createElement('a');
+  link.className = 'btn';
+  link.href = `hospital.html?id=${hospital.id}`;
+  link.textContent = 'عرض التفاصيل';
+  
+  // تجميع العناصر
+  card.appendChild(img);
+  card.appendChild(nameDiv);
+  card.appendChild(cityInfo);
+  card.appendChild(phoneInfo);
+  card.appendChild(deptInfo);
+  card.appendChild(descInfo);
+  card.appendChild(link);
+  
+  return card;
+}
 
-  async function loadHospitals() {
-
+// دالة لتحميل المستشفيات
+async function loadHospitals() {
+  const container = document.getElementById('hospitals');
+  
+  try {
     const { data, error } = await supabase
       .from("hospitals") 
-      .select("*");
-
-    const box = document.getElementById("hospitals");
-    box.innerHTML = "";
-
+      .select("*")
+      .order('name', { ascending: true });
+    
+    // تفريغ الحاوية
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    
     if (error) {
-      box.innerHTML = `<p style='color:red;text-align:center;'>خطأ في الاتصال بقاعدة البيانات</p>`;
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error';
+      errorDiv.textContent = 'حدث خطأ في تحميل المستشفيات. يرجى المحاولة لاحقاً.';
+      container.appendChild(errorDiv);
+      console.error('خطأ Supabase:', error);
       return;
     }
-
+    
     if (!data || data.length === 0) {
-      box.innerHTML = "<p style='text-align:center;color:#777;'>لا توجد مستشفيات</p>";
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'empty-state';
+      
+      const icon = document.createElement('i');
+      icon.className = 'fas fa-hospital';
+      
+      const message = document.createElement('p');
+      message.textContent = 'لا توجد مستشفيات مسجلة حالياً';
+      
+      emptyDiv.appendChild(icon);
+      emptyDiv.appendChild(message);
+      container.appendChild(emptyDiv);
       return;
     }
-
-    data.forEach(h => {
-
-      box.innerHTML += `
-        <div class="card">
-
-          <img src="${h.img || 'https://i.postimg.cc/TPZpYH5f/noimage.png'}" 
-               class="hospital-imgcircle">
-
-          <div class="hospital-name">${h.name}</div>
-
-          <p class="info"><b>المدينة:</b> ${h.city}</p>
-          <p class="info"><b>الهاتف:</b> ${h.phone}</p>
-          <p class="info"><b>الأقسام:</b> ${h.department}</p>
-          <p class="info"><b>الوصف:</b> ${h.description}</p>
-
-          
-
-          <a class="btn" href="hospital.html?id=${h.id}">
-            عرض التفاصيل
-          </a>
-
-        </div>
-      `;
+    
+    // إضافة كل مستشفى
+    data.forEach(hospital => {
+      const card = createHospitalCard(hospital);
+      container.appendChild(card);
     });
+    
+  } catch (err) {
+    console.error('خطأ غير متوقع:', err);
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error';
+    errorDiv.textContent = 'حدث خطأ غير متوقع. يرجى تحديث الصفحة.';
+    
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    container.appendChild(errorDiv);
   }
+}
 
+// تهيئة الصفحة
+document.addEventListener('DOMContentLoaded', () => {
   loadHospitals();
+  
+  // تحديث تلقائي كل دقيقة (اختياري)
+  setInterval(() => {
+    loadHospitals();
+  }, 60000);
+});
 
+// دالة إضافية: البحث في المستشفيات (إذا أردت إضافة بحث لاحقاً)
+function setupSearch() {
+  // يمكن إضافة شريط بحث هنا لاحقاً
+  console.log('إعداد البحث - جاهز للإضافة');
+}
 </script>
 
 </body>
