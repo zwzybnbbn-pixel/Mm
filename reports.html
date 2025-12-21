@@ -20,8 +20,6 @@
   block-all-mixed-content;
 ">
 
-
-
 <title>📝 نظام إبلاغ انقطاع الكهرباء</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -84,6 +82,15 @@ body {
 }
 
 /* ===== العنوان ===== */
+.title {
+  text-align: center;
+  margin: 20px 0 30px;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  padding-bottom: 15px;
+}
 
 .title::after {
   content: '';
@@ -570,10 +577,18 @@ const progressFill = document.getElementById('progressFill');
 function showAlert(message, type = 'success') {
   const alertDiv = document.createElement('div');
   alertDiv.className = `alert ${type}`;
-  alertDiv.innerHTML = `
-    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'}"></i>
-    ${message}
-  `;
+  
+  // استخدام textContent للنص الآمن
+  const icon = document.createElement('i');
+  icon.className = `fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'}`;
+  
+  // إنشاء نص الرسالة
+  const textNode = document.createTextNode(' ' + message);
+  
+  // تجميع العناصر
+  alertDiv.appendChild(icon);
+  alertDiv.appendChild(textNode);
+  
   alertContainer.appendChild(alertDiv);
   
   setTimeout(() => {
@@ -670,6 +685,148 @@ async function canSubmitReport(ip) {
   }
 }
 
+// دالة لإنشاء عنصر بلاغ
+function createReportElement(report) {
+  const date = formatDate(report.created_at);
+  
+  // تحديد لون الحالة
+  let statusClass = 'status-pending';
+  let statusIcon = 'fas fa-clock';
+  
+  if (report.status === 'جارِ الحل') {
+    statusClass = 'status-progress';
+    statusIcon = 'fas fa-tools';
+  } else if (report.status === 'تم الحل') {
+    statusClass = 'status-solved';
+    statusIcon = 'fas fa-check-circle';
+  }
+  
+  // إنشاء العنصر الرئيسي
+  const reportItem = document.createElement('div');
+  reportItem.className = 'report-item';
+  reportItem.id = `report-${report.id}`;
+  
+  // إنشاء قسم الميتاداتا
+  const reportMeta = document.createElement('div');
+  reportMeta.className = 'report-meta';
+  
+  // المرسل
+  const senderItem = document.createElement('div');
+  senderItem.className = 'meta-item';
+  const senderLabel = document.createElement('strong');
+  const senderIcon = document.createElement('i');
+  senderIcon.className = 'fas fa-user';
+  senderLabel.appendChild(senderIcon);
+  senderLabel.appendChild(document.createTextNode(' المرسل'));
+  const senderValue = document.createElement('span');
+  senderValue.textContent = report.name || 'غير مذكور';
+  senderItem.appendChild(senderLabel);
+  senderItem.appendChild(senderValue);
+  
+  // النوع
+  const typeItem = document.createElement('div');
+  typeItem.className = 'meta-item';
+  const typeLabel = document.createElement('strong');
+  const typeIcon = document.createElement('i');
+  typeIcon.className = 'fas fa-bolt';
+  typeLabel.appendChild(typeIcon);
+  typeLabel.appendChild(document.createTextNode(' النوع'));
+  const typeValue = document.createElement('span');
+  typeValue.textContent = report.type || 'غير محدد';
+  typeItem.appendChild(typeLabel);
+  typeItem.appendChild(typeValue);
+  
+  // الموقع
+  const locationItem = document.createElement('div');
+  locationItem.className = 'meta-item';
+  const locationLabel = document.createElement('strong');
+  const locationIcon = document.createElement('i');
+  locationIcon.className = 'fas fa-map-marker-alt';
+  locationLabel.appendChild(locationIcon);
+  locationLabel.appendChild(document.createTextNode(' الموقع'));
+  const locationValue = document.createElement('span');
+  locationValue.textContent = report.location || 'غير محدد';
+  locationItem.appendChild(locationLabel);
+  locationItem.appendChild(locationValue);
+  
+  // الهاتف
+  const phoneItem = document.createElement('div');
+  phoneItem.className = 'meta-item';
+  const phoneLabel = document.createElement('strong');
+  const phoneIcon = document.createElement('i');
+  phoneIcon.className = 'fas fa-phone';
+  phoneLabel.appendChild(phoneIcon);
+  phoneLabel.appendChild(document.createTextNode(' الهاتف'));
+  const phoneValue = document.createElement('span');
+  phoneValue.textContent = report.phone || 'غير مذكور';
+  phoneItem.appendChild(phoneLabel);
+  phoneItem.appendChild(phoneValue);
+  
+  // إضافة العناصر إلى الميتاداتا
+  reportMeta.appendChild(senderItem);
+  reportMeta.appendChild(typeItem);
+  reportMeta.appendChild(locationItem);
+  reportMeta.appendChild(phoneItem);
+  
+  // التفاصيل
+  const detailsItem = document.createElement('div');
+  detailsItem.className = 'meta-item';
+  detailsItem.style.gridColumn = '1 / -1';
+  const detailsLabel = document.createElement('strong');
+  const detailsIcon = document.createElement('i');
+  detailsIcon.className = 'fas fa-info-circle';
+  detailsLabel.appendChild(detailsIcon);
+  detailsLabel.appendChild(document.createTextNode(' التفاصيل'));
+  const detailsValue = document.createElement('span');
+  detailsValue.textContent = report.details || 'لا توجد تفاصيل';
+  detailsItem.appendChild(detailsLabel);
+  detailsItem.appendChild(detailsValue);
+  
+  // حالة البلاغ
+  const statusBadge = document.createElement('div');
+  statusBadge.className = `${statusClass} status-badge`;
+  const statusIconEl = document.createElement('i');
+  statusIconEl.className = statusIcon;
+  statusBadge.appendChild(statusIconEl);
+  statusBadge.appendChild(document.createTextNode(' ' + (report.status || 'قيد المراجعة')));
+  
+  // تجميع العناصر
+  reportItem.appendChild(reportMeta);
+  reportItem.appendChild(detailsItem);
+  reportItem.appendChild(statusBadge);
+  
+  // إضافة رد الإدارة إذا كان موجوداً
+  if (report.reply) {
+    const replyBox = document.createElement('div');
+    replyBox.className = 'reply-box';
+    
+    const replyLabel = document.createElement('strong');
+    const replyIcon = document.createElement('i');
+    replyIcon.className = 'fas fa-reply';
+    replyLabel.appendChild(replyIcon);
+    replyLabel.appendChild(document.createTextNode(' رد الإدارة'));
+    
+    const replyText = document.createElement('p');
+    replyText.textContent = report.reply;
+    
+    replyBox.appendChild(replyLabel);
+    replyBox.appendChild(replyText);
+    reportItem.appendChild(replyBox);
+  }
+  
+  // التاريخ
+  const reportDate = document.createElement('div');
+  reportDate.className = 'report-date';
+  const dateIcon = document.createElement('i');
+  dateIcon.className = 'far fa-clock';
+  reportDate.appendChild(dateIcon);
+  reportDate.appendChild(document.createTextNode(' ' + date));
+  
+  reportItem.appendChild(reportDate);
+  
+  return reportItem;
+}
+
 // =========================
 // 📝 إرسال بلاغ جديد
 // =========================
@@ -707,7 +864,13 @@ form.addEventListener('submit', async (e) => {
   
   // تعطيل الزر وعرض التقدم
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+  
+  // استخدام textContent بدلاً من innerHTML
+  const spinner = document.createElement('i');
+  spinner.className = 'fas fa-spinner fa-spin';
+  submitBtn.innerHTML = '';
+  submitBtn.appendChild(spinner);
+  submitBtn.appendChild(document.createTextNode(' جاري الإرسال...'));
   
   // عرض شريط التقدم
   let progress = 0;
@@ -753,7 +916,12 @@ form.addEventListener('submit', async (e) => {
     // إعادة تعيين الزر وشريط التقدم
     setTimeout(() => {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال البلاغ';
+      submitBtn.innerHTML = '';
+      const planeIcon = document.createElement('i');
+      planeIcon.className = 'fas fa-paper-plane';
+      submitBtn.appendChild(planeIcon);
+      submitBtn.appendChild(document.createTextNode(' إرسال البلاغ'));
+      
       progressFill.style.width = '0%';
       clearInterval(progressInterval);
     }, 1500);
@@ -764,7 +932,24 @@ form.addEventListener('submit', async (e) => {
 // 📋 تحميل وعرض البلاغات
 // =========================
 async function loadReports() {
-  list.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البلاغات...</div>';
+  // استخدام DOM API لإنشاء حالة التحميل
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+  
+  const loadingDiv = document.createElement('div');
+  loadingDiv.style.textAlign = 'center';
+  loadingDiv.style.padding = '20px';
+  
+  const spinner = document.createElement('i');
+  spinner.className = 'fas fa-spinner fa-spin';
+  
+  const loadingText = document.createElement('span');
+  loadingText.textContent = ' جاري تحميل البلاغات...';
+  
+  loadingDiv.appendChild(spinner);
+  loadingDiv.appendChild(loadingText);
+  list.appendChild(loadingDiv);
   
   try {
     const { data: reports, error } = await supabase
@@ -775,89 +960,59 @@ async function loadReports() {
     
     if (error) throw error;
     
-    // تحديث العداد
+    // تحديث العداد باستخدام textContent
     reportsCount.textContent = `${reports?.length || 0} بلاغ`;
     
     if (!reports || reports.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <i class="far fa-folder-open"></i>
-          <p>لا توجد بلاغات مسجلة</p>
-          <p style="font-size: 14px; color: #666;">كن أول من يبلغ عن مشكلة</p>
-        </div>
-      `;
+      while (list.firstChild) {
+        list.removeChild(list.firstChild);
+      }
+      
+      const emptyState = document.createElement('div');
+      emptyState.className = 'empty-state';
+      
+      const folderIcon = document.createElement('i');
+      folderIcon.className = 'far fa-folder-open';
+      
+      const message1 = document.createElement('p');
+      message1.textContent = 'لا توجد بلاغات مسجلة';
+      
+      const message2 = document.createElement('p');
+      message2.style.fontSize = '14px';
+      message2.style.color = '#666';
+      message2.textContent = 'كن أول من يبلغ عن مشكلة';
+      
+      emptyState.appendChild(folderIcon);
+      emptyState.appendChild(message1);
+      emptyState.appendChild(message2);
+      
+      list.appendChild(emptyState);
       return;
     }
     
-    let html = '';
+    // إنشاء حاوية للبلاغات
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
     
+    // إضافة كل بلاغ باستخدام DOM API
     reports.forEach(report => {
-      const date = formatDate(report.created_at);
-      
-      // تحديد لون الحالة
-      let statusClass = 'status-pending';
-      let statusIcon = 'fas fa-clock';
-      
-      if (report.status === 'جارِ الحل') {
-        statusClass = 'status-progress';
-        statusIcon = 'fas fa-tools';
-      } else if (report.status === 'تم الحل') {
-        statusClass = 'status-solved';
-        statusIcon = 'fas fa-check-circle';
-      }
-      
-      html += `
-        <div class="report-item" id="report-${report.id}">
-          <div class="report-meta">
-            <div class="meta-item">
-              <strong><i class="fas fa-user"></i> المرسل</strong>
-              <span>${report.name || 'غير مذكور'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-bolt"></i> النوع</strong>
-              <span>${report.type || 'غير محدد'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-map-marker-alt"></i> الموقع</strong>
-              <span>${report.location || 'غير محدد'}</span>
-            </div>
-            
-            <div class="meta-item">
-              <strong><i class="fas fa-phone"></i> الهاتف</strong>
-              <span>${report.phone || 'غير مذكور'}</span>
-            </div>
-          </div>
-          
-          <div class="meta-item" style="grid-column: 1 / -1;">
-            <strong><i class="fas fa-info-circle"></i> التفاصيل</strong>
-            <span>${report.details || 'لا توجد تفاصيل'}</span>
-          </div>
-          
-          <div class="${statusClass} status-badge">
-            <i class="${statusIcon}"></i> ${report.status || 'قيد المراجعة'}
-          </div>
-          
-          ${report.reply ? `
-            <div class="reply-box">
-              <strong><i class="fas fa-reply"></i> رد الإدارة</strong>
-              <p>${report.reply}</p>
-            </div>
-          ` : ''}
-          
-          <div class="report-date">
-            <i class="far fa-clock"></i> ${date}
-          </div>
-        </div>
-      `;
+      const reportElement = createReportElement(report);
+      list.appendChild(reportElement);
     });
-    
-    list.innerHTML = html;
     
   } catch (error) {
     console.error('خطأ في تحميل البلاغات:', error);
-    list.innerHTML = '<div class="alert error">❌ حدث خطأ في تحميل البلاغات</div>';
+    
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'alert error';
+    errorDiv.textContent = '❌ حدث خطأ في تحميل البلاغات';
+    
+    list.appendChild(errorDiv);
   }
 }
 
@@ -895,6 +1050,4 @@ init();
 </script>
 
 </body>
-</html>  
-
-
+</html>
