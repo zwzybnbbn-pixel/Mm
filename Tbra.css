@@ -1,0 +1,349 @@
+
+    :root {
+      --primary-red: #be123c; /* أحمر ملكي */
+      --dark-red: #881337;
+      --gold: #fbbf24;
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -7px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: var(--transition);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: radial-gradient(circle at top left, #fff1f2 0%, #f1f5f9 100%);
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* هيدر بتصميم زجاجي وانسيابي */
+    header {
+      background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      border-bottom-left-radius: 50% 20px;
+      border-bottom-right-radius: 50% 20px;
+      box-shadow: 0 15px 35px rgba(190, 18, 60, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate { 100% { transform: rotate(360deg); } }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-top: 10px;
+      font-weight: 300;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: -40px auto 40px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: var(--card-shadow);
+    }
+
+    h2 {
+      color: var(--dark-red);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--primary-red);
+      border-radius: 10px;
+    }
+
+    /* أزرار التبديل الفخمة */
+    .switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      background: #f1f5f9;
+      padding: 8px;
+      border-radius: 16px;
+      margin-bottom: 25px;
+    }
+
+    .switch button {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: #64748b;
+    }
+
+    .switch button.active {
+      background: white;
+      color: var(--primary-red);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+/* حاوية زر الاتصال الفخم */
+.call-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #ff2d55 0%, #d91b41 100%); /* أحمر نابض */
+    color: #ffffff !important;
+    padding: 16px 24px;
+    border-radius: 18px;
+    font-weight: 800;
+    font-size: 17px;
+    box-shadow: 0 10px 20px rgba(255, 45, 85, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* تأثير اللمعان عند التمرير */
+.call-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: 0.6s;
+}
+
+.call-btn:hover::before {
+    left: 100%;
+}
+
+/* حركة الزر عند التفاعل */
+.call-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(255, 45, 85, 0.5);
+    filter: brightness(1.1);
+}
+
+.call-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* أيقونة الهاتف مع حركة نبض */
+.call-icon {
+    font-size: 20px;
+    animation: phone-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes phone-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* نص فرعي صغير داخل الزر (اختياري) */
+.call-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.call-text span:first-child {
+    font-size: 11px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    font-weight: 400;
+    margin-bottom: 2px;
+}
+
+    /* المدخلات والقوائم */
+    select, input {
+      padding: 15px 20px;
+      width: 100%;
+      margin-bottom: 15px;
+      border-radius: 14px;
+      border: 2px solid #f1f5f9;
+      font-size: 15px;
+      font-family: inherit;
+      background: #f8fafc;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(190, 18, 60, 0.1);
+    }
+
+    /* الأزرار الرئيسية */
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+      color: white;
+      border: none;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(190, 18, 60, 0.2);
+      width: 100%;
+    }
+    /* تنسيق الزر الفخم داخل الكارت */
+.call-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #ff2d55 0%, #d91b41 100%);
+    color: white !important;
+    padding: 14px;
+    border-radius: 18px;
+    margin-top: 10px;
+    box-shadow: 0 8px 20px rgba(255, 45, 85, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.call-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 25px rgba(255, 45, 85, 0.4);
+}
+
+.call-icon {
+    font-size: 22px;
+    animation: pulse 1.5s infinite;
+}
+
+.call-text {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    line-height: 1.3;
+}
+
+.call-text span:first-child {
+    font-size: 11px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px rgba(190, 18, 60, 0.3);
+    }
+
+    /* الكروت */
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .blood-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #fff1f2;
+      color: var(--primary-red);
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-weight: 800;
+      border: 1px solid #fecdd3;
+    }
+
+    .card-name { font-weight: 700; font-size: 18px; color: #0f172a; }
+    .card-info { font-size: 14px; color: #64748b; display: flex; align-items: center; gap: 5px; }
+
+    footer {
+      padding: 40px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* تحسينات الـ Responsive */
+    @media (min-width: 768px) {
+      header { padding: 80px 20px; }
+      header h1 { font-size: 42px; }
+      #posts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .full-width { grid-column: span 2; }
+    }
+  

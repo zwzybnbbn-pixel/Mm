@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة التبرع بالدم | إنقاذ حياة</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Tbra.css"></head>
+
+<body>
+
+<header>
+  <h1>🩸 نُبض الحياة</h1>
+  <p>منصة رقمية فاخرة تربط بين المتبرعين ومحتاجي الدم بكل سلاسة</p>
+</header>
+
+<main>
+
+  <section>
+    <h2>استكشاف القائمة</h2>
+    
+    <div class="switch">
+      <button id="showDonations" class="active">أبطال تبرعوا</button>
+      <button id="showRequests">طلبات</button>
+    </div>
+
+    <select id="bloodFilter">
+      <option value="">تصفية حسب الفصيلة (الكل)</option>
+      <option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option>
+      <option>O+</option><option>O-</option>
+      <option>AB+</option><option>AB-</option>
+    </select>
+
+    <div id="posts">
+      <div class="card">
+        <div class="blood-badge">A+</div>
+        <div class="card-name">أحمد محمد علي</div>
+        <div class="card-info">📍 مدينة الرياض</div>
+        <div class="card-info">📞 777000000</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>إضافة طلب جديد</h2>
+    <form id="postForm">
+      <div class="form-grid">
+        <select id="type" required>
+          <option value="">نوع الحالة</option>
+          <option value="donation">أنا متبرع</option>
+          <option value="request">أحتاج متبرع</option>
+        </select>
+
+        <select id="bloodType" required>
+          <option value="">فصيلة الدم</option>
+          <option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option>
+          <option>AB+</option><option>AB-</option>
+        </select>
+
+        <input id="name" placeholder="الاسم الكامل" required>
+        <input id="city" placeholder="المدينة" required>
+        
+        <div class="full-width">
+          <input id="phone" placeholder="رقم الجوال (مثال: 777123456)" pattern="^7[0-9]{8}$" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">نشر الحالة الآن</button>
+    </form>
+    <div id="msg" class="msg"></div>
+  </section>
+
+</main>
+
+<footer>
+  تصميم بكل ❤️ لخدمة الإنسانية &copy; 2024
+</footer>
+
+<script type="module" src="Tbra.js"></script>
+</body>
+</html>
