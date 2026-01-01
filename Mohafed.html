@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أعمال المحافظ | لوحة الإنجازات</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2e5bff;
+            --primary-dark: #1e4bdf;
+            --secondary: #00d4aa;
+            --accent: #ff6b6b;
+            --dark: #1a1f36;
+            --light: #f7fafc;
+            --gray: #a0aec0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 0 80px;
+            margin-bottom: -40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: translate(-30%, 30%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--dark);
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 5px;
+            width: 4px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-image {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .project-description {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .project-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+
+        .status-in-progress {
+            background: rgba(237, 137, 54, 0.1);
+            color: var(--warning);
+        }
+
+        .status-planned {
+            background: rgba(160, 174, 192, 0.1);
+            color: var(--gray);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 30px;
+            color: #4a5568;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 32px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content h1 {
+                font-size: 28px;
+            }
+            
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>أعمال وإنجازات المحافظ</h1>
+                <p>نظرة شاملة على المشاريع والإحصائيات والانجازات التي تحققت على أرض الواقع</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stats-grid" id="statsContainer">
+                <!-- سيتم ملؤها ديناميكياً -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>جاري تحميل الإحصائيات...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="projects-section">
+            <div class="section-header">
+                <h2 class="section-title">المشاريع المنفذة</h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">الكل</button>
+                    <button class="filter-btn" data-filter="تحت التنفيذ">تحت التنفيذ</button>
+                    <button class="filter-btn" data-filter="مكتمل">مكتمل</button>
+                    <button class="filter-btn" data-filter="مخطط له">مخطط له</button>
+                </div>
+            </div>
+
+            <div class="projects-grid" id="projectsContainer">
+                <!-- سيتم ملؤها ديناميكياً -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>جاري تحميل المشاريع...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // متغيرات التطبيق
+        let allProjects = [];
+        let allStats = [];
+        let currentFilter = 'all';
+        const SUPABASE_URL = 'https://gxuumjhtutkipvkljjhj.supabase.co'
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI';
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+            setupEventListeners();
+        });
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // فلترة المشاريع
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // إزالة النشاط من جميع الأزرار
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    // إضافة النشاط للزر المضغوط
+                    btn.classList.add('active');
+                    // تطبيق الفلتر
+                    currentFilter = btn.dataset.filter;
+                    filterProjects(currentFilter);
+                });
+            });
+        }
+
+        // تهيئة التطبيق
+        async function initializeApp() {
+            await loadStats();
+            await loadProjects();
+        }
+
+        // تحميل الإحصائيات من Supabase
+        async function loadStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            
+            try {
+                // استعلام REST API بدلاً من استخدام SDK
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/stats?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                allStats = data;
+                renderStats(data);
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                // عرض بيانات تجريبية في حالة الخطأ
+                const sampleStats = [
+                    { id: 1, label: 'المشاريع المنفذة', value: 24 },
+                    { id: 2, label: 'الميزانية الإجمالية', value: 85000000 },
+                    { id: 3, label: 'عدد المستفيدين', value: 8500 },
+                    { id: 4, label: 'معدل الإنجاز', value: 76 }
+                ];
+                allStats = sampleStats;
+                renderStats(sampleStats);
+                
+                statsContainer.innerHTML += `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>تم تحميل بيانات تجريبية</p>
+                    </div>
+                `;
+            }
+        }
+
+        // عرض الإحصائيات
+        function renderStats(stats) {
+            const statsContainer = document.getElementById('statsContainer');
+            
+            if (!stats || stats.length === 0) {
+                statsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>لا توجد إحصائيات متاحة حالياً</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            // أيقونات لكل نوع من الإحصائيات
+            const iconMap = {
+                'المشاريع المنفذة': 'fas fa-project-diagram',
+                'الميزانية الإجمالية': 'fas fa-money-bill-wave',
+                'عدد المستفيدين': 'fas fa-users',
+                'المناطق المستهدفة': 'fas fa-map-marker-alt',
+                'المقاولين': 'fas fa-hard-hat',
+                'معدل الإنجاز': 'fas fa-chart-line',
+                'التكلفة': 'fas fa-coins',
+                'الوقت': 'fas fa-clock'
+            };
+
+            const statsHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="${iconMap[stat.label] || 'fas fa-chart-bar'}"></i>
+                    </div>
+                    <div class="stat-value">${formatStatValue(stat.value, stat.label)}</div>
+                    <div class="stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+
+            statsContainer.innerHTML = statsHTML;
+        }
+
+        // تنسيق قيمة الإحصائية
+        function formatStatValue(value, label) {
+            if (label.includes('الميزانية') || label.includes('التكلفة')) {
+                return new Intl.NumberFormat('ar-SA').format(value) + ' ريال';
+            } else if (label.includes('معدل')) {
+                return value + '%';
+            }
+            return new Intl.NumberFormat('ar-SA').format(value);
+        }
+
+        // تحميل المشاريع من Supabase
+        async function loadProjects() {
+            const projectsContainer = document.getElementById('projectsContainer');
+            
+            try {
+                // استعلام REST API بدلاً من استخدام SDK
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/projects?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                allProjects = data;
+                renderProjects(data);
+
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                // عرض بيانات تجريبية في حالة الخطأ
+                const sampleProjects = [
+                    { 
+                        id: 1, 
+                        title: 'مشروع تطوير البنية التحتية', 
+                        description: 'تحسين شبكات الطرق والمرافق الأساسية في المنطقة الصناعية', 
+                        status: 'مكتمل',
+                        image_url: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5'
+                    },
+                    { 
+                        id: 2, 
+                        title: 'برنامج الدعم الاجتماعي', 
+                        description: 'تقديم مساعدات مالية للأسر المحتاجة وتحسين مستوى المعيشة', 
+                        status: 'تحت التنفيذ',
+                        image_url: 'https://images.unsplash.com/photo-1577896851231-70ef18881754'
+                    },
+                    { 
+                        id: 3, 
+                        title: 'مبادرة التعليم الرقمي', 
+                        description: 'توفير أجهزة وتدريب للطلاب على التقنيات الحديثة', 
+                        status: 'مخطط له',
+                        image_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1'
+                    }
+                ];
+                allProjects = sampleProjects;
+                renderProjects(sampleProjects);
+            }
+        }
+
+        // عرض المشاريع
+        function renderProjects(projects) {
+            const projectsContainer = document.getElementById('projectsContainer');
+            
+            if (!projects || projects.length === 0) {
+                projectsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>لا توجد مشاريع متاحة حالياً</h3>
+                        <p>سيتم إضافة المشاريع قريباً</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const projectsHTML = projects.map(project => `
+                <div class="project-card" data-status="${project.status}">
+                    <div class="project-image">
+                        <img src="${getProjectImage(project.image_url)}" 
+                             alt="${project.title}"
+                             onerror="this.src='https://images.unsplash.com/photo-1541888946425-d81bb19240f5'">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">${project.description || 'لا يوجد وصف متاح لهذا المشروع حالياً.'}</p>
+                        <div class="project-footer">
+                            <div class="project-status ${getStatusClass(project.status)}">
+                                ${project.status}
+                            </div>
+                            <button class="view-details" onclick="viewProjectDetails(${project.id})" style="
+                                background: none;
+                                border: none;
+                                color: var(--primary);
+                                font-weight: 500;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                            ">
+                                <i class="fas fa-arrow-left"></i>
+                                التفاصيل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            projectsContainer.innerHTML = projectsHTML;
+        }
+
+        // الحصول على صورة المشروع
+        function getProjectImage(imageUrl) {
+            if (!imageUrl || imageUrl.trim() === '') {
+                return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5';
+            }
+            return imageUrl;
+        }
+
+        // فلترة المشاريع
+        function filterProjects(filter) {
+            let filteredProjects;
+            
+            if (filter === 'all') {
+                filteredProjects = allProjects;
+            } else {
+                filteredProjects = allProjects.filter(project => project.status === filter);
+            }
+            
+            renderProjects(filteredProjects);
+        }
+
+        // الحصول على كلاس حالة المشروع
+        function getStatusClass(status) {
+            const statusMap = {
+                'مكتمل': 'status-completed',
+                'تحت التنفيذ': 'status-in-progress',
+                'مخطط له': 'status-planned'
+            };
+            return statusMap[status] || 'status-planned';
+        }
+
+        // عرض تفاصيل المشروع
+        function viewProjectDetails(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (project) {
+                alert(`تفاصيل المشروع:\n\nالعنوان: ${project.title}\n\nالوصف: ${project.description || 'لا يوجد وصف'}\n\nالحالة: ${project.status}`);
+            }
+        }
+
+        // تحديث البيانات تلقائياً كل دقيقة
+        setInterval(async () => {
+            await loadStats();
+            await loadProjects();
+        }, 60000);
+    </script>
+</body>
+</html>
