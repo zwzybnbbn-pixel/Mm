@@ -2,34 +2,103 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تفاصيل القرار الرسمي</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #1a5f7a; --bg: #f4f7fa; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .details-card {
-            max-width: 800px; margin: 40px auto; background: white;
-            padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 15px; /* تقليل الحواف في الجوال */
         }
-        .header-meta { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        .decision-title { color: var(--primary); font-size: 28px; margin: 0; }
-        .date { color: #888; font-size: 14px; }
-        .content { line-height: 1.8; font-size: 18px; color: #444; white-space: pre-wrap; }
-        .back-btn { display: inline-block; margin-top: 30px; text-decoration: none; color: var(--primary); font-weight: bold; }
+
+        .details-card {
+            max-width: 800px; 
+            margin: 20px auto; /* تقليل الهامش العلوي */
+            background: white;
+            padding: 25px; /* تقليل الحشوة الداخلية لتناسب الشاشات الصغيرة */
+            border-radius: 15px; /* زوايا أنعم قليلاً */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            word-wrap: break-word; /* منع خروج النص الطويل عن الشاشة */
+        }
+
+        .header-meta { 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 15px; 
+            margin-bottom: 20px; 
+        }
+
+        .decision-title { 
+            color: var(--primary); 
+            font-size: 22px; /* تصغير العنوان قليلاً ليناسب عرض الجوال */
+            margin: 0 0 10px 0; 
+            line-height: 1.4;
+        }
+
+        .date { 
+            color: #888; 
+            font-size: 13px; 
+            display: block;
+        }
+
+        .content { 
+            line-height: 1.8; 
+            font-size: 16px; /* حجم خط مريح للقراءة من الهاتف */
+            color: #444; 
+            white-space: pre-wrap; 
+        }
+
+        /* زر التحميل بشكل واضح وسهل اللمس */
+        .download-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            padding: 15px;
+            background: #fff5f5;
+            color: #e53e3e;
+            text-decoration: none;
+            border-radius: 10px;
+            border: 1px dashed #e53e3e;
+            font-weight: bold;
+        }
+
+        .back-btn { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px; 
+            text-decoration: none; 
+            color: var(--primary); 
+            font-weight: bold; 
+            padding: 10px 0;
+        }
+
+        /* تعديلات مخصصة للشاشات الكبيرة (الكمبيوتر) */
+        @media (min-width: 768px) {
+            body { padding: 40px; }
+            .details-card { padding: 40px; }
+            .decision-title { font-size: 28px; }
+            .content { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="details-card" id="detailsBox">
-        <p style="text-align:center">جاري تحميل تفاصيل القرار...</p>
+        <p style="text-align:center">
+            <i class="fas fa-spinner fa-spin"></i> جاري تحميل تفاصيل القرار...
+        </p>
     </div>
 
     <script type="module">
         import { supabase } from './supabase.js';
 
         async function loadDetails() {
-            // الحصول على ID من الرابط (مثال: ?id=5)
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
 
@@ -50,11 +119,24 @@
                     <div class="content">
                         ${data.content || 'لا يوجد نص متاح لهذا القرار حالياً.'}
                     </div>
-                    ${data.file_url ? `<a href="${data.file_url}" target="_blank" style="display:block; margin-top:20px; color:#e53e3e;">تحميل المرفق الرسمي (PDF)</a>` : ''}
-                    <a href="education.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لقائمة القرارات</a>
+                    ${data.file_url ? `
+                        <a href="${data.file_url}" target="_blank" class="download-link">
+                            <i class="fas fa-file-pdf"></i>
+                            تحميل المرفق الرسمي (PDF)
+                        </a>
+                    ` : ''}
+                    <a href="education.html" class="back-btn">
+                        <i class="fas fa-arrow-right"></i> العودة لقائمة القرارات
+                    </a>
                 `;
             } else {
-                document.getElementById('detailsBox').innerHTML = "القرار غير موجود.";
+                document.getElementById('detailsBox').innerHTML = `
+                    <div style="text-align:center; padding: 20px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ccc;"></i>
+                        <p>القرار غير موجود أو تم حذفه.</p>
+                        <a href="education.html" class="back-btn">العودة للرئيسية</a>
+                    </div>
+                `;
             }
         }
 
@@ -62,3 +144,4 @@
     </script>
 </body>
 </html>
+
