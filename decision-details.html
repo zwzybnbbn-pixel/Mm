@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تفاصيل القرار الرسمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #1a5f7a; --bg: #f4f7fa; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .details-card {
+            max-width: 800px; margin: 40px auto; background: white;
+            padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .header-meta { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+        .decision-title { color: var(--primary); font-size: 28px; margin: 0; }
+        .date { color: #888; font-size: 14px; }
+        .content { line-height: 1.8; font-size: 18px; color: #444; white-space: pre-wrap; }
+        .back-btn { display: inline-block; margin-top: 30px; text-decoration: none; color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="details-card" id="detailsBox">
+        <p style="text-align:center">جاري تحميل تفاصيل القرار...</p>
+    </div>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+
+        async function loadDetails() {
+            // الحصول على ID من الرابط (مثال: ?id=5)
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (!id) { window.location.href = 'education.html'; return; }
+
+            const { data, error } = await supabase
+                .from('decisions')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (data) {
+                document.getElementById('detailsBox').innerHTML = `
+                    <div class="header-meta">
+                        <h1 class="decision-title">${data.title}</h1>
+                        <span class="date"><i class="far fa-calendar-alt"></i> نشر في: ${new Date(data.created_at).toLocaleDateString('ar-SA')}</span>
+                    </div>
+                    <div class="content">
+                        ${data.content || 'لا يوجد نص متاح لهذا القرار حالياً.'}
+                    </div>
+                    ${data.file_url ? `<a href="${data.file_url}" target="_blank" style="display:block; margin-top:20px; color:#e53e3e;">تحميل المرفق الرسمي (PDF)</a>` : ''}
+                    <a href="education.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لقائمة القرارات</a>
+                `;
+            } else {
+                document.getElementById('detailsBox').innerHTML = "القرار غير موجود.";
+            }
+        }
+
+        loadDetails();
+    </script>
+</body>
+</html>

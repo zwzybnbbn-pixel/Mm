@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة قطاع التعليم | الداشبورد</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root { --primary: #1a5f7a; --danger: #e53e3e; --bg: #f0f2f5; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; }
+        
+        /* شاشة الدخول */
+        #loginSection { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+
+        /* لوحة التحكم */
+        #dashboardSection { display: none; padding: 20px; max-width: 1000px; margin: 0 auto; }
+        header { background: var(--primary); color: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        
+        .admin-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h3 { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; }
+        
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        button { cursor: pointer; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        .btn-add { background: var(--primary); color: white; width: 100%; }
+        .btn-logout { background: transparent; border: 1px solid white; color: white; }
+        
+        .data-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-del { background: #fee2e2; color: var(--danger); padding: 5px 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <section id="loginSection">
+        <div class="login-card">
+            <i class="fas fa-user-shield fa-3x" style="color: var(--primary); margin-bottom: 15px;"></i>
+            <h2>إدارة التعليم</h2>
+            <input type="email" id="email" placeholder="البريد الإلكتروني">
+            <input type="password" id="password" placeholder="كلمة المرور">
+            <button class="btn-add" onclick="handleLogin()">دخول</button>
+        </div>
+    </section>
+
+    <section id="dashboardSection">
+        <header>
+            <div>
+                <h2 style="margin:0">لوحة إدارة التربية والتعليم</h2>
+                <small id="userMail"></small>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">خروج</button>
+        </header>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-bullhorn"></i> إضافة خبر عاجل</h3>
+            <input type="text" id="urgent_content" placeholder="اكتب نص الخبر العاجل هنا...">
+            <button class="btn-add" onclick="saveUrgent()">نشر الخبر</button>
+            <div id="urgentList" style="margin-top:15px;"></div>
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-file-signature"></i> إضافة قرار جديد</h3>
+            <input type="text" id="dec_title" placeholder="عنوان القرار (مثال: تقديم موعد الامتحانات)">
+            <textarea id="dec_content" rows="4" placeholder="اكتب نص القرار الكامل والتفاصيل هنا..."></textarea>
+            <input type="text" id="dec_url" placeholder="رابط مرفق PDF (اختياري)">
+            <button class="btn-add" onclick="saveDecision()">نشر القرار والتفاصيل</button>
+            <div id="decisionsList" style="margin-top:15px;"></div>
+        </div>
+    </section>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+
+        // ربط الدوال بـ window
+        window.handleLogin = handleLogin;
+        window.handleLogout = handleLogout;
+        window.saveUrgent = saveUrgent;
+        window.saveDecision = saveDecision;
+        window.deleteItem = deleteItem;
+
+        // التحقق من الجلسة
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                showDashboard(session.user.email);
+            }
+        });
+
+        function showDashboard(email) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            document.getElementById('userMail').innerText = "المدير: " + email;
+            loadData();
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("خطأ: " + error.message); else location.reload();
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+
+        async function loadData() {
+            // تحميل الأخبار
+            const { data: news } = await supabase.from('urgent_news').select('*').order('created_at', {ascending: false});
+            document.getElementById('urgentList').innerHTML = news.map(n => `
+                <div class="data-item">
+                    <span>${n.content}</span>
+                    <button class="btn-del" onclick="deleteItem('urgent_news', '${n.id}')">حذف</button>
+                </div>
+            `).join('');
+
+            // تحميل القرارات
+            const { data: decs } = await supabase.from('decisions').select('*').order('created_at', {ascending: false});
+            document.getElementById('decisionsList').innerHTML = decs.map(d => `
+                <div class="data-item">
+                    <span>${d.title}</span>
+                    <button class="btn-del" onclick="deleteItem('decisions', '${d.id}')">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        async function saveUrgent() {
+            const content = document.getElementById('urgent_content').value;
+            const { error } = await supabase.from('urgent_news').insert([{ content }]);
+            if (error) alert(error.message); else location.reload();
+        }
+
+        async function saveDecision() {
+            const payload = {
+                title: document.getElementById('dec_title').value,
+                content: document.getElementById('dec_content').value,
+                file_url: document.getElementById('dec_url').value
+            };
+            const { error } = await supabase.from('decisions').insert([payload]);
+            if (error) alert(error.message); else location.reload();
+        }
+
+        async function deleteItem(table, id) {
+            if(confirm("هل تريد الحذف نهائياً؟")) {
+                await supabase.from(table).delete().eq('id', id);
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
