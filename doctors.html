@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' https://esm.sh https://*.supabase.co;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+  font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+  img-src 'self' data: https:;
+  connect-src 'self' https://gxuumjhtutkipvkljjhj.supabase.co wss://gxuumjhtutkipvkljjhj.supabase.co;
+  frame-src 'none';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+">
+
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+<title>🏥 قائمة الأطباء</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="doctors.css">
+
+</head>
+<body>
+
+<!-- العنوان الرئيسي -->
+<div class="page-header">
+  <h1>🏥 قائمة الأطباء</h1>
+  <p>ابحث عن الطبيب المناسب لاحتياجاتك الصحية</p>
+</div>
+
+<!-- شريط التنقل المبسط -->
+<nav class="nav-bar">
+  <a href="index.html" class="active">
+    <i class="fas fa-home"></i> الرئيسية
+  </a>
+</nav>
+
+<!-- شريط البحث -->
+<div class="search-section">
+  <div class="search-box">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" id="searchInput" placeholder="اكتب اسم الطبيب للبحث...">
+  </div>
+  <div class="search-stats" id="searchStats">
+    اكتب اسم الطبيب في الحقل أعلاه للبحث
+  </div>
+</div>
+
+<!-- قائمة الأطباء -->
+<div class="doctors-grid" id="doctorsList">
+  <div class="loading">
+    <i class="fas fa-spinner"></i>
+    <p>جاري تحميل قائمة الأطباء...</p>
+  </div>
+</div>
+
+<!-- نصائح البحث -->
+<div class="search-tips">
+  <h4><i class="fas fa-lightbulb"></i> نصائح للبحث:</h4>
+  <ul>
+    <li>ابحث باسم الطبيب (مثال: د. أحمد، محمد علي)</li>
+    <li>يمكنك البحث بجزء من الاسم (مثال: "محمد" لرؤية جميع الأطباء الذين يحتوي اسمهم على "محمد")</li>
+    <li>لمشاهدة جميع الأطباء، اترك حقل البحث فارغاً</li>
+  </ul>
+</div>
+
+<script type="module" src="doctors.js"></script>
+
+</body>
+</html>
