@@ -1,0 +1,123 @@
+* { 
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: #eef3f3;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 380px;
+    padding: 12px;
+}
+
+.back-btn {
+    display: inline-block;
+    background: #444;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    text-align: center;
+    color: #00695C;
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.card {
+    background: white;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+    transition: transform 0.2s;
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.hospital-name {
+    font-size: 19px;
+    font-weight: 800;
+    color: #00695C;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.info {
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.info b {
+    color: #004D40;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #00796B;
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #004D40;
+}
+
+.hospital-imgcircle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 10px auto;
+    border: 3px solid #009688;
+}
+
+.loading, .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.loading i {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.error {
+    text-align: center;
+    padding: 20px;
+    color: #d32f2f;
+    background: #ffebee;
+    border-radius: 10px;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+    display: block;
+}

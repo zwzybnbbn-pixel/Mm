@@ -1,0 +1,283 @@
+/* الإعدادات العامة */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: #eef3f3;
+    padding: 12px;
+    line-height: 1.6;
+}
+
+/* الأزرار العلوية */
+.back-btn {
+    display: inline-block;
+    background: #444;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin-bottom: 15px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: #555;
+}
+
+/* تنسيق صورة المستشفى */
+.hospital-img-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.hospital-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    border: 4px solid #00796B;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* تنسيق البطاقات (Cards) */
+.card {
+    width: 100%;
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.13);
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #00695C;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    border-right: 4px solid #00796B;
+    padding-right: 10px;
+}
+
+/* معلومات المستشفى */
+.info {
+    background: #f9ffff;
+    padding: 12px;
+    border-left: 5px solid #00796B; /* لإعطاء لمسة جمالية مع RTL */
+    border-right: 5px solid #00796B;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #00695C;
+}
+
+.value {
+    font-size: 16px;
+    color: #333;
+    margin-top: 4px;
+}
+
+/* التقييم العام */
+.avg-rating {
+    font-size: 48px;
+    font-weight: 900;
+    color: #ff9800;
+    text-align: center;
+}
+
+.rating-stars {
+    font-size: 24px;
+    color: #ffc107;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.rating-count {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* قائمة التقييمات */
+.review {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-right: 4px solid #00796B;
+}
+
+.review .stars {
+    color: #ffc107;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.review p {
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.review small {
+    color: #888;
+    font-size: 12px;
+    display: block;
+}
+
+/* مدخلات النجوم (Rating Input) */
+.stars-input {
+    margin: 15px 0;
+    direction: ltr; /* لجعل النجوم تترتب من اليسار لليمين برمجياً */
+    text-align: center;
+}
+
+.star {
+    font-size: 32px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    padding: 0 3px;
+    display: inline-block;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.star.active {
+    color: #ffc107;
+}
+
+/* منطقة النص والزر */
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+    transition: border-color 0.3s;
+    margin-bottom: 10px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #00796B;
+}
+
+.btn-submit {
+    background: #00796B;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background: #009688;
+    transform: translateY(-2px);
+}
+
+.btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* رسائل التنبيه */
+.rating-message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+    text-align: center;
+    font-weight: bold;
+}
+
+.rating-message.error {
+    background: #f8d7da;
+    color: #d32f2f;
+}
+
+.rating-message.success {
+    background: #d4edda;
+    color: #2e7d32;
+}
+
+/* قسم الأطباء */
+.doctor-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s;
+}
+
+.doctor-item:hover {
+    transform: scale(1.02);
+}
+
+.doctor-info b {
+    display: block;
+    color: #00695C;
+    font-size: 16px;
+}
+
+.doctor-info p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* نصوص مساعدة */
+.hint-text {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.empty-msg {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+/* أنيميشن */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .review, .doctor-item {
+    animation: fadeIn 0.4s ease-out forwards;
+}
