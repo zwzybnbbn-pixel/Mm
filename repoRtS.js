@@ -1,4 +1,4 @@
-// ========================
+// =========================
 // 🌐 استيراد Supabase
 // =========================
 import { supabase } from './supabase.js';
@@ -14,16 +14,12 @@ const reportsCount = document.getElementById('reportsCount');
 const progressFill = document.getElementById('progressFill');
 
 // =========================
-// ⏱️ متغير آخر وقت جلب
-// =========================
-let lastFetchedAt = localStorage.getItem('lastFetchedAt') || '1970-01-01T00:00:00Z';
-
-// =========================
 // 🟢 دوال مساعدة
 // =========================
 
 // عرض رسائل التنبيه
 function showAlert(message, type = 'success') {
+    if (!alertContainer) return;
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert ${type}`;
     const icon = document.createElement('i');
@@ -196,7 +192,7 @@ function createReportElement(report) {
 // =========================
 // 📝 إرسال بلاغ جديد
 // =========================
-form.addEventListener('submit', async (e) => {
+form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     let session = (await supabase.auth.getSession()).data.session;
@@ -204,6 +200,7 @@ form.addEventListener('submit', async (e) => {
         const { data } = await supabase.auth.signInAnonymously();
         session = data.session;
     }
+
     const officialUserId = session.user.id;
     const userIP = await getUserIP();
     const checkResult = await canSubmitReport(userIP);
@@ -213,11 +210,11 @@ form.addEventListener('submit', async (e) => {
     }
 
     const reportData = {
-        type: document.getElementById('type').value,
-        name: document.getElementById('name').value.trim().slice(0, 20),
-        phone: document.getElementById('phone').value.trim().slice(0, 9),
-        location: document.getElementById('location').value.trim().slice(0, 10),
-        details: document.getElementById('details').value.trim().slice(0, 50),
+        type: document.getElementById('type')?.value || '',
+        name: document.getElementById('name')?.value.trim().slice(0, 20) || '',
+        phone: document.getElementById('phone')?.value.trim().slice(0, 9) || '',
+        location: document.getElementById('location')?.value.trim().slice(0, 10) || '',
+        details: document.getElementById('details')?.value.trim().slice(0, 50) || '',
         ip: userIP,
         user_id: officialUserId,
         status: 'قيد المراجعة',
@@ -263,36 +260,43 @@ form.addEventListener('submit', async (e) => {
 });
 
 // =========================
-// 📋 تحميل وعرض البلاغات مع الكاش
+// 📋 تحميل وعرض البلاغات
 // =========================
 async function loadReports() {
     if (!list) return;
 
     list.textContent = '⏳ جاري تحميل البلاغات...';
+
     try {
-        let session = (await supabase.auth.getSession()).data.session;
+        let { data: { session } } = await supabase.auth.getSession();
+
         if (!session) {
-            const { data } = await supabase.auth.signInAnonymously();
+            const { data, error } = await supabase.auth.signInAnonymously();
+            if (error) throw error;
             session = data.session;
         }
-        const myUserId = session.user.id;
-        const cacheKey = `reports_cache_${myUserId}`;
 
-        // جلب جميع البلاغات من Supabase مباشرة
+        const myUserId = session.user.id;
+
         const { data: myReports, error } = await supabase
             .from('reports')
             .select('*')
             .eq('user_id', myUserId)
             .order('created_at', { ascending: false });
+
         if (error) throw error;
 
-        // استبدال الكاش بالكامل بالبيانات الحالية
-        localStorage.setItem(cacheKey, JSON.stringify(myReports));
-
-        // عرض البلاغات
         list.textContent = '';
-        reportsCount.textContent = `${myReports.length} بلاغ`;
-        myReports.forEach(report => list.appendChild(createReportElement(report)));
+        reportsCount && (reportsCount.textContent = `${myReports.length} بلاغ`);
+
+        if (!myReports || myReports.length === 0) {
+            list.textContent = 'لا توجد بلاغات بعد';
+            return;
+        }
+
+        myReports.forEach(report => {
+            list.appendChild(createReportElement(report));
+        });
 
     } catch (err) {
         console.error('❌ خطأ في تحميل البلاغات:', err);
@@ -306,7 +310,7 @@ async function loadReports() {
 async function init() {
     await loadReports();
 
-    let session = (await supabase.auth.getSession()).data.session;
+    let { data: { session } } = await supabase.auth.getSession();
     if (!session) {
         const { data } = await supabase.auth.signInAnonymously();
         session = data.session;
@@ -314,7 +318,6 @@ async function init() {
     const myUserId = session.user.id;
     const cacheKey = `reports_cache_${myUserId}`;
 
-    // الاشتراك في Realtime لمراقبة التحديثات
     supabase
         .channel('realtime-reports')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'reports', filter: `user_id=eq.${myUserId}` }, (payload) => {
@@ -335,7 +338,7 @@ async function init() {
 
             // إعادة عرض البلاغات مباشرة
             list.textContent = '';
-            reportsCount.textContent = `${oldReports.length} بلاغ`;
+            reportsCount && (reportsCount.textContent = `${oldReports.length} بلاغ`);
             oldReports.forEach(report => list.appendChild(createReportElement(report)));
         })
         .subscribe();
