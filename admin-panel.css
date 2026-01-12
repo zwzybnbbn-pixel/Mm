@@ -1,61 +1,44 @@
-/* Modern Government Dashboard UI - Shabwah Edition */
+/* Modern Government Dashboard UI - Shabwah Edition (Mobile Optimized) */
 :root {
-    --primary: #004d40;      /* الزيتي الرسمي */
+    --primary: #004d40;
     --primary-light: #00695c;
-    --accent: #27ae60;       /* الأخضر للنجاح */
-    --danger: #e74c3c;       /* الأحمر للحذف */
-    --warning: #f39c12;      /* البرتقالي للتعديل */
-    --bg: #f4f7f6;           /* خلفية رمادية فاتحة جداً */
+    --accent: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --bg: #f4f7f6;
     --white: #ffffff;
     --text: #2c3e50;
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     margin: 0;
+    padding: 0;
     direction: rtl;
     line-height: 1.6;
+    -webkit-tap-highlight-color: transparent; /* تحسين اللمس للجوال */
 }
 
-/* حاوية تسجيل الدخول */
+/* حاوية تسجيل الدخول - متجاوبة */
 .login-box {
-    max-width: 400px;
-    margin: 100px auto;
+    max-width: 90%; /* عرض مرن للجوال */
+    width: 380px;
+    margin: 60px auto;
     background: var(--white);
-    padding: 40px;
+    padding: 30px 20px;
     border-radius: 20px;
     box-shadow: var(--shadow);
     text-align: center;
 }
 
-.login-box h2 {
-    color: var(--primary);
-    margin-bottom: 30px;
-}
-
-.login-box input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 2px solid #eee;
-    border-radius: 10px;
-    box-sizing: border-box;
-    transition: 0.3s;
-}
-
-.login-box input:focus {
-    border-color: var(--primary);
-    outline: none;
-}
-
 /* لوحة التحكم الرئيسية */
 .admin-wrapper {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 15px; /* تقليل الحواف في الجوال */
 }
 
 .admin-header {
@@ -64,121 +47,109 @@ body {
     align-items: center;
     background: var(--primary);
     color: white;
-    padding: 20px 30px;
-    border-radius: 15px;
-    margin-bottom: 30px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     box-shadow: var(--shadow);
 }
 
-/* قسم المحرر (إضافة وتعديل) */
+.admin-header h2 {
+    font-size: 1.2rem; /* تصغير الخط قليلاً للجوال */
+    margin: 0;
+}
+
+/* قسم المحرر */
 .editor-section {
     background: var(--white);
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     box-shadow: var(--shadow);
-    margin-bottom: 30px;
-}
-
-.editor-section h3 {
-    margin-top: 0;
-    color: var(--primary);
-    border-bottom: 2px solid var(--bg);
-    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 input[type="text"], textarea, select {
     width: 100%;
-    padding: 12px 15px;
-    margin: 10px 0;
+    padding: 14px; /* تكبير منطقة اللمس */
+    margin: 8px 0;
     border: 1px solid #ddd;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 16px; /* منع الزووم التلقائي في الآيفون */
     box-sizing: border-box;
 }
 
-textarea { resize: vertical; min-height: 100px; }
-
-/* الأزرار */
+/* الأزرار للجوال */
 button {
     cursor: pointer;
     border: none;
     border-radius: 10px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    padding: 12px 20px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary {
     background: var(--primary);
     color: white;
-    padding: 12px 25px;
-    font-size: 16px;
+    width: 100%; /* زر النشر يأخذ العرض كامل في الجوال */
 }
 
-.btn-primary:hover {
-    background: var(--primary-light);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,77,64,0.3);
-}
-
-.btn-logout {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    padding: 8px 15px;
-}
-
-/* قائمة الأخبار المنشورة */
-.list-section {
-    background: var(--white);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: var(--shadow);
-}
-
+/* قائمة الأخبار المنشورة (العنصر الواحد) */
 .admin-news-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* تحويل التوزيع لعمودي بشكل افتراضي للجوال */
+    gap: 12px;
+    background: var(--white);
     padding: 15px;
-    border-bottom: 1px solid #eee;
-    transition: 0.2s;
-}
-
-.admin-news-item:hover {
-    background: #fafafa;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
 }
 
 .admin-news-item strong {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--primary);
 }
 
-/* أزرار الإجراءات (تعديل وحذف) */
 .actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    width: 100%; /* تمدد الأزرار */
 }
 
-.btn-edit {
-    background: var(--warning);
-    color: white;
-    padding: 6px 15px;
+.actions button {
+    flex: 1; /* جعل زر التعديل والحذف متساويين في العرض */
+    font-size: 0.9rem;
+    padding: 10px;
 }
 
-.btn-danger {
-    background: var(--danger);
-    color: white;
-    padding: 6px 15px;
+.btn-edit { background: var(--warning); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+
+/* 📱 شاشات الكمبيوتر والتابلت (أكبر من 768px) */
+@media (min-width: 768px) {
+    .admin-wrapper { padding: 30px; }
+    .admin-header h2 { font-size: 1.5rem; }
+    
+    .admin-news-item {
+        flex-direction: row; /* إعادة التوزيع الأفقي للشاشات الكبيرة */
+        justify-content: space-between;
+    }
+    
+    .actions {
+        width: auto; /* الأزرار تأخذ حجمها الطبيعي فقط */
+    }
+    
+    .btn-primary {
+        width: auto; /* زر النشر لا يأخذ العرض كامل */
+    }
 }
 
-.btn-edit:hover, .btn-danger:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-}
-
-/* الحالات الخاصة بالبلاغات */
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    margin-right: 10px;
+/* تحسينات إضافية للمس */
+button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
 }
