@@ -1,0 +1,489 @@
+:root {
+    --primary-color: #004d40;
+    --accent-color: #27ae60;
+    --loss-color: #e74c3c;
+    --gold-gradient: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
+    --silver-gradient: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
+    --bg-color: #f4f7f6;
+    --card-bg: linear-gradient(145deg, #ffffff 0%, #f9fbfa 100%);
+    --shadow-color: rgba(0, 77, 64, 0.1);
+    --glass-effect: rgba(255, 255, 255, 0.95);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: 'Segoe UI', 'Cairo', sans-serif;
+}
+
+.exchange-card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    padding: 40px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 20px;
+    direction: rtl;
+    position: relative;
+    overflow: hidden;
+}
+
+/* تأثيرات زخرفية */
+.exchange-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+    z-index: 0;
+}
+
+.exchange-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: var(--gold-gradient);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: 0;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(30px, 30px) rotate(360deg); }
+}
+
+.exchange-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.exchange-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--gold-gradient);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.exchange-icon i {
+    font-size: 32px;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.exchange-header h1 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.exchange-header h1 span {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-badge {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #2ecc71 100%);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(39, 174, 96, 0.4);
+}
+
+.status-badge i {
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* جدول الأسعار */
+.exchange-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+
+.exchange-table thead {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #00695c 100%);
+}
+
+.exchange-table th {
+    color: white;
+    padding: 25px 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    position: relative;
+}
+
+.exchange-table th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.exchange-table th:first-child {
+    text-align: right;
+    padding-right: 30px;
+}
+
+.exchange-table tbody tr {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.exchange-table tbody tr:hover {
+    background: linear-gradient(90deg, rgba(39, 174, 96, 0.05) 0%, rgba(39, 174, 96, 0.02) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.exchange-table tbody tr::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #eee, transparent);
+}
+
+.exchange-table td {
+    padding: 25px 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #444;
+    font-weight: 500;
+}
+
+.exchange-table td:first-child {
+    text-align: right;
+    padding-right: 30px;
+}
+
+/* تصميم خلية العملة */
+.currency-cell {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.currency-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.usd-icon { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+.eur-icon { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+.gbp-icon { background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); }
+.sar-icon { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); }
+.gold-icon { background: var(--gold-gradient); }
+
+.currency-info {
+    text-align: right;
+}
+
+.currency-name {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.currency-code {
+    color: #777;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* تصميم الأسعار */
+.price-cell {
+    position: relative;
+}
+
+.price-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 15px;
+    display: inline-block;
+    min-width: 140px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.buy-price .price-value {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(39, 174, 96, 0.05) 100%);
+    color: var(--accent-color);
+    border: 2px solid rgba(39, 174, 96, 0.2);
+}
+
+.buy-price .price-value:hover {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #2ecc71 100%);
+    color: white;
+    transform: scale(1.05);
+}
+
+.sell-price .price-value {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
+    color: var(--loss-color);
+    border: 2px solid rgba(231, 76, 60, 0.2);
+}
+
+.sell-price .price-value:hover {
+    background: linear-gradient(135deg, var(--loss-color) 0%, #ff6b6b 100%);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* نسبة التغير */
+.change-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.positive-change {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15) 0%, rgba(39, 174, 96, 0.08) 100%);
+    color: var(--accent-color);
+}
+
+.negative-change {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(231, 76, 60, 0.08) 100%);
+    color: var(--loss-color);
+}
+
+/* التذييل */
+.exchange-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1;
+}
+
+.last-update {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #666;
+    font-size: 1rem;
+}
+
+.update-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.refresh-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #00695c 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 77, 64, 0.2);
+}
+
+.refresh-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 77, 64, 0.3);
+}
+
+.refresh-btn:active {
+    transform: translateY(-1px);
+}
+
+/* تصميم متجاوب */
+@media (max-width: 992px) {
+    .exchange-card {
+        padding: 30px;
+    }
+    
+    .exchange-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .exchange-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .exchange-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .exchange-card {
+        padding: 25px;
+        border-radius: 25px;
+    }
+    
+    .exchange-table td,
+    .exchange-table th {
+        padding: 20px 15px;
+        font-size: 1rem;
+    }
+    
+    .price-value {
+        min-width: 120px;
+        padding: 8px 15px;
+        font-size: 1.2rem;
+    }
+    
+    .currency-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .exchange-footer {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .exchange-card {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .exchange-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .currency-cell {
+        gap: 12px;
+    }
+    
+    .currency-name {
+        font-size: 1.1rem;
+    }
+    
+    .price-value {
+        min-width: 100px;
+        font-size: 1.1rem;
+    }
+}

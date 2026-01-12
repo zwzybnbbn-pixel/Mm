@@ -1,0 +1,74 @@
+:root {
+    --gov-green: #004d40;
+    --urgent-red: #d32f2f;
+    --calm-green: #2e7d32;
+    --info-blue: #0277bd;
+    --light-bg: #f8f9fa;
+}
+
+body {
+    background-color: var(--light-bg);
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    direction: rtl;
+}
+
+.emergency-app { max-width: 600px; margin: 0 auto; padding: 15px; }
+
+.gov-header {
+    background: var(--gov-green);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.status-indicator {
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.2);
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.pulse-dot {
+    width: 8px; height: 8px;
+    background: #ff5252;
+    border-radius: 50%;
+    margin-left: 8px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
+.alert-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-right: 6px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    animation: slideIn 0.4s ease-out;
+}
+
+.alert-urgent { border-right-color: var(--urgent-red); background: #fff5f5; }
+.alert-calm { border-right-color: var(--calm-green); background: #f1f8e9; }
+.alert-info { border-right-color: var(--info-blue); background: #e1f5fe; }
+
+.alert-card h3 { margin: 0 0 10px 0; color: #333; }
+.alert-time { font-size: 0.75rem; color: #777; display: block; margin-bottom: 10px; }
+.alert-text { line-height: 1.6; color: #444; }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.initial-loader { text-align: center; padding: 50px; color: #888; }

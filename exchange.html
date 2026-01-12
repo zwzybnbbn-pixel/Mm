@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسعار الصرف - دليل شبوة</title>
+    <link rel="stylesheet" href="exchange.css">
+</head>
+<body>
+
+    <div class="exchange-card">
+        <div class="exchange-header">
+            <h2>أسعار الصرف في عتق</h2>
+            <span class="status-badge">مباشر • سوق شبوة</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>العملة</th>
+                    <th>شراء</th>
+                    <th>بيع</th>
+                </tr>
+            </thead>
+            <tbody id="rates-body">
+                <tr>
+                    <td colspan="3" style="text-align:center;">جاري جلب البيانات...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <small class="last-update" id="update-timer">آخر تحديث: --:--</small>
+    </div>
+
+  <script type="module" src="exchange.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة أسعار الصرف | دليل شبوة</title>
+    <link rel="stylesheet" href="admin1.css">
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <section id="auth-section" class="auth-card">
+            <div class="card-header">
+                <h2>دخول الإدارة</h2>
+                <p>يرجى إدخال البيانات للوصول للوحة التحكم</p>
+            </div>
+            <div class="form-group">
+                <input type="email" id="admin-email" placeholder="البريد الإلكتروني">
+            </div>
+            <div class="form-group">
+                <input type="password" id="admin-password" placeholder="كلمة المرور">
+            </div>
+            <button id="btn-login" class="primary-btn">تسجيل الدخول</button>
+            <p id="auth-msg" class="error-msg"></p>
+        </section>
+
+        <section id="dashboard-section" class="dashboard-card" style="display: none;">
+            <div class="dashboard-header">
+                <div class="titles">
+                    <h2>لوحة تحكم الصرف</h2>
+                    <span id="user-display"></span>
+                </div>
+                <button id="btn-logout" class="outline-btn">تسجيل الخروج</button>
+            </div>
+
+            <div class="rates-management">
+                <div class="table-header">
+                    <span>العملة</span>
+                    <span>شراء</span>
+                    <span>بيع</span>
+                </div>
+                <div id="admin-rates-list">
+                    </div>
+            </div>
+
+            <div class="dashboard-footer">
+                <button id="btn-save" class="save-btn">حفظ وتحديث السوق</button>
+                <p id="save-status"></p>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="admin1.js"></script>
+</body>
+</html>
