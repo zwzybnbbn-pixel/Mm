@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة النور - نظام الدرجات والحضور</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fff9e6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        :root {
+            --beige: #f8e8c9;
+            --beige-dark: #ecd9b5;
+            --beige-light: #fff9e6;
+            --burgundy: #8b1a3a;
+            --burgundy-light: #a8455a;
+            --burgundy-dark: #6b132b;
+        }
+
+        /* الشريط العلوي */
+        .top-bar {
+            background-color: var(--burgundy);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-info span {
+            margin-left: 20px;
+        }
+
+        .contact-info i {
+            margin-left: 5px;
+        }
+
+        .social-icons a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+
+        /* الهيدر الرئيسي */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: fixed;
+            top: 40px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--burgundy);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--burgundy-light);
+            font-size: 14px;
+            display: block;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-right: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--burgundy);
+        }
+
+        .cta-button {
+            background-color: var(--burgundy);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* الصفحات */
+        .page {
+            min-height: 100vh;
+            padding: 140px 0 60px;
+            border-bottom: 1px solid var(--beige-dark);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h2 {
+            font-size: 42px;
+            color: var(--burgundy);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--burgundy);
+        }
+
+/* قسم الدرجات المتقدم */
+        .grades-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .grades-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            background-color: var(--beige-light);
+            color: var(--burgundy);
+            border: 2px solid var(--burgundy);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--burgundy);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* بطاقات الطلاب */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, white 0%, var(--beige-light) 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--beige);
+            transition: transform 0.3s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .student-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--beige);
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--burgundy);
+        }
+
+        .student-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-main-info h3 {
+            color: var(--burgundy);
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .student-main-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* جدول المواد */
+        .subjects-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .subject-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--beige-dark);
+        }
+
+        .subject-name {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .subject-grade {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--burgundy);
+        }
+
+        .monthly-grade {
+            background-color: var(--beige);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* قسم الحضور والغياب المتقدم */
+        .attendance-advanced {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--beige) 0%, var(--beige-light) 100%);
+            border-radius: 20px;
+        }
+
+        .attendance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .attendance-header h3 {
+            color: var(--burgundy);
+            font-size: 28px;
+        }
+
+        .month-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .month-btn {
+            background-color: white;
+            color: var(--burgundy);
+            border: 1px solid var(--burgundy);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+.month-btn.active {
+            background-color: var(--burgundy);
+            color: white;
+        }
+
+        /* بطاقات الحضور للطلاب */
+        .attendance-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minfax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .attendance-student-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .attendance-student-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--beige-light);
+        }
+
+        .stat-box.present {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .stat-box.absent {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .stat-box.late {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+        }
+
+        .attendance-bar {
+            margin-top: 15px;
+        }
+
+        .bar-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: var(--beige);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .progress-present {
+            height: 100%;
+            background-color: #28a745;
+        }
+
+        .progress-absent {
+            height: 100%;
+            background-color: #dc3545;
+        }
+
+        .progress-late {
+            height: 100%;
+            background-color: #ffc107;
+        }
+
+        /* جدول الحضور التفصيلي */
+        .attendance-detailed {
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .attendance-detailed h4 {
+            background-color: var(--burgundy);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .attendance-table th {
+            background-color: var(--beige);
+            color: var(--burgundy);
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        .attendance-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--beige);
+            text-align: center;
+        }
+
+        .attendance-table tr:hover {
+            background-color: var(--beige-light);
+        }
+
+        .attendance-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-present {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-absent {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-late {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        /* إحصائيات عامة */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--beige);
+        }
+
+.summary-card i {
+            font-size: 40px;
+            color: var(--burgundy);
+            margin-bottom: 15px;
+        }
+
+        .summary-card h4 {
+            color: var(--burgundy);
+            margin-bottom: 10px;
+        }
+
+        .summary-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--burgundy-dark);
+        }
+
+        @media (max-width: 768px) {
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendance-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .grades-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> ٠١٢٣٤٥٦٧٨٩</span>
+                <span><i class="fas fa-envelope"></i> info@alnoor.edu</span>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- الهيدر الرئيسي -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <h1>مدرسة النور</h1>
+                <span>نظام المتابعة الأكاديمية</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#grades" class="active">الدرجات</a></li>
+                    <li><a href="#attendance">الحضور</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- قسم الدرجات الشهرية والسنوية -->
+    <section id="grades" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>الدرجات الأكاديمية</h2>
+                <p>متابعة الأداء الدراسي شهرياً وسنوياً</p>
+            </div>
+
+            <div class="stats-summary">
+                <div class="summary-card">
+                    <i class="fas fa-star"></i>
+                    <h4>المعدل العام</h4>
+                    <div class="summary-number">٨٥.٦٪</div>
+                    <p>لجميع الطلاب</p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-trophy"></i>
+                    <h4>أعلى درجة</h4>
+                    <div class="summary-number">٩٨٪</div>
+                    <p>فاطمة علي - ٦/ب</p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>نسبة النجاح</h4>
+                    <div class="summary-number">٩٥٪</div>
+                    <p>الفصل الدراسي الأول</p>
+                </div>
+            </div>
+
+            <div class="grades-section">
+                <div class="grades-tabs">
+                    <button class="tab-btn active" onclick="showTab('monthly')">الدرجات الشهرية</button>
+                    <button class="tab-btn" onclick="showTab('yearly')">الدرجات السنوية</button>
+                </div>
+
+<!-- الدرجات الشهرية -->
+                <div id="monthly" class="tab-content active">
+                    <div class="students-grid">
+                        <!-- بطاقة أحمد -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="طالب">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>أحمد محمود</h3>
+                                    <p>الصف ٦/أ - الشعبة: علمي</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٢</span>
+                                        <span class="monthly-grade">شهر٢: ٨٨</span>
+                                        <span class="monthly-grade">شهر٣: ٩٥</span>
+                                        <span class="subject-grade">المعدل: ٩٢</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٥</span>
+                                        <span class="monthly-grade">شهر٢: ٨٨</span>
+                                        <span class="monthly-grade">شهر٣: ٩١</span>
+                                        <span class="subject-grade">المعدل: ٨٨</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٠</span>
+                                        <span class="monthly-grade">شهر٢: ٩٢</span>
+                                        <span class="monthly-grade">شهر٣: ٨٩</span>
+                                        <span class="subject-grade">المعدل: ٩٠</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٢</span>
+                                        <span class="monthly-grade">شهر٢: ٨٥</span>
+                                        <span class="monthly-grade">شهر٣: ٨٨</span>
+                                        <span class="subject-grade">المعدل: ٨٥</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٩</span>
+                                        <span class="monthly-grade">شهر٢: ٩٠</span>
+                                        <span class="monthly-grade">شهر٣: ٩١</span>
+                                        <span class="subject-grade">المعدل: ٩٠</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: left;">
+
+<strong style="color: var(--burgundy);">المجموع: ٤٤٥ - النسبة: ٨٩٪</strong>
+                            </div>
+                        </div>
+
+                        <!-- بطاقة فاطمة -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1494790108777-466fd6c79c9b?w=60&h=60&fit=crop" alt="طالبة">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>فاطمة علي</h3>
+                                    <p>الصف ٦/ب - الشعبة: علمي</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٨</span>
+                                        <span class="monthly-grade">شهر٢: ٩٦</span>
+                                        <span class="monthly-grade">شهر٣: ٩٨</span>
+                                        <span class="subject-grade">المعدل: ٩٧</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٥</span>
+                                        <span class="monthly-grade">شهر٢: ٩٤</span>
+                                        <span class="monthly-grade">شهر٣: ٩٦</span>
+                                        <span class="subject-grade">المعدل: ٩٥</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٦</span>
+                                        <span class="monthly-grade">شهر٢: ٩٧</span>
+                                        <span class="monthly-grade">شهر٣: ٩٥</span>
+                                        <span class="subject-grade">المعدل: ٩٦</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٤</span>
+                                        <span class="monthly-grade">شهر٢: ٩٥</span>
+                                        <span class="monthly-grade">شهر٣: ٩٥</span>
+                                        <span class="subject-grade">المعدل: ٩٥</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٧</span>
+                                        <span class="monthly-grade">شهر٢: ٩٦</span>
+                                        <span class="monthly-grade">شهر٣: ٩٨</span>
+                                        <span class="subject-grade">المعدل: ٩٧</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: left;">
+
+<strong style="color: var(--burgundy);">المجموع: ٤٨٠ - النسبة: ٩٦٪</strong>
+                            </div>
+                        </div>
+
+                        <!-- بطاقة يوسف -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" alt="طالب">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>يوسف حسن</h3>
+                                    <p>الصف ٨/ج - الشعبة: أدبي</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٧٥</span>
+                                        <span class="monthly-grade">شهر٢: ٧٨</span>
+                                        <span class="monthly-grade">شهر٣: ٨٢</span>
+                                        <span class="subject-grade">المعدل: ٧٨</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٠</span>
+                                        <span class="monthly-grade">شهر٢: ٨٢</span>
+                                        <span class="monthly-grade">شهر٣: ٨٤</span>
+                                        <span class="subject-grade">المعدل: ٨٢</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٧٢</span>
+                                        <span class="monthly-grade">شهر٢: ٧٥</span>
+                                        <span class="monthly-grade">شهر٣: ٧٨</span>
+                                        <span class="subject-grade">المعدل: ٧٥</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٧٨</span>
+                                        <span class="monthly-grade">شهر٢: ٨٠</span>
+                                        <span class="monthly-grade">شهر٣: ٨٢</span>
+                                        <span class="subject-grade">المعدل: ٨٠</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٧٦</span>
+                                        <span class="monthly-grade">شهر٢: ٧٧</span>
+                                        <span class="monthly-grade">شهر٣: ٧٩</span>
+                                        <span class="subject-grade">المعدل: ٧٧</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: left;">
+
+<strong style="color: var(--burgundy);">المجموع: ٣٩٢ - النسبة: ٧٨٪</strong>
+                            </div>
+                        </div>
+
+                        <!-- بطاقة ليلى -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" alt="طالبة">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>ليلى عمر</h3>
+                                    <p>الصف ٩/أ - الشعبة: علمي</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٤</span>
+                                        <span class="monthly-grade">شهر٢: ٨٥</span>
+                                        <span class="monthly-grade">شهر٣: ٨٦</span>
+                                        <span class="subject-grade">المعدل: ٨٥</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٧٨</span>
+                                        <span class="monthly-grade">شهر٢: ٧٩</span>
+                                        <span class="monthly-grade">شهر٣: ٨٠</span>
+                                        <span class="subject-grade">المعدل: ٧٩</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٦</span>
+                                        <span class="monthly-grade">شهر٢: ٨٨</span>
+                                        <span class="monthly-grade">شهر٣: ٩٠</span>
+                                        <span class="subject-grade">المعدل: ٨٨</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٩٠</span>
+                                        <span class="monthly-grade">شهر٢: ٩٢</span>
+                                        <span class="monthly-grade">شهر٣: ٩٤</span>
+                                        <span class="subject-grade">المعدل: ٩٢</span>
+                                    </div>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <div>
+                                        <span class="monthly-grade">شهر١: ٨٢</span>
+                                        <span class="monthly-grade">شهر٢: ٨٤</span>
+                                        <span class="monthly-grade">شهر٣: ٨٦</span>
+                                        <span class="subject-grade">المعدل: ٨٤</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: left;">
+
+<strong style="color: var(--burgundy);">المجموع: ٤٢٨ - النسبة: ٨٦٪</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الدرجات السنوية -->
+                <div id="yearly" class="tab-content">
+                    <div class="students-grid">
+                        <!-- بطاقة أحمد - سنوي -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="طالب">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>أحمد محمود</h3>
+                                    <p>النتيجة النهائية - ٦/أ</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٢</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٨٨</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٠</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٨٥</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٠</span>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; text-align: center; background-color: var(--beige); padding: 10px; border-radius: 10px;">
+                                <strong style="color: var(--burgundy); font-size: 20px;">التقدير العام: جيد جداً - ٨٩٪</strong>
+                            </div>
+                        </div>
+
+<!-- بطاقة فاطمة - سنوي -->
+                        <div class="student-card">
+                            <div class="student-card-header">
+                                <div class="student-avatar">
+                                    <img src="https://images.unsplash.com/photo-1494790108777-466fd6c79c9b?w=60&h=60&fit=crop" alt="طالبة">
+                                </div>
+                                <div class="student-main-info">
+                                    <h3>فاطمة علي</h3>
+                                    <p>النتيجة النهائية - ٦/ب</p>
+                                </div>
+                            </div>
+                            
+                            <div class="subjects-table">
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة العربية</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٧</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الرياضيات</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٥</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">العلوم</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٦</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">اللغة الإنجليزية</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٥</span>
+                                </div>
+                                <div class="subject-row">
+                                    <span class="subject-name">الدراسات</span>
+                                    <span class="subject-grade">الدرجة النهائية: ٩٧</span>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; text-align: center; background-color: var(--beige); padding: 10px; border-radius: 10px;">
+                                <strong style="color: var(--burgundy); font-size: 20px;">التقدير العام: ممتاز - ٩٦٪</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الحضور والغياب المتقدم -->
+    <section id="attendance" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>نظام الحضور والغياب</h2>
+                <p>متابعة يومية وشهرية لحضور الطلاب</p>
+            </div>
+
+            <div class="attendance-advanced">
+                <div class="attendance-header">
+                    <h3>سجل الحضور لشهر مارس ٢٠٢٥</h3>
+                    <div class="month-selector">
+                        <button class="month-btn active">يناير</button>
+                        <button class="month-btn">فبراير</button>
+                        <button class="month-btn">مارس</button>
+                        <button class="month-btn">أبريل</button>
+                    </div>
+                </div>
+
+<!-- إحصائيات سريعة -->
+                <div class="stats-summary" style="margin-top: 20px;">
+                    <div class="summary-card">
+                        <i class="fas fa-calendar-day"></i>
+                        <h4>أيام الدراسة</h4>
+                        <div class="summary-number">٢٢</div>
+                        <p>يوم دراسي هذا الشهر</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-user-check"></i>
+                        <h4>نسبة الحضور</h4>
+                        <div class="summary-number">٩٢٪</div>
+                        <p>معدل حضور الطلاب</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-user-clock"></i>
+                        <h4>حالات التأخير</h4>
+                        <div class="summary-number">٤٥</div>
+                        <p>حالة تأخير هذا الشهر</p>
+                    </div>
+                </div>
+
+                <!-- بطاقات حضور الطلاب -->
+                <div class="students-grid" style="margin-top: 30px;">
+                    <!-- بطاقة حضور أحمد -->
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <div class="student-avatar">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" alt="طالب">
+                            </div>
+                            <div class="student-main-info">
+                                <h3>أحمد محمود</h3>
+                                <p>الصف ٦/أ</p>
+                            </div>
+                        </div>
+
+                        <div class="attendance-stats">
+                            <div class="stat-box present">
+                                <div class="stat-number">٢٠</div>
+                                <div class="stat-label">حضور</div>
+                            </div>
+                            <div class="stat-box absent">
+                                <div class="stat-number">١</div>
+                                <div class="stat-label">غياب</div>
+                            </div>
+                            <div class="stat-box late">
+                                <div class="stat-number">١</div>
+                                <div class="stat-label">تأخير</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">٢٢</div>
+                                <div class="stat-label">إجمالي</div>
+                            </div>
+                        </div>
+
+                        <div class="attendance-bar">
+                            <div class="bar-labels">
+                                <span>حضور: ٢٠ يوم</span>
+                                <span>غياب: ١ يوم</span>
+                                <span>تأخير: ١ يوم</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-present" style="width: 91%"></div>
+                                <div class="progress-absent" style="width: 4.5%"></div>
+                                <div class="progress-late" style="width: 4.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة حضور فاطمة -->
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <div class="student-avatar">
+                                <img src="https://images.unsplash.com/photo-1494790108777-466fd6c79c9b?w=60&h=60&fit=crop" alt="طالبة">
+                            </div>
+                            <div class="student-main-info">
+                                <h3>فاطمة علي</h3>
+                                <p>الصف ٦/ب</p>
+                            </div>
+                        </div>
+
+<div class="attendance-stats">
+                            <div class="stat-box present">
+                                <div class="stat-number">٢٢</div>
+                                <div class="stat-label">حضور</div>
+                            </div>
+                            <div class="stat-box absent">
+                                <div class="stat-number">٠</div>
+                                <div class="stat-label">غياب</div>
+                            </div>
+                            <div class="stat-box late">
+                                <div class="stat-number">٠</div>
+                                <div class="stat-label">تأخير</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">٢٢</div>
+                                <div class="stat-label">إجمالي</div>
+                            </div>
+                        </div>
+
+                        <div class="attendance-bar">
+                            <div class="bar-labels">
+                                <span>حضور: ٢٢ يوم</span>
+                                <span>غياب: ٠ يوم</span>
+                                <span>تأخير: ٠ يوم</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-present" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- بطاقة حضور يوسف -->
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <div class="student-avatar">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" alt="طالب">
+                            </div>
+                            <div class="student-main-info">
+                                <h3>يوسف حسن</h3>
+                                <p>الصف ٨/ج</p>
+                            </div>
+                        </div>
+
+                        <div class="attendance-stats">
+                            <div class="stat-box present">
+                                <div class="stat-number">١٨</div>
+                                <div class="stat-label">حضور</div>
+                            </div>
+                            <div class="stat-box absent">
+                                <div class="stat-number">٣</div>
+                                <div class="stat-label">غياب</div>
+                            </div>
+                            <div class="stat-box late">
+                                <div class="stat-number">١</div>
+                                <div class="stat-label">تأخير</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">٢٢</div>
+                                <div class="stat-label">إجمالي</div>
+                            </div>
+                        </div>
+
+                        <div class="attendance-bar">
+                            <div class="bar-labels">
+                                <span>حضور: ١٨ يوم</span>
+                                <span>غياب: ٣ أيام</span>
+                                <span>تأخير: ١ يوم</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-present" style="width: 82%"></div>
+                                <div class="progress-absent" style="width: 13.5%"></div>
+                                <div class="progress-late" style="width: 4.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+<!-- بطاقة حضور ليلى -->
+                    <div class="student-card">
+                        <div class="student-card-header">
+                            <div class="student-avatar">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" alt="طالبة">
+                            </div>
+                            <div class="student-main-info">
+                                <h3>ليلى عمر</h3>
+                                <p>الصف ٩/أ</p>
+                            </div>
+                        </div>
+
+                        <div class="attendance-stats">
+                            <div class="stat-box present">
+                                <div class="stat-number">٢١</div>
+                                <div class="stat-label">حضور</div>
+                            </div>
+                            <div class="stat-box absent">
+                                <div class="stat-number">١</div>
+                                <div class="stat-label">غياب</div>
+                            </div>
+                            <div class="stat-box late">
+                                <div class="stat-number">٠</div>
+                                <div class="stat-label">تأخير</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">٢٢</div>
+                                <div class="stat-label">إجمالي</div>
+                            </div>
+                        </div>
+
+                        <div class="attendance-bar">
+                            <div class="bar-labels">
+                                <span>حضور: ٢١ يوم</span>
+                                <span>غياب: ١ يوم</span>
+                                <span>تأخير: ٠ يوم</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-present" style="width: 95.5%"></div>
+                                <div class="progress-absent" style="width: 4.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<!-- جدول الحضور التفصيلي -->
+                <div class="attendance-detailed" style="margin-top: 40px;">
+                    <h4>سجل الحضور اليومي لشهر مارس</h4>
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الطالب</th>
+                                <th>الأسبوع الأول</th>
+                                <th>الأسبوع الثاني</th>
+                                <th>الأسبوع الثالث</th>
+                                <th>الأسبوع الرابع</th>
+                                <th>إجمالي الحضور</th>
+                                <th>إجمالي الغياب</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>أحمد محمود</td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٤/٥ <span class="attendance-badge badge-late">تأخير</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٢٠</td>
+                                <td>١</td>
+                            </tr>
+                            <tr>
+                                <td>فاطمة علي</td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٢٢</td>
+                                <td>٠</td>
+                            </tr>
+                            <tr>
+                                <td>يوسف حسن</td>
+                                <td>٤/٥ <span class="attendance-badge badge-absent">غائب</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٤/٥ <span class="attendance-badge badge-absent">غائب</span></td>
+                                <td>٤/٥ <span class="attendance-badge badge-absent">غائب</span></td>
+                                <td>١٨</td>
+                                <td>٣</td>
+                            </tr>
+                            <tr>
+                                <td>ليلى عمر</td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٥/٥ <span class="attendance-badge badge-present">كامل</span></td>
+                                <td>٢١</td>
+                                <td>١</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+<!-- ملخص نهاية الفصل -->
+                <div style="margin-top: 40px; background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 100%); color: white; padding: 30px; border-radius: 15px; text-align: center;">
+                    <h3 style="font-size: 28px; margin-bottom: 20px;">ملخص نهاية الفصل الدراسي الأول</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                        <div>
+                            <div style="font-size: 48px; font-weight: bold;">٩٣٪</div>
+                            <div>نسبة الحضور العامة</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 48px; font-weight: bold;">٤٥٢</div>
+                            <div>إجمالي أيام الحضور</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 48px; font-weight: bold;">٣٢</div>
+                            <div>إجمالي أيام الغياب</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function showTab(tabName) {
+            // إخفاء كل التبويبات
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            document.getElementById(tabName).classList.add('active');
+            
+            // تحديث حالة الأزرار
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // تفعيل الروابط
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetSection.offsetTop - 140,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
