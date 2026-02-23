@@ -735,25 +735,27 @@
                 if (booking.status === 'cancelled') statusClass = 'status-cancelled';
 
                 row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${booking.customer_name}</td>
-                    <td>${booking.customer_phone}</td>
-                    <td>${booking.booking_date}</td>
-                    <td>${booking.booking_time}</td>
-                    <td>${stadiumName}</td>
-                    <td>${booking.players_count}</td>
-                    <td><span class="status-badge ${statusClass}">${booking.status === 'confirmed' ? 'مؤكد' : booking.status === 'pending' ? 'معلق' : 'ملغي'}</span></td>
-                    <td>
-                        <button class="action-btn" onclick="viewBooking('${booking.id}')" title="عرض">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="action-btn" onclick="editBooking('${booking.id}')" title="تعديل">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn delete" onclick="showDeleteModal('${booking.id}', '${booking.customer_name}')" title="حذف">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
+    <td>${index + 1}</td>
+    <td>${booking.customer_name}</td>
+    <td>${booking.customer_phone}</td>
+    <td>${booking.booking_date}</td>
+    <td>${booking.booking_time}</td>
+    <td>${stadiumName}</td>
+    <td>${booking.players_count}</td>
+    <td><span class="status-badge ${statusClass}">${booking.status === 'confirmed' ? 'مؤكد' : booking.status === 'pending' ? 'معلق' : 'ملغي'}</span></td>
+    <td>
+        <button class="action-btn" onclick="viewBooking('${booking.id}')" title="عرض">
+            <i class="fas fa-eye"></i>
+        </button>
+        <button class="action-btn" onclick="editBooking('${booking.id}')" title="تعديل">
+            <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn delete" onclick="showDeleteModal('${booking.id}', '${booking.customer_name}')" title="حذف">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+`;
+
                 `;
 
                 tbody.appendChild(row);
@@ -931,8 +933,8 @@
         // تهيئة الصفحة
         loadData();
 
-        // تحديث تلقائي كل 30 ثانية
-        setInterval(loadData, 30000);
+
+        
     </script>
 </body>
 </html>
