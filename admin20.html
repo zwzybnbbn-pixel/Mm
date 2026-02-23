@@ -266,38 +266,27 @@
         }
 
         
-        /* تنسيق محسن للأزرار لضمان ظهور الأيقونات */
+/* تنسيق الأزرار داخل الجدول */
 .action-btn {
-    background: rgba(255, 215, 0, 0.1); /* خلفية خفيفة خلف الأيقونة */
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    color: #ffd700 !important; /* لون ذهبي واضح */
-    cursor: pointer;
-    margin: 0 5px;
-    font-size: 1.2rem; /* تكبير الحجم قليلًا */
-    transition: all 0.3s;
-    width: 35px;
-    height: 35px;
+    background: rgba(255, 215, 0, 0.1) !important;
+    border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    color: #ffd700 !important; /* اللون الذهبي */
+    padding: 8px;
+    margin: 2px;
     border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.action-btn:hover {
-    background: #ffd700;
-    color: #0a0f1e !important;
-    transform: scale(1.1);
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .action-btn.delete {
-    color: #ff4444 !important;
-    border-color: rgba(255, 68, 68, 0.3);
+    color: #ff4444 !important; /* لون السلة (أحمر) */
 }
 
-.action-btn.delete:hover {
-    background: #ff4444;
-    color: #fff !important;
+.action-btn i {
+    font-size: 1.1rem;
+    pointer-events: none; /* لمنع تداخل الضغط مع الأيقونة */
 }
+
 
 /* التأكد من أن أيقونات Font Awesome تظهر بشكل صحيح */
 .fas, .fab, .fa {
