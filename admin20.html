@@ -722,45 +722,47 @@
 
         // عرض الحجوزات في الجدول
         function displayBookings(filteredBookings = bookings) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return; // تأمين الكود في حال عدم وجود الجدول
+    
+    tbody.innerHTML = '';
 
-            filteredBookings.forEach((booking, index) => {
-                const row = document.createElement('tr');
-                
-                const stadiumName = booking.stadium_type === 'big' ? 'كبير' : 'صغير';
-                
-                let statusClass = 'status-confirmed';
-                if (booking.status === 'pending') statusClass = 'status-pending';
-                if (booking.status === 'cancelled') statusClass = 'status-cancelled';
+    filteredBookings.forEach((booking, index) => {
+        const row = document.createElement('tr');
+        
+        const stadiumName = booking.stadium_type === 'big' ? 'كبير' : 'صغير';
+        
+        let statusClass = 'status-confirmed';
+        if (booking.status === 'pending') statusClass = 'status-pending';
+        if (booking.status === 'cancelled') statusClass = 'status-cancelled';
 
-                row.innerHTML = `
-    <td>${index + 1}</td>
-    <td>${booking.customer_name}</td>
-    <td>${booking.customer_phone}</td>
-    <td>${booking.booking_date}</td>
-    <td>${booking.booking_time}</td>
-    <td>${stadiumName}</td>
-    <td>${booking.players_count}</td>
-    <td><span class="status-badge ${statusClass}">${booking.status === 'confirmed' ? 'مؤكد' : booking.status === 'pending' ? 'معلق' : 'ملغي'}</span></td>
-    <td>
-        <button class="action-btn" onclick="viewBooking('${booking.id}')" title="عرض">
-            <i class="fas fa-eye"></i>
-        </button>
-        <button class="action-btn" onclick="editBooking('${booking.id}')" title="تعديل">
-            <i class="fas fa-edit"></i>
-        </button>
-        <button class="action-btn delete" onclick="showDeleteModal('${booking.id}', '${booking.customer_name}')" title="حذف">
-            <i class="fas fa-trash"></i>
-        </button>
-    </td>
-`;
+        // لاحظ هنا تم مسح الإغلاق الزائد الذي كان يسبب المشكلة
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${booking.customer_name}</td>
+            <td>${booking.customer_phone}</td>
+            <td>${booking.booking_date}</td>
+            <td>${booking.booking_time}</td>
+            <td>${stadiumName}</td>
+            <td>${booking.players_count}</td>
+            <td><span class="status-badge ${statusClass}">${booking.status === 'confirmed' ? 'مؤكد' : booking.status === 'pending' ? 'معلق' : 'ملغي'}</span></td>
+            <td>
+                <button class="action-btn" onclick="viewBooking('${booking.id}')" title="عرض">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" onclick="editBooking('${booking.id}')" title="تعديل">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete" onclick="showDeleteModal('${booking.id}', '${booking.customer_name}')" title="حذف">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
 
-                `;
+        tbody.appendChild(row);
+    });
+}
 
-                tbody.appendChild(row);
-            });
-        }
 
         // تصفية الحجوزات
         function filterBookings() {
