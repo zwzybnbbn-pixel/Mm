@@ -712,20 +712,19 @@
         // عرض الحجوزات في الجدول
         function displayBookings(filteredBookings = bookings) {
     const tbody = document.getElementById('tableBody');
-    if (!tbody) return; // تأمين الكود في حال عدم وجود الجدول
+    if (!tbody) return;
     
     tbody.innerHTML = '';
 
     filteredBookings.forEach((booking, index) => {
         const row = document.createElement('tr');
-        
         const stadiumName = booking.stadium_type === 'big' ? 'كبير' : 'صغير';
         
         let statusClass = 'status-confirmed';
         if (booking.status === 'pending') statusClass = 'status-pending';
         if (booking.status === 'cancelled') statusClass = 'status-cancelled';
 
-        // لاحظ هنا تم مسح الإغلاق الزائد الذي كان يسبب المشكلة
+        // الكود أدناه تم تصحيحه ليعمل بشكل سليم
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${booking.customer_name}</td>
@@ -747,10 +746,10 @@
                 </button>
             </td>
         `;
-
         tbody.appendChild(row);
     });
 }
+
 
 
         // تصفية الحجوزات
