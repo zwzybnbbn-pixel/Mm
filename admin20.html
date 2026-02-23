@@ -266,22 +266,45 @@
         }
 
         .action-btn {
-            background: none;
-            border: none;
-            color: #ffd700;
-            cursor: pointer;
-            margin: 0 5px;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
+        /* تنسيق محسن للأزرار لضمان ظهور الأيقونات */
+.action-btn {
+    background: rgba(255, 215, 0, 0.1); /* خلفية خفيفة خلف الأيقونة */
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #ffd700 !important; /* لون ذهبي واضح */
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.2rem; /* تكبير الحجم قليلًا */
+    transition: all 0.3s;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .action-btn:hover {
-            transform: scale(1.2);
-        }
+.action-btn:hover {
+    background: #ffd700;
+    color: #0a0f1e !important;
+    transform: scale(1.1);
+}
 
-        .action-btn.delete:hover {
-            color: #ff4444;
-        }
+.action-btn.delete {
+    color: #ff4444 !important;
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.action-btn.delete:hover {
+    background: #ff4444;
+    color: #fff !important;
+}
+
+/* التأكد من أن أيقونات Font Awesome تظهر بشكل صحيح */
+.fas, .fab, .fa {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
 
         /* Loading Spinner */
         .loading-spinner {
