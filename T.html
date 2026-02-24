@@ -1127,27 +1127,49 @@ const firebaseConfig = {
         });
 
         // ========== تسجيل الدخول ==========
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            try {
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
-                errorDiv.style.display = 'none';
-                
-                await auth.signInWithEmailAndPassword(email, password);
-            } catch (error) {
-                errorDiv.textContent = 'خطأ في البريد الإلكتروني أو كلمة المرور';
-                errorDiv.style.display = 'block';
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
-            }
-        });
+        // 1. استهدف الزر مباشرة بدلاً من الفورم لضمان السيطرة
+document.getElementById('loginBtn').onclick = async (e) => {
+    // منع أي سلوك افتراضي فوراً
+    if (e) e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('loginError');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    // التحقق من المدخلات قبل الإرسال لتجنب الأخطاء
+    if (!email || !password) {
+        errorDiv.textContent = 'يرجى إدخال البريد وكلمة المرور';
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    try {
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+        errorDiv.style.display = 'none';
+        
+        // تنفيذ عملية تسجيل الدخول
+        await auth.signInWithEmailAndPassword(email, password);
+        
+        // ملاحظة: التحويل للوحة سيتم تلقائياً عبر دالة onAuthStateChanged الموجودة في كودك السابق
+        
+    } catch (error) {
+        console.error("Firebase Error Details:", error); // هذا السطر سيظهر لك السبب الحقيقي في Console
+        
+        // عرض رسالة خطأ واضحة بناءً على نوع الخطأ
+        if (error.code === 'auth/unauthorized-domain') {
+            errorDiv.textContent = 'هذا النطاق (Vercel) غير مصرح به في Firebase Console.';
+        } else {
+            errorDiv.textContent = 'خطأ في بيانات الدخول أو مشكلة في الاتصال';
+        }
+        
+        errorDiv.style.display = 'block';
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+    }
+};
+
 
         // ========== تحميل بيانات لوحة التحكم ==========
         async function loadDashboardData() {
