@@ -889,21 +889,21 @@
                 <p>لوحة التحكم الإدارية المتكاملة</p>
             </div>
             <div class="login-body">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" class="form-control" id="email" value="admin@tawseelo.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" class="form-control" id="password" value="Admin@123" required>
-                    </div>
-                    <div id="loginError" style="color: #e74c3c; margin-bottom: 15px; display: none;"></div>
-                    <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
-                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-                    </button>
-                </form>
-            </div>
+    <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" class="form-control" id="email" value="admin@tawseelo.com" required>
+    </div>
+    <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" class="form-control" id="password" value="Admin@123" required>
+    </div>
+    <div id="loginError" style="color: #e74c3c; margin-bottom: 15px; display: none; background: #fee; padding: 10px; border-radius: 8px; font-size: 14px;"></div>
+    
+    <button type="button" class="btn btn-primary btn-block" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+    </button>
+</div>
+
         </div>
     </div>
 
@@ -1127,17 +1127,13 @@ const firebaseConfig = {
         });
 
         // ========== تسجيل الدخول ==========
-        // 1. استهدف الزر مباشرة بدلاً من الفورم لضمان السيطرة
-document.getElementById('loginBtn').onclick = async (e) => {
-    // منع أي سلوك افتراضي فوراً
-    if (e) e.preventDefault();
-    
+        // استهداف الزر مباشرة لفك الارتباط بحدث الـ Submit الخاص بالمتصفح
+document.getElementById('loginBtn').addEventListener('click', async () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const errorDiv = document.getElementById('loginError');
     const loginBtn = document.getElementById('loginBtn');
     
-    // التحقق من المدخلات قبل الإرسال لتجنب الأخطاء
     if (!email || !password) {
         errorDiv.textContent = 'يرجى إدخال البريد وكلمة المرور';
         errorDiv.style.display = 'block';
@@ -1145,30 +1141,41 @@ document.getElementById('loginBtn').onclick = async (e) => {
     }
 
     try {
+        // تجهيز الواجهة للتحميل
         loginBtn.disabled = true;
         loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
         errorDiv.style.display = 'none';
         
-        // تنفيذ عملية تسجيل الدخول
+        // تنفيذ عملية تسجيل الدخول مع Firebase
         await auth.signInWithEmailAndPassword(email, password);
         
-        // ملاحظة: التحويل للوحة سيتم تلقائياً عبر دالة onAuthStateChanged الموجودة في كودك السابق
+        // ملاحظة: التحويل سيتم عبر دالة onAuthStateChanged تلقائياً
         
     } catch (error) {
-        console.error("Firebase Error Details:", error); // هذا السطر سيظهر لك السبب الحقيقي في Console
+        console.error("Firebase Error:", error.code, error.message);
         
-        // عرض رسالة خطأ واضحة بناءً على نوع الخطأ
-        if (error.code === 'auth/unauthorized-domain') {
-            errorDiv.textContent = 'هذا النطاق (Vercel) غير مصرح به في Firebase Console.';
-        } else {
-            errorDiv.textContent = 'خطأ في بيانات الدخول أو مشكلة في الاتصال';
-        }
-        
-        errorDiv.style.display = 'block';
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+        errorDiv.style.display = 'block';
+
+        // عرض رسائل خطأ مفهومة للمستخدم والمبرمج
+        switch (error.code) {
+            case 'auth/unauthorized-domain':
+                errorDiv.innerHTML = '<b>خطأ في التصريح:</b> الرابط الحالي غير مضاف في Firebase Console.';
+                break;
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+                errorDiv.textContent = 'خطأ في البريد الإلكتروني أو كلمة المرور';
+                break;
+            case 'auth/network-request-failed':
+                errorDiv.textContent = 'تأكد من اتصالك بالإنترنت';
+                break;
+            default:
+                errorDiv.textContent = 'حدث خطأ غير متوقع: ' + error.message;
+        }
     }
-};
+});
+
 
 
         // ========== تحميل بيانات لوحة التحكم ==========
