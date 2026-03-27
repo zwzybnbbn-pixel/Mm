@@ -4,138 +4,278 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام مدرسة رواد المستقبل | الإدارة الذكية</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --burgundy: #800020; --beige: #F8F8F4; }
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--beige); margin: 0; padding: 0; }
-        .bg-burgundy { background-color: var(--burgundy) !important; }
-        .text-burgundy { color: var(--burgundy) !important; }
+        /* المتغيرات الأساسية */
+        :root {
+            --burgundy: #800020;
+            --beige: #F8F8F4;
+            --white: #ffffff;
+            --gray-light: #e5e7eb;
+            --blue-main: #1e40af;
+            --pink-light: #fdf2f8;
+            --blue-light: #eff6ff;
+        }
+
+        /* التنسيق العام */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--beige);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 40px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* الهيدر */
+        nav {
+            background-color: var(--burgundy);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-home {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* البطاقات */
+        .custom-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid var(--gray-light);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
         .step-hidden { display: none !important; }
-        .custom-card { background: white; border-radius: 1.5rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #e5e7eb; padding: 0.75rem; }
+
+        /* الأزرار */
+        .grid-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-gender {
+            width: 160px;
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-male { background-color: var(--blue-light); border-color: #dbeafe; color: #1e40af; }
+        .btn-female { background-color: var(--pink-light); border-color: #fce7f3; color: #9d174d; }
+
+        .btn-gender span { display: block; font-size: 40px; margin-bottom: 10px; }
+
+        /* الجداول */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid var(--gray-light);
+            padding: 12px;
+            text-align: center;
+        }
+
+        th { background-color: #f9fafb; color: var(--burgundy); font-weight: bold; }
+        .bg-burgundy-table { background-color: var(--burgundy) !important; color: white; }
+
+        /* شبكة الطلاب */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .student-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid var(--gray-light);
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .student-card:hover { border-color: var(--burgundy); transform: translateY(-3px); }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            color: var(--burgundy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+
+        /* صناديق الحضور */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .attend-box { padding: 15px; border-radius: 15px; border: 2px solid; }
+        .box-green { background: #f0fdf4; border-color: #dcfce7; color: #15803d; }
+        .box-red { background: #fef2f2; border-color: #fee2e2; color: #b91c1c; }
+
+        /* ريسبونسيف للجوال */
+        @media (max-width: 600px) {
+            .grid-selection { flex-direction: column; align-items: center; }
+            .btn-gender { width: 100%; }
+            .students-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
-<body class="pb-10">
+<body>
 
-    <nav class="bg-burgundy text-white p-4 shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">🏫 نظام رواد المستقبل</h1>
-            <button onclick="location.reload()" class="text-xs bg-white bg-opacity-20 px-4 py-2 rounded-lg">الرئيسية</button>
+    <nav>
+        <div class="container nav-content">
+            <h1 style="font-size: 20px; font-weight: bold; margin: 0;">🏫 نظام رواد المستقبل</h1>
+            <button onclick="location.reload()" class="btn-home">الرئيسية</button>
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto px-4 mt-8">
+    <div class="container">
 
-        <section id="step-1" class="custom-card p-10 text-center">
-            <h2 class="text-2xl font-black text-burgundy mb-8">اختر القسم</h2>
-            <div class="flex justify-center gap-6">
-                <button onclick="setGender('بنين')" class="w-40 p-6 bg-blue-50 border-2 border-blue-100 rounded-2xl hover:bg-blue-100 transition shadow-sm">
-                    <span class="text-5xl block mb-2">👨‍🎓</span>
-                    <span class="font-bold text-blue-800">بنين</span>
+        <section id="step-1" class="custom-card">
+            <h2 style="color: var(--burgundy); font-weight: 900; margin-bottom: 25px;">اختر القسم</h2>
+            <div class="grid-selection">
+                <button onclick="setGender('بنين')" class="btn-gender btn-male">
+                    <span>👨‍🎓</span> <b>بنين</b>
                 </button>
-                <button onclick="setGender('بنات')" class="w-40 p-6 bg-pink-50 border-2 border-pink-100 rounded-2xl hover:bg-pink-100 transition shadow-sm">
-                    <span class="text-5xl block mb-2">👩‍🎓</span>
-                    <span class="font-bold text-pink-800">بنات</span>
+                <button onclick="setGender('بنات')" class="btn-gender btn-female">
+                    <span>👩‍🎓</span> <b>بنات</b>
                 </button>
             </div>
         </section>
 
-        <section id="step-2" class="step-hidden custom-card p-8">
-            <h2 class="text-xl font-black text-burgundy mb-6">تحديد الصف والشعبة</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section id="step-2" class="step-hidden custom-card" style="text-align: right;">
+            <h2 style="color: var(--burgundy); margin-bottom: 20px;">تحديد الصف والشعبة</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                 <div>
-                    <label class="block text-sm font-bold mb-2">اختر الصف الدراسي:</label>
-                    <select id="grade-select" class="w-full p-4 border rounded-xl outline-none focus:ring-2 focus:ring-burgundy">
-                        <option value="الخامس" selected>الصف الخامس الابتدائي</option>
+                    <label style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px;">اختر الصف:</label>
+                    <select id="grade-select" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
+                        <option value="الخامس">الصف الخامس الابتدائي</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold mb-2 text-right">اختر الشعبة:</label>
-                    <div class="flex gap-4">
-                        <button onclick="loadStudents('أ')" class="flex-1 py-4 bg-burgundy text-white rounded-xl font-bold shadow-md">شعبة (أ)</button>
-                        <button onclick="loadStudents('ب')" class="flex-1 py-4 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300">شعبة (ب)</button>
+                    <label style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px;">اختر الشعبة:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="loadStudents('أ')" style="flex: 1; padding: 12px; background: var(--burgundy); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">شعبة (أ)</button>
+                        <button onclick="loadStudents('ب')" style="flex: 1; padding: 12px; background: #eee; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">شعبة (ب)</button>
                     </div>
                 </div>
             </div>
-            <button onclick="goToStep(1)" class="mt-6 text-sm text-gray-400 underline block text-right">← العودة للقسم</button>
+            <p onclick="goToStep(1)" style="margin-top: 20px; color: #999; cursor: pointer; text-decoration: underline; font-size: 13px;">← العودة</p>
         </section>
 
-        <section id="step-3" class="step-hidden">
-            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl border shadow-sm">
-                <h3 id="list-title" class="font-black text-burgundy text-lg"></h3>
-                <button onclick="goToStep(2)" class="text-xs bg-gray-200 px-3 py-1 rounded">تغيير الصف</button>
+        <section id="step-3" class="step-hidden" style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid #ddd;">
+                <h3 id="list-title" style="margin: 0; color: var(--burgundy); font-weight: bold;"></h3>
+                <button onclick="goToStep(2)" style="font-size: 11px; background: #eee; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">تغيير</button>
             </div>
-            <div id="students-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            <div id="students-grid" class="students-grid"></div>
         </section>
 
-        <section id="step-4" class="step-hidden">
-            <div class="custom-card overflow-hidden">
-                <div class="bg-burgundy p-6 text-white flex justify-between items-center">
-                    <div class="flex items-center gap-4 text-right">
-                        <div id="det-avatar" class="w-12 h-12 bg-white text-burgundy rounded-full flex items-center justify-center text-xl font-bold border-2 border-white"></div>
-                        <div>
-                            <h2 id="det-name" class="font-bold text-lg leading-tight"></h2>
-                            <p id="det-meta" class="text-xs opacity-80"></p>
-                        </div>
+        <section id="step-4" class="step-hidden custom-card" style="padding: 0; overflow: hidden;">
+            <div style="background: var(--burgundy); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px; text-align: right;">
+                    <div id="det-avatar" class="avatar" style="background: white; margin: 0; width: 50px; height: 50px; font-size: 20px;"></div>
+                    <div>
+                        <h2 id="det-name" style="margin: 0; font-size: 18px;"></h2>
+                        <span id="det-meta" style="font-size: 11px; opacity: 0.8;"></span>
                     </div>
-                    <button onclick="goToStep(3)" class="text-xl font-bold bg-white bg-opacity-20 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
                 </div>
+                <button onclick="goToStep(3)" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">✕</button>
+            </div>
 
-                <div class="p-4 bg-gray-100 border-b flex flex-wrap gap-4 items-center justify-between">
-                    <select id="month-select" onchange="renderGrades()" class="p-2 rounded border text-sm font-bold bg-white">
-                        <option value="سبتمبر">سبتمبر</option>
-                        <option value="أكتوبر">أكتوبر</option>
-                        <option value="نوفمبر">نوفمبر</option>
-                        <option value="ديسمبر">ديسمبر</option>
-                        <option value="مارس" selected>مارس</option>
-                    </select>
-                    <button onclick="showYearlySummary()" class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md hover:bg-blue-800 transition">📊 المحصلة السنوية</button>
-                </div>
+            <div style="padding: 15px; background: #f9fafb; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                <select id="month-select" onchange="renderGrades()" style="padding: 5px 10px; border-radius: 5px;">
+                    <option value="سبتمبر">سبتمبر</option>
+                    <option value="مارس" selected>مارس</option>
+                </select>
+                <button onclick="showYearlySummary()" style="background: var(--blue-main); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; cursor: pointer;">📊 المحصلة السنوية</button>
+            </div>
 
-                <div class="p-6">
-                    <div id="attendance-box" class="grid grid-cols-2 gap-4 mb-6"></div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-center border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-burgundy font-bold">
-                                    <th class="p-3 text-right">المادة</th>
-                                    <th class="p-3">اختبار (40)</th>
-                                    <th class="p-3">مواظبة (10)</th>
-                                    <th class="p-3 bg-burgundy text-white">المحصلة (50)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="grades-body" class="bg-white"></tbody>
-                        </table>
-                    </div>
+            <div style="padding: 20px;">
+                <div id="attendance-box" class="attendance-grid"></div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: right;">المادة</th>
+                                <th>اختبار (40)</th>
+                                <th>مواظبة (10)</th>
+                                <th class="bg-burgundy-table">المحصلة (50)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grades-body"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <section id="step-5" class="step-hidden">
-            <div class="custom-card overflow-hidden border-2 border-blue-900">
-                <div class="bg-blue-900 p-6 text-white text-center">
-                    <h2 class="text-2xl font-black mb-1">كشف أعمال السنة</h2>
-                    <p id="yearly-student-name" class="text-sm opacity-90 italic"></p>
+        <section id="step-5" class="step-hidden custom-card" style="border: 2px solid var(--blue-main); padding: 0; overflow: hidden;">
+            <div style="background: var(--blue-main); color: white; padding: 20px;">
+                <h2 style="margin: 0;">كشف أعمال السنة</h2>
+                <p id="yearly-student-name" style="font-size: 13px; opacity: 0.9; margin-top: 5px;"></p>
+            </div>
+            <div style="padding: 20px;">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr style="background: #f3f4f6;">
+                                <th style="text-align: right;">المادة</th>
+                                <th>ف1 (50)</th>
+                                <th>ف2 (50)</th>
+                                <th style="background: #fef3c7; color: #92400e;">المجموع (100)</th>
+                                <th>التقدير</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yearly-body"></tbody>
+                    </table>
                 </div>
-                <div class="p-6">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-center border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-gray-100 font-bold">
-                                    <th class="p-3 border text-right">المادة</th>
-                                    <th class="p-3 border">الفصل الأول (50)</th>
-                                    <th class="p-3 border">الفصل الثاني (50)</th>
-                                    <th class="p-3 border bg-yellow-50 font-black text-red-800">المجموع (100)</th>
-                                    <th class="p-3 border">التقدير</th>
-                                </tr>
-                            </thead>
-                            <tbody id="yearly-body" class="bg-white"></tbody>
-                        </table>
-                    </div>
-                    <button onclick="goToStep(4)" class="w-full mt-6 py-3 bg-gray-800 text-white font-bold rounded-xl shadow-lg">← العودة</button>
-                </div>
+                <button onclick="goToStep(4)" style="width: 100%; margin-top: 20px; padding: 15px; background: #374151; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">← العودة</button>
             </div>
         </section>
     </div>
@@ -194,9 +334,9 @@
                 const s = studentsDB[id];
                 if(s.gender === currentGender && s.section === sec) {
                     const card = document.createElement('div');
-                    card.className = "bg-white p-4 rounded-xl border-2 hover:border-burgundy cursor-pointer text-center transition shadow-sm hover:shadow-md";
+                    card.className = "student-card";
                     card.onclick = () => showDetails(id);
-                    card.innerHTML = `<div class="w-10 h-10 bg-gray-100 text-burgundy rounded-full flex items-center justify-center mx-auto mb-2 font-bold border">${s.name[0]}</div><p class="text-xs font-bold text-gray-800">${s.name}</p>`;
+                    card.innerHTML = `<div class="avatar">${s.name[0]}</div><p style="font-size: 12px; font-weight: bold; margin: 0;">${s.name}</p>`;
                     grid.appendChild(card);
                 }
             });
@@ -221,11 +361,11 @@
             const data = student.monthlyData[month] || { attend: 0, absent: 0, grades: {} };
 
             attendanceBox.innerHTML = `
-                <div class="bg-green-50 p-4 rounded-xl border-2 border-green-100 text-center text-green-700">
-                    <p class="text-xs font-bold mb-1">حضور</p><p class="text-2xl font-black">${data.attend}</p>
+                <div class="attend-box box-green">
+                    <small>حضور</small><br><b style="font-size: 20px;">${data.attend}</b>
                 </div>
-                <div class="bg-red-50 p-4 rounded-xl border-2 border-red-100 text-center text-red-700">
-                    <p class="text-xs font-bold mb-1">غياب</p><p class="text-2xl font-black">${data.absent}</p>
+                <div class="attend-box box-red">
+                    <small>غياب</small><br><b style="font-size: 20px;">${data.absent}</b>
                 </div>
             `;
 
@@ -241,11 +381,11 @@
                 const g = data.grades[sub.key] || [0, 0];
                 const total = g[0] + g[1];
                 table.innerHTML += `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="p-3 font-bold text-right border">${sub.label}</td>
-                        <td class="p-3 text-center border">${g[0]}</td>
-                        <td class="p-3 text-center border">${g[1]}</td>
-                        <td class="p-3 text-center font-bold text-red-800 bg-gray-50 border">${total}</td>
+                    <tr>
+                        <td style="text-align: right; font-weight: bold;">${sub.label}</td>
+                        <td>${g[0]}</td>
+                        <td>${g[1]}</td>
+                        <td style="font-weight: bold; color: var(--burgundy); background: #f9fafb;">${total}</td>
                     </tr>
                 `;
             });
@@ -259,12 +399,12 @@
             const subjects = ["القرآن الكريم", "الرياضيات", "اللغة العربية", "العلوم"];
             subjects.forEach(sub => {
                 body.innerHTML += `
-                    <tr class="hover:bg-blue-50 transition text-center">
-                        <td class="p-3 font-bold border text-right">${sub}</td>
-                        <td class="p-3 border">48</td>
-                        <td class="p-3 border">49</td>
-                        <td class="p-3 border font-black text-red-800 bg-yellow-50 text-lg">97</td>
-                        <td class="p-3 border font-bold text-blue-700">ممتاز</td>
+                    <tr>
+                        <td style="text-align: right; font-weight: bold;">${sub}</td>
+                        <td>48</td>
+                        <td>49</td>
+                        <td style="font-weight: bold; color: #b91c1c; background: #fffbeb;">97</td>
+                        <td style="color: var(--blue-main); font-weight: bold;">ممتاز</td>
                     </tr>`;
             });
             goToStep(5);
@@ -272,4 +412,3 @@
     </script>
 </body>
 </html>
-
