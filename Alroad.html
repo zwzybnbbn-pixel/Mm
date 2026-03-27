@@ -3,1777 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسة رواد المستقبل - الموقع الرسمي</title>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>نظام مدرسة رواد المستقبل | الإدارة الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #fff9e6;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        :root {
-            --beige: #f8e8c9;
-            --beige-dark: #ecd9b5;
-            --beige-light: #fff9e6;
-            --burgundy: #8b1a3a;
-            --burgundy-light: #a8455a;
-            --burgundy-dark: #6b132b;
-        }
-
-        /* الشريط العلوي */
-        .top-bar {
-            background-color: var(--burgundy);
-            color: white;
-            padding: 8px 0;
-            font-size: 14px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-
-        .top-bar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .contact-info span {
-            margin-left: 20px;
-        }
-
-        .contact-info i {
-            margin-left: 5px;
-        }
-
-        .social-icons a {
-            color: white;
-            margin-right: 15px;
-            text-decoration: none;
-            font-size: 16px;
-            transition: opacity 0.3s;
-        }
-
-        .social-icons a:hover {
-            opacity: 0.8;
-        }
-
-        /* الهيدر الرئيسي */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 15px 0;
-            position: fixed;
-            top: 40px;
-            left: 0;
-            right: 0;
-            z-index: 999;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo h1 {
-            color: var(--burgundy);
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .logo span {
-            color: var(--burgundy-light);
-            font-size: 14px;
-            display: block;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-right: 25px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 16px;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: var(--burgundy);
-        }
-
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--burgundy);
-        }
-
-        .cta-button {
-            background-color: var(--burgundy);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 14px;
-        }
-
-        .cta-button:hover {
-            background-color: var(--burgundy-dark);
-        }
-
-        /* الصفحات */
-        .page {
-            min-height: 100vh;
-            padding: 140px 0 60px;
-            border-bottom: 1px solid var(--beige-dark);
-        }
-
-        .page:last-child {
-            border-bottom: none;
-        }
-
-        .page-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .page-header h2 {
-            font-size: 42px;
-            color: var(--burgundy);
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .page-header h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background-color: var(--burgundy);
-        }
-
-        .page-header p {
-            color: #666;
-            font-size: 18px;
-        }
-
-        /* الصفحة الرئيسية */
-        #home {
-            background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
-        }
-
-        .hero-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 50px;
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-text h2 {
-            font-size: 52px;
-            color: var(--burgundy);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero-text p {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-primary {
-            background-color: var(--burgundy);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--burgundy-dark);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--burgundy);
-            border: 2px solid var(--burgundy);
-            padding: 10px 28px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--burgundy);
-            color: white;
-        }
-
-        .hero-image {
-    /* تجعل الصورة تطير فوق العناصر وتذهب للركن */
-    position: absolute; 
-    top: 20px;    /* المسافة من الأعلى */
-    left: 20px;   /* المسافة من اليسار */
-    z-index: 1000; /* لضمان ظهورها فوق أي نص أو خلفية */
-}
-
-.hero-image img {
-    width: 120px; /* حجم مناسب للوجو في الركن */
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-/* حركة بسيطة عند تمرير الماوس */
-.hero-image img:hover {
-    transform: scale(1.05);
-}
-
-
-        /* صفحة الدرجات */
-        #grades {
-            background-color: white;
-        }
-
-        .grades-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box input {
-            padding: 10px 15px;
-            border: 1px solid var(--beige-dark);
-            border-radius: 5px;
-            width: 250px;
-            font-size: 14px;
-        }
-
-        .search-box button {
-            background-color: var(--burgundy);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .search-box button:hover {
-            background-color: var(--burgundy-dark);
-        }
-
-        .grades-filter {
-            display: flex;
-            gap: 10px;
-        }
-
-        .grade-btn {
-            background-color: var(--beige-light);
-            color: var(--burgundy);
-            border: 1px solid var(--burgundy);
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .grade-btn.active,
-        .grade-btn:hover {
-            background-color: var(--burgundy);
-            color: white;
-        }
-
-        .grades-table-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            overflow-x: auto;
-            margin-bottom: 40px;
-            border: 1px solid var(--beige);
-        }
-
-        .grades-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-
-        .grades-table th {
-            background-color: var(--burgundy);
-            color: white;
-            padding: 15px;
-            font-weight: 600;
-        }
-
-        .grades-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--beige);
-            text-align: center;
-        }
-
-        .grades-table tr:hover {
-            background-color: var(--beige-light);
-        }
-
-        .student-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .student-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .student-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .grade-score {
-            font-weight: bold;
-            color: var(--burgundy);
-        }
-
-        .grade-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-excellent {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-very-good {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status-good {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .attendance-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .attendance-card {
-            background-color: var(--beige-light);
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid var(--beige);
-        }
-
-        .attendance-card i {
-            font-size: 40px;
-            color: var(--burgundy);
-            margin-bottom: 15px;
-        }
-
-        .attendance-card h3 {
-            color: var(--burgundy);
-            margin-bottom: 10px;
-        }
-
-        .attendance-number {
-            font-size: 42px;
-            font-weight: bold;
-            color: var(--burgundy-dark);
-        }
-
-        /* صفحة الدوري */
-        #league {
-            background: linear-gradient(135deg, var(--beige-light) 0%, var(--beige) 100%);
-        }
-
-        .league-header {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
-            color: white;
-            padding: 50px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .league-header h2 {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .league-header i {
-            font-size: 70px;
-            margin-bottom: 20px;
-            color: var(--beige);
-        }
-
-        .teams-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .team-card {
-            background-color: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .team-header {
-            background-color: var(--burgundy);
-            color: white;
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .team-logo {
-            width: 70px;
-            height: 70px;
-            background-color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: var(--burgundy);
-        }
-
-        .team-name h3 {
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
-
-        .team-players {
-            padding: 25px;
-        }
-
-        .player-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--beige);
-        }
-
-        .player-item:last-child {
-            border-bottom: none;
-        }
-
-        .player-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .player-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .player-info {
-            flex: 1;
-        }
-
-        .player-name {
-            font-weight: bold;
-            color: var(--burgundy);
-            font-size: 16px;
-        }
-
-        .player-number {
-            color: #666;
-            font-size: 13px;
-        }
-
-        .player-position {
-            background-color: var(--burgundy);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .matches-section {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-        }
-
-        .matches-section h3 {
-            color: var(--burgundy);
-            font-size: 28px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .match-card {
-            background-color: var(--beige-light);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid var(--beige);
-        }
-
-        .match-teams {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .match-team {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 150px;
-        }
-
-        .match-team span {
-            font-weight: bold;
-            color: var(--burgundy);
-            font-size: 18px;
-        }
-
-        .match-score {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--burgundy-dark);
-        }
-
-        .match-date {
-            color: #666;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .standings-table {
-            background-color: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .standings-table h3 {
-            background-color: var(--burgundy);
-            color: white;
-            padding: 20px;
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .standings-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .standings-table th {
-            background-color: var(--beige);
-            color: var(--burgundy);
-            padding: 15px;
-            font-weight: 600;
-        }
-
-        .standings-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--beige);
-            text-align: center;
-        }
-
-        /* صفحة الأخبار */
-        #news {
-            background-color: white;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .news-card {
-            background-color: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .news-image {
-            height: 250px;
-            overflow: hidden;
-        }
-
-        .news-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .news-card:hover .news-image img {
-            transform: scale(1.1);
-        }
-
-        .news-content {
-            padding: 25px;
-        }
-
-        .news-content h3 {
-            color: var(--burgundy);
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-
-        .news-content p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .read-more {
-            color: var(--burgundy);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* صفحة الاتصال */
-        #contact {
-            background: linear-gradient(135deg, var(--beige) 0%, var(--beige-dark) 100%);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-        }
-
-        .contact-info-section {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .contact-info-section h3 {
-            color: var(--burgundy);
-            font-size: 28px;
-            margin-bottom: 30px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .info-icon {
-            width: 60px;
-            height: 60px;
-            background-color: var(--burgundy);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 20px;
-        }
-
-        .info-icon i {
-            color: white;
-            font-size: 24px;
-        }
-
-        .info-text h4 {
-            color: var(--burgundy);
-            margin-bottom: 5px;
-            font-size: 18px;
-        }
-
-        .info-text p {
-            color: #666;
-        }
-
-        .contact-form {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .contact-form h3 {
-            color: var(--burgundy);
-            font-size: 28px;
-            margin-bottom: 30px;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid var(--beige-dark);
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        .contact-form textarea {
-            height: 150px;
-            resize: vertical;
-        }
-
-        .contact-form button {
-            background-color: var(--burgundy);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
-
-        .contact-form button:hover {
-            background-color: var(--burgundy-dark);
-        }
-
-        /* صفحة عن المدرسة */
-        #about {
-            background-color: white;
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .about-text h3 {
-            color: var(--burgundy);
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        .about-text p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        .about-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .about-stat {
-            text-align: center;
-            padding: 20px;
-            background-color: var(--beige-light);
-            border-radius: 10px;
-        }
-
-        .about-stat h4 {
-            font-size: 36px;
-            color: var(--burgundy);
-        }
-
-        .about-image img {
-            width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .value-card {
-            text-align: center;
-            padding: 30px;
-            background-color: var(--beige-light);
-            border-radius: 10px;
-        }
-
-        .value-card i {
-            font-size: 40px;
-            color: var(--burgundy);
-            margin-bottom: 20px;
-        }
-
-        .value-card h4 {
-            color: var(--burgundy);
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        /* الفوتر */
-        footer {
-            background-color: var(--burgundy-dark);
-            color: white;
-            padding: 60px 0 20px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1.5fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-about h3 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .footer-about p {
-            opacity: 0.8;
-            line-height: 1.8;
-        }
-
-        .footer-links h4 {
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: white;
-            opacity: 0.8;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .footer-links a:hover {
-            opacity: 1;
-        }
-
-        .footer-newsletter input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 5px;
-        }
-
-        .footer-newsletter button {
-            background-color: var(--beige);
-            color: var(--burgundy);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s;
-            width: 100%;
-        }
-
-        .footer-newsletter button:hover {
-            opacity: 0.9;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .hero-content,
-            .about-content,
-            .contact-grid,
-            .teams-grid,
-            .values-grid,
-            .news-grid,
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-text {
-                text-align: center;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .page {
-                padding: 180px 0 40px;
-            }
-
-            .match-card {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .match-teams {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .attendance-summary {
-                grid-template-columns: 1fr;
-            }
-        }
+        :root { --burgundy: #800020; --beige: #F8F8F4; }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--beige); }
+        .bg-burgundy { background-color: var(--burgundy); }
+        .text-burgundy { color: var(--burgundy); }
+        .step-hidden { display: none; }
+        .card-hover:hover { transform: translateY(-5px); border-color: var(--burgundy); }
     </style>
 </head>
-<body>
-    <!-- الشريط العلوي -->
-    
+<body class="pb-10">
 
-    
-        <div class="container header-content">
-            <div class="logo">
-                <h1>مدرسة رواد المستقبل</h1>
-                <span>التميز في التعليم منذ ٢٠٢٠ </span>
-            </div>
-            
+    <nav class="bg-burgundy text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-black">🏫 نظام رواد المستقبل</h1>
+            <button onclick="location.reload()" class="text-xs bg-white/20 px-3 py-1 rounded">الرئيسية</button>
         </div>
-   
+    </nav>
 
-    <!-- الصفحة الرئيسية -->
-    <section id="home" class="page">
-        <div class="container hero-content">
-            <div class="hero-text">
-                <h2>مستقبل أبنائك يبدأ من هنا</h2>
-                <p>نحن في مدرسة الرواد نؤمن بأن التعليم هو أساس بناء المستقبل. نقدم بيئة تعليمية متميزة تجمع بين الأصالة والحداثة، مع نخبة من أفضل المعلمين وأحدث الوسائل التكنولوجية.</p>
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn-primary">تسجيل الآن</a>
-                    <a href="#about" class="btn-secondary">تعرف علينا</a>
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+
+        <section id="step-1" class="text-center py-10 bg-white rounded-3xl shadow-sm border">
+            <h2 class="text-2xl font-black text-burgundy mb-8">اختر القسم</h2>
+            <div class="flex justify-center gap-6">
+                <button onclick="setGender('بنين')" class="w-40 p-6 bg-blue-50 border rounded-2xl hover:bg-blue-100 transition">
+                    <span class="text-5xl block">👨‍🎓</span>
+                    <span class="font-bold text-blue-800">بنين</span>
+                </button>
+                <button onclick="setGender('بنات')" class="w-40 p-6 bg-pink-50 border rounded-2xl hover:bg-pink-100 transition">
+                    <span class="text-5xl block">👩‍🎓</span>
+                    <span class="font-bold text-pink-800">بنات</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-2" class="step-hidden bg-white p-8 rounded-3xl shadow-sm border">
+            <h2 class="text-xl font-black text-burgundy mb-6">تحديد الصف والشعبة</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold mb-2">اختر الصف الدراسي:</label>
+                    <select id="grade-select" class="w-full p-4 border-2 rounded-xl outline-none focus:border-burgundy">
+                        <option value="الأول">الصف الأول الابتدائي</option>
+                        <option value="الثاني">الصف الثاني الابتدائي</option>
+                        <option value="الثالث">الصف الثالث الابتدائي</option>
+                        <option value="الرابع">الصف الرابع الابتدائي</option>
+                        <option value="الخامس" selected>الصف الخامس الابتدائي</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">اختر الشعبة:</label>
+                    <div class="flex gap-4">
+                        <button onclick="loadStudents('أ')" class="flex-1 py-4 bg-burgundy text-white rounded-xl font-bold">شعبة (أ)</button>
+                        <button onclick="loadStudents('ب')" class="flex-1 py-4 bg-gray-100 rounded-xl font-bold hover:bg-gray-200">شعبة (ب)</button>
+                    </div>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="images (2).jpeg" alt="مدرستنا">
-            </div>
-        </div>
-    </section>
+            <button onclick="goToStep(1)" class="mt-6 text-sm text-gray-400 underline">← العودة للقسم</button>
+        </section>
 
-    <!-- صفحة عن المدرسة -->
-    <section id="about" class="page">
-        <div class="container">
-            <div class="page-header">
-                <h2>عن مدرسة الرواد</h2>
-                <p>صروح تعليمية متميزة منذ ربع قرن</p>
+        <section id="step-3" class="step-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="list-title" class="font-black text-burgundy text-lg"></h3>
+                <button onclick="goToStep(2)" class="text-xs bg-gray-200 px-3 py-1 rounded">تغيير الصف</button>
             </div>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>نحو تعليم أفضل لمستقبل أكثر إشراقاً</h3>
-                    <p>تأسست مدرسة النور عام ١٩٩٠ بهدف تقديم تعليم متميز يجمع بين الأصالة والمعاصرة. على مدار ٢٥ عاماً، حرصنا على تخريج أجيال قادرة على مواكبة تطورات العصر مع الحفاظ على قيمنا العربية الأصيلة.</p>
-                    <p>نؤمن في مدرسة الرواد بأن كل طالب لديه قدرات فريدة، لذا نعمل على اكتشاف هذه القدرات وتنميتها من خلال برامج تعليمية متطورة وأنشطة متنوعة.</p>
+            <div id="students-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+        </section>
+
+        <section id="step-4" class="step-hidden">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-burgundy/20">
+                <div class="bg-burgundy p-6 text-white flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <div id="det-avatar" class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold border-2 border-white/50"></div>
+                        <div>
+                            <h2 id="det-name" class="font-bold text-lg leading-tight"></h2>
+                            <p id="det-meta" class="text-[10px] opacity-80"></p>
+                        </div>
+                    </div>
+                    <button onclick="goToStep(3)" class="text-xl">✕</button>
+                </div>
+
+                <div class="p-6 border-b bg-gray-50 grid grid-cols-2 gap-4">
+                    <select id="year-select" onchange="renderGrades()" class="p-3 rounded-lg border text-sm font-bold"></select>
+                    <select id="month-select" onchange="renderGrades()" class="p-3 rounded-lg border text-sm font-bold">
+                        <option>سبتمبر</option><option>أكتوبر</option><option>نوفمبر</option>
+                        <option>ديسمبر</option><option>يناير</option><option>فبراير</option>
+                        <option selected>مارس</option><option>أبريل</option><option>مايو</option>
+                    </select>
+                </div>
+
+                <div class="p-6">
+                    <div id="attendance-box" class="grid grid-cols-2 gap-4 mb-6"></div>
                     
-                    <div class="about-stats">
-                        <div class="about-stat">
-                            <h4>٢٥+</h4>
-                            <p>عام من التميز</p>
-                        </div>
-                        <div class="about-stat">
-                            <h4>١٢٠٠</h4>
-                            <p>طالب وطالبة</p>
-                        </div>
-                        <div class="about-stat">
-                            <h4>٨٥</h4>
-                            <p>معلم ومعلمة</p>
-                        </div>
-                        <div class="about-stat">
-                            <h4>٩٨٪</h4>
-                            <p>نسبة النجاح</p>
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-gray-100 text-burgundy">
+                                    <th class="p-3 border-b-2 border-burgundy/10">المادة</th>
+                                    <th class="p-3 text-center border-b-2 border-burgundy/10">اختبار</th>
+                                    <th class="p-3 text-center border-b-2 border-burgundy/10">مواظبة</th>
+                                    <th class="p-3 text-center border-b-2 border-burgundy/10">المحصلة</th>
+                                    <th class="p-3 text-center border-b-2 border-burgundy/10">التقدير</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grades-body"></tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=500&h=600&fit=crop" alt="مبنى المدرسة">
-                </div>
-            </div>
 
-            <div class="values-grid">
-                <div class="value-card">
-                    <i class="fas fa-eye"></i>
-                    <h4>رؤيتنا</h4>
-                    <p>الريادة في تقديم تعليم متميز يواكب المعايير العالمية</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-bullseye"></i>
-                    <h4>رسالتنا</h4>
-                    <p>إعداد جيل مبدع قادر على المنافسة محلياً وعالمياً</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-heart"></i>
-                    <h4>قيمنا</h4>
-                    <p>التميز - الابتكار - النزاهة - العمل الجماعي</p>
+                    <button onclick="openYearlyWindow()" class="w-full mt-8 py-4 border-2 border-dashed border-burgundy text-burgundy font-black rounded-2xl hover:bg-burgundy hover:text-white transition">
+                        📊 فتح تقرير أعمال السنة كاملاً (تبويب جديد)
+                    </button>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- صفحة الدرجات -->
-    <section id="grades" class="page">
-        <div class="container">
-            <div class="page-header">
-                <h2>درجات الطلاب</h2>
-                <p>متابعة أداء الطلاب والطالبات بشكل دوري</p>
-            </div>
-
-            <div class="grades-header">
-                <div class="search-box">
-                    <input type="text" placeholder="ابحث باسم الطالب...">
-                    <button><i class="fas fa-search"></i> بحث</button>
-                </div>
-                <div class="grades-filter">
-                    <button class="grade-btn active">الكل</button>
-                    <button class="grade-btn">الابتدائية</button>
-                    <button class="grade-btn">الإعدادية</button>
-                    <button class="grade-btn">الثانوية</button>
-                </div>
-            </div>
-
-            <div class="grades-table-container">
-                <table class="grades-table">
-                    <thead>
-                        <tr>
-                            <th>الطالب</th>
-                            <th>الصف</th>
-                            <th>العربية</th>
-                            <th>الرياضيات</th>
-                            <th>العلوم</th>
-                            <th>الإنجليزية</th>
-                            <th>الدراسات</th>
-                            <th>المجموع</th>
-                            <th>النسبة</th>
-                            <th>التقييم</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop" alt="طالب">
-                                    </div>
-                                    <span>أحمد محمود</span>
-                                </div>
-                            </td>
-                            <td>٦/أ</td>
-                            <td class="grade-score">٩٥</td>
-                            <td class="grade-score">٨٨</td>
-                            <td class="grade-score">٩٢</td>
-                            <td class="grade-score">٨٥</td>
-                            <td class="grade-score">٩٠</td>
-                            <td class="grade-score">٤٥٠</td>
-                            <td>٩٠٪</td>
-                            <td><span class="grade-status status-excellent">ممتاز</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        <img src="https://images.unsplash.com/photo-1494790108777-466fd6c79c9b?w=40&h=40&fit=crop" alt="طالبة">
-                                    </div>
-                                    <span>فاطمة علي</span>
-                                </div>
-                            </td>
-                            <td>٦/ب</td>
-                            <td class="grade-score">٩٨</td>
-                            <td class="grade-score">٩٥</td>
-                            <td class="grade-score">٩٦</td>
-                            <td class="grade-score">٩٤</td>
-                            <td class="grade-score">٩٧</td>
-                            <td class="grade-score">٤٨٠</td>
-                            <td>٩٦٪</td>
-                            <td><span class="grade-status status-excellent">ممتاز</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop" alt="طالب">
-                                    </div>
-                                    <span>يوسف حسن</span>
-                                </div>
-                            </td>
-                            <td>٨/ج</td>
-                            <td class="grade-score">٧٨</td>
-                            <td class="grade-score">٨٢</td>
-                            <td class="grade-score">٧٥</td>
-                            <td class="grade-score">٨٠</td>
-                            <td class="grade-score">٧٧</td>
-                            <td class="grade-score">٣٩٢</td>
-                            <td>٧٨٪</td>
-                            <td><span class="grade-status status-good">جيد</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop" alt="طالبة">
-                                    </div>
-                                    <span>ليلى عمر</span>
-                                </div>
-                            </td>
-                            <td>٩/أ</td>
-                            <td class="grade-score">٨٥</td>
-                            <td class="grade-score">٧٩</td>
-                            <td class="grade-score">٨٨</td>
-                            <td class="grade-score">٩٢</td>
-                            <td class="grade-score">٨٤</td>
-                            <td class="grade-score">٤٢٨</td>
-                            <td>٨٦٪</td>
-                            <td><span class="grade-status status-very-good">جيد جدا</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=40&h=40&fit=crop" alt="طالب">
-                                    </div>
-                                    <span>عمر حسن</span>
-                                </div>
-                            </td>
-                            <td>١٠/ب</td>
-                            <td class="grade-score">٨٨</td>
-                            <td class="grade-score">٩٢</td>
-                            <td class="grade-score">٨٦</td>
-                            <td class="grade-score">٨٩</td>
-                            <td class="grade-score">٩١</td>
-                            <td class="grade-score">٤٤٦</td>
-                            <td>٨٩٪</td>
-                            <td><span class="grade-status status-very-good">جيد جدا</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="attendance-summary">
-                <div class="attendance-card">
-                    <i class="fas fa-calendar-check"></i>
-                    <h3>نسبة الحضور العامة</h3>
-                    <div class="attendance-number">٩٥٪</div>
-                    <p>من إجمالي الطلاب</p>
-                </div>
-                <div class="attendance-card">
-                    <i class="fas fa-user-check"></i>
-                    <h3>طلاب اليوم</h3>
-                    <div class="attendance-number">١١٤٢</div>
-                    <p>من أصل ١٢٠٠ طالب</p>
-                </div>
-                <div class="attendance-card">
-                    <i class="fas fa-user-clock"></i>
-                    <h3>متأخرين اليوم</h3>
-                    <div class="attendance-number">٢٣</div>
-                    <p>طالب متأخر</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- صفحة الدوري -->
-    <section id="league" class="page">
-        <div class="container">
-            <div class="page-header">
-                <h2>دوري كرة القدم</h2>
-                <p>البطولة السنوية لمدارس الرواد</p>
-            </div>
-
-            <div class="league-header">
-                <i class="fas fa-futbol"></i>
-                <h2>دوري المدارس ٢٠٢٥</h2>
-                <p>مشاركة ٨ مدارس في البطولة السنوية</p>
-            </div>
-
-            <div class="teams-grid">
-                <!-- فريق النور -->
-                <div class="team-card">
-                    <div class="team-header">
-                        <div class="team-logo">
-                            <i class="fas fa-futbol"></i>
-                        </div>
-                        <div class="team-name">
-                            <h3>فريق النور</h3>
-                            <p>مدرسة النور</p>
-                        </div>
-                    </div>
-                    <div class="team-players">
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">محمد أحمد</div>
-                                <div class="player-number">رقم ١٠ - قائد الفريق</div>
-                            </div>
-                            <span class="player-position">مهاجم</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">عمر خالد</div>
-                                <div class="player-number">رقم ٧</div>
-                            </div>
-                            <span class="player-position">جناح</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">يوسف عبدالله</div>
-                                <div class="player-number">رقم ٥</div>
-                            </div>
-                            <span class="player-position">مدافع</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">سيف الدين</div>
-                                <div class="player-number">رقم ١</div>
-                            </div>
-                            <span class="player-position">حارس مرمى</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">محمود وليد</div>
-                                <div class="player-number">رقم ٨</div>
-                            </div>
-                            <span class="player-position">وسط</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- فريق الأمل -->
-                <div class="team-card">
-                    <div class="team-header">
-                        <div class="team-logo">
-                            <i class="fas fa-futbol"></i>
-                        </div>
-                        <div class="team-name">
-                            <h3>فريق الأمل</h3>
-                            <p>مدرسة الأمل</p>
-                        </div>
-                    </div>
-                    <div class="team-players">
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">كريم مصطفى</div>
-                                <div class="player-number">رقم ٩ - قائد الفريق</div>
-                            </div>
-                            <span class="player-position">مهاجم</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">أحمد سامي</div>
-                                <div class="player-number">رقم ١١</div>
-                            </div>
-                            <span class="player-position">جناح</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">محمود حسن</div>
-                                <div class="player-number">رقم ٤</div>
-                            </div>
-                            <span class="player-position">مدافع</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1500048993953-d23a436266cf?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">إبراهيم عادل</div>
-                                <div class="player-number">رقم ١</div>
-                            </div>
-                            <span class="player-position">حارس مرمى</span>
-                        </div>
-                        <div class="player-item">
-                            <div class="player-image">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop" alt="لاعب">
-                            </div>
-                            <div class="player-info">
-                                <div class="player-name">زياد عمرو</div>
-                                <div class="player-number">رقم ٦</div>
-                            </div>
-                            <span class="player-position">وسط</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="matches-section">
-                <h3>المباريات القادمة</h3>
-                <div class="match-card">
-                    <div class="match-teams">
-                        <div class="match-team">
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                            <span>النور</span>
-                        </div>
-                        <span class="match-score">vs</span>
-                        <div class="match-team">
-                            <span>الأمل</span>
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                        </div>
-                    </div>
-                    <div class="match-date">
-                        <i class="fas fa-calendar"></i> ٢٥ مارس ٢٠٢٥ - ٤ عصراً
-                    </div>
-                </div>
-                <div class="match-card">
-                    <div class="match-teams">
-                        <div class="match-team">
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                            <span>النور</span>
-                        </div>
-                        <span class="match-score">vs</span>
-                        <div class="match-team">
-                            <span>الفلاح</span>
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                        </div>
-                    </div>
-                    <div class="match-date">
-                        <i class="fas fa-calendar"></i> ٢ أبريل ٢٠٢٥ - ٤ عصراً
-                    </div>
-                </div>
-                <div class="match-card">
-                    <div class="match-teams">
-                        <div class="match-team">
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                            <span>النجوم</span>
-                        </div>
-                        <span class="match-score">vs</span>
-                        <div class="match-team">
-                            <span>النور</span>
-                            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=30&h=30&fit=crop" alt="فريق">
-                        </div>
-                    </div>
-                    <div class="match-date">
-                        <i class="fas fa-calendar"></i> ٩ أبريل ٢٠٢٥ - ٤ عصراً
-                    </div>
-                </div>
-            </div>
-
-            <div class="standings-table">
-                <h3>ترتيب الفرق</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الترتيب</th>
-                            <th>الفريق</th>
-                            <th>لعب</th>
-                            <th>فوز</th>
-                            <th>تعادل</th>
-                            <th>خسارة</th>
-                            <th>له</th>
-                            <th>عليه</th>
-                            <th>نقاط</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>١</td>
-                            <td>فريق النور</td>
-                            <td>٤</td>
-                            <td>٣</td>
-                            <td>١</td>
-                            <td>٠</td>
-                            <td>١٢</td>
-                            <td>٥</td>
-                            <td>١٠</td>
-                        </tr>
-                        <tr>
-                            <td>٢</td>
-                            <td>فريق الأمل</td>
-                            <td>٤</td>
-                            <td>٣</td>
-                            <td>٠</td>
-                            <td>١</td>
-                            <td>١٠</td>
-                            <td>٦</td>
-                            <td>٩</td>
-                        </tr>
-                        <tr>
-                            <td>٣</td>
-                            <td>فريق الفلاح</td>
-                            <td>٤</td>
-                            <td>٢</td>
-                            <td>١</td>
-                            <td>١</td>
-                            <td>٨</td>
-                            <td>٧</td>
-                            <td>٧</td>
-                        </tr>
-                        <tr>
-                            <td>٤</td>
-                            <td>فريق النجوم</td>
-                            <td>٤</td>
-                            <td>١</td>
-                            <td>٠</td>
-                            <td>٣</td>
-                            <td>٥</td>
-                            <td>٩</td>
-                            <td>٣</td>
-                        </tr>
-                        <tr>
-                            <td>٥</td>
-                            <td>فريق التحرير</td>
-                            <td>٤</td>
-                            <td>١</td>
-                            <td>٠</td>
-                            <td>٣</td>
-                            <td>٤</td>
-                            <td>١١</td>
-                            <td>٣</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- صفحة الأخبار -->
-    <section id="news" class="page">
-        <div class="container">
-            <div class="page-header">
-                <h2>آخر الأخبار</h2>
-                <p>تعرف على أحدث الفعاليات والأنشطة في مدرستنا</p>
-            </div>
-
-            <div class="news-grid">
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=250&fit=crop" alt="تكريم الطلاب">
-                    </div>
-                    <div class="news-content">
-                        <h3>تكريم الطلاب المتفوقين</h3>
-                        <p>نظمت المدرسة حفلاً لتكريم الطلاب المتفوقين في الفصل الدراسي الأول بحضور أولياء الأمور والمعلمين. تم توزيع الجوائز والشهادات على ١٢٠ طالباً وطالبة.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&h=250&fit=crop" alt="مسابقة القرآن">
-                    </div>
-                    <div class="news-content">
-                        <h3>مسابقة القرآن الكريم</h3>
-                        <p>اختتام مسابقة القرآن الكريم السنوية بمشاركة ١٠٠ طالب من مختلف المراحل الدراسية. فاز بالمركز الأول الطالب أحمد محمود من الصف السادس.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&h=250&fit=crop" alt="يوم الرياضة">
-                    </div>
-                    <div class="news-content">
-                        <h3>يوم الرياضة المفتوح</h3>
-                        <p>نظمت مدرستنا يوم رياضي مفتوح بمشاركة جميع الطلاب وأولياء الأمور في أجواء عائلية ممتعة. تضمن اليوم مسابقات وفعاليات رياضية متنوعة.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&h=250&fit=crop" alt="رحلة مدرسية">
-                    </div>
-                    <div class="news-content">
-                        <h3>رحلة إلى المكتبة </h3>
-                        <p>نظمت المدرسة رحلة علمية لطلاب المرحلة الثانوية إلى مكتبة الإسكندرية للتعرف على المعالم الثقافية والتاريخية.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1503676260728-5176ea92c8ae?w=400&h=250&fit=crop" alt="ورش عمل">
-                    </div>
-                    <div class="news-content">
-                        <h3>ورش عمل للتنمية البشرية</h3>
-                        <p>قدمت المدرسة سلسلة من ورش العمل في التنمية البشرية وتطوير الذات للطلاب بالتعاون مع متخصصين في المجال.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-image">
-                        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=250&fit=crop" alt="معرض الكتاب">
-                    </div>
-                    <div class="news-content">
-                        <h3>معرض الكتاب السنوي</h3>
-                        <p>افتتاح معرض الكتاب السنوي بالمدرسة بمشاركة عدد من دور النشر، وخصومات تصل إلى ٥٠٪ للطلاب.</p>
-                        <a href="#" class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- صفحة الاتصال -->
-    <section id="contact" class="page">
-        <div class="container">
-            <div class="page-header">
-                <h2>اتصل بنا</h2>
-                <p>نحن هنا للإجابة على جميع استفساراتكم</p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="contact-info-section">
-                    <h3>معلومات التواصل</h3>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="info-text">
-                            <h4>العنوان</h4>
-                            <p>الشارع العام مقابل بنك التضامن، عتق، اليمن</p>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="info-text">
-                            <h4>الهاتف</h4>
-                            <p>٠١٢٣٤٥٦٧٨٩ - ٠١١٢٢٣٣٤٤٥٥</p>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="info-text">
-                            <h4>البريد الإلكتروني</h4>
-                            <p>info@alnoor.edu</p>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="info-text">
-                            <h4>ساعات العمل</h4>
-                            <p>السبت - الخميس: ٨ صباحاً - ٢ ظهراً</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <h3>أرسل لنا رسالة</h3>
-                    <form>
-                        <input type="text" placeholder="الاسم كامل" required>
-                        <input type="email" placeholder="البريد الإلكتروني" required>
-                        <input type="text" placeholder="رقم الهاتف">
-                        <textarea placeholder="رسالتك" required></textarea>
-                        <button type="submit">إرسال الرسالة</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- الفوتر -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <h3>مدرسة النور</h3>
-                    <p>نحن مؤسسة تعليمية رائدة تسعى إلى تقديم تعليم متميز يجمع بين الأصالة والمعاصرة. تأسسنا عام ١٩٩٠ وخرجنا آلاف الطلاب المتميزين.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>روابط سريعة</h4>
-                    <ul>
-                        <li><a href="#home">الرئيسية</a></li>
-                        <li><a href="#about">عن المدرسة</a></li>
-                        <li><a href="#grades">الدرجات</a></li>
-                        <li><a href="#league">الدوري</a></li>
-                        <li><a href="#news">الأخبار</a></li>
-                        <li><a href="#contact">اتصل بنا</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>أقسام المدرسة</h4>
-                    <ul>
-                        <li><a href="#">رياض الأطفال</a></li>
-                        <li><a href="#">المرحلة الابتدائية</a></li>
-                        <li><a href="#">المرحلة الإعدادية</a></li>
-                        <li><a href="#">المرحلة الثانوية</a></li>
-                        <li><a href="#">الأنشطة الطلابية</a></li>
-                    </ul>
-                </div>
-                <div class="footer-newsletter">
-                    <h4>النشرة البريدية</h4>
-                    <p>اشترك في نشرتنا البريدية ليصلك كل جديد</p>
-                    <input type="email" placeholder="بريدك الإلكتروني">
-                    <button>اشتراك</button>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>جميع الحقوق محفوظة &copy; ٢٠٢٥ مدرسة النور - تصميم وبرمجة: [اسمك]</p>
-            </div>
-        </div>
-    </footer>
+        </section>
+    </div>
 
     <script>
-        // تفعيل الروابط
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // إزالة active من جميع الروابط
-                document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
-                
-                // إضافة active للرابط الحالي
-                this.classList.add('active');
-                
-                // التمرير للقسم المطلوب
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                window.scrollTo({
-                    top: targetSection.offsetTop - 140,
-                    behavior: 'smooth'
-                });
-            });
-        });
+        // بيانات تجريبية ضخمة (بنين وبنات، صفوف وشعب مختلفة)
+        const allStudents = [
+            { id: 1, name: "ماجد قاسم مبارك", gender: "بنين", grade: "الخامس", section: "أ" },
+            { id: 2, name: "أحمد علي سالم", gender: "بنين", grade: "الخامس", section: "أ" },
+            { id: 3, name: "سعيد محمد ناصر", gender: "بنين", grade: "الخامس", section: "ب" },
+            { id: 4, name: "فاطمة الزهراء", gender: "بنات", grade: "الخامس", section: "أ" },
+            { id: 5, name: "أروى خالد يوسف", gender: "بنات", grade: "الخامس", section: "ب" },
+            { id: 6, name: "ليلى حسن عمر", gender: "بنات", grade: "الخامس", section: "أ" },
+            { id: 7, name: "عمر الفاروق", gender: "بنين", grade: "الرابع", section: "أ" },
+            { id: 8, name: "مريم إبراهيم", gender: "بنات", grade: "الرابع", section: "ب" }
+        ];
 
-        // تحديث الرابط النشط عند التمرير
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('.page');
-            const navLinks = document.querySelectorAll('nav a');
+        let currentGender = '';
+        let currentStudent = null;
+
+        // إعداد السنوات حتى 2030
+        const yrSelect = document.getElementById('year-select');
+        for(let y = 2024; y <= 2030; y++) {
+            let op = document.createElement('option');
+            op.value = y; op.text = `سنة ${y}`;
+            if(y === 2026) op.selected = true;
+            yrSelect.add(op);
+        }
+
+        function setGender(g) { currentGender = g; goToStep(2); }
+
+        function loadStudents(sec) {
+            const grade = document.getElementById('grade-select').value;
+            const grid = document.getElementById('students-grid');
+            const title = document.getElementById('list-title');
             
-            let current = '';
+            grid.innerHTML = '';
+            title.innerText = `طلاب الصف ${grade} - شعبة (${sec})`;
+
+            const filtered = allStudents.filter(s => s.gender === currentGender && s.grade === grade && s.section === sec);
             
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 150;
-                const sectionHeight = section.clientHeight;
-                
-                if (pageYOffset >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center py-10 text-gray-400">لا يوجد طلاب مسجلين في هذه الشعبة حالياً</p>';
+            } else {
+                filtered.forEach(s => {
+                    grid.innerHTML += `
+                        <div onclick="showDetails(${s.id})" class="bg-white p-4 rounded-2xl border-2 border-transparent card-hover cursor-pointer shadow-sm text-center transition-all">
+                            <div class="w-10 h-10 bg-burgundy/5 text-burgundy rounded-full flex items-center justify-center mx-auto mb-2 font-bold">${s.name[0]}</div>
+                            <p class="text-[11px] font-bold text-gray-700 truncate">${s.name}</p>
+                        </div>`;
+                });
+            }
+            goToStep(3);
+        }
+
+        function showDetails(id) {
+            currentStudent = allStudents.find(s => s.id === id);
+            document.getElementById('det-name').innerText = currentStudent.name;
+            document.getElementById('det-avatar').innerText = currentStudent.name[0];
+            document.getElementById('det-meta').innerText = `الصف ${currentStudent.grade} | شعبة ${currentStudent.section}`;
+            renderGrades();
+            goToStep(4);
+        }
+
+        function renderGrades() {
+            const month = document.getElementById('month-select').value;
+            const table = document.getElementById('grades-body');
+            const attendanceBox = document.getElementById('attendance-box');
+            
+            // محاكاة بيانات الشهر
+            const subjects = ["القرآن الكريم", "الرياضيات", "اللغة العربية", "العلوم"];
+            const isNoStudyMonth = ["يونيو", "يوليو", "أغسطس"].includes(month);
+
+            if(isNoStudyMonth) {
+                attendanceBox.innerHTML = '';
+                table.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-gray-400 font-bold italic">هذا الشهر لا يوجد أعمال دراسية</td></tr>`;
+                return;
+            }
+
+            // إحصائيات وهمية
+            attendanceBox.innerHTML = `
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100 text-center">
+                    <p class="text-[10px] text-green-600 font-bold uppercase">أيام الحضور</p>
+                    <p class="text-xl font-black text-green-700">21</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 text-center">
+                    <p class="text-[10px] text-red-600 font-bold uppercase">أيام الغياب</p>
+                    <p class="text-xl font-black text-red-700">1</p>
+                </div>
+            `;
+
+            table.innerHTML = '';
+            subjects.forEach(sub => {
+                const exam = Math.floor(Math.random() * 20) + 30; // 30-50
+                const behavior = Math.floor(Math.random() * 5) + 5; // 5-10
+                const total = exam + behavior;
+                const rank = total >= 55 ? 'ممتاز' : total >= 45 ? 'جيد جداً' : 'جيد';
+
+                table.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="p-3 font-bold border-b">${sub}</td>
+                        <td class="p-3 text-center border-b">${exam}</td>
+                        <td class="p-3 text-center border-b">${behavior}</td>
+                        <td class="p-3 text-center border-b font-black text-burgundy">${total}</td>
+                        <td class="p-3 text-center border-b text-xs font-bold text-blue-600">${rank}</td>
+                    </tr>
+                `;
             });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
+        }
+
+        function openYearlyWindow() {
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>التقرير السنوي - ${currentStudent.name}</title>
+                    <style>
+                        body { font-family: 'Tajawal', sans-serif; padding: 50px; line-height: 1.6; }
+                        .header { text-align: center; margin-bottom: 40px; border-bottom: 5px double #800020; padding-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                        th, td { border: 1px solid #800020; padding: 12px; text-align: center; }
+                        th { background: #800020; color: white; }
+                        .stamp { float: left; margin-top: 50px; text-align: center; border: 2px solid #800020; padding: 20px; color: #800020; font-weight: bold; border-radius: 50%; width: 100px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h2>شهادة السيرة والدرجات السنوية لعام ${document.getElementById('year-select').value}</h2>
+                        <h3>الطالب: ${currentStudent.name} | القسم: ${currentGender}</h3>
+                    </div>
+                    <table>
+                        <tr><th>المادة</th><th>الفصل الأول</th><th>الفصل الثاني</th><th>المعدل</th><th>النتيجة</th></tr>
+                        <tr><td>القرآن الكريم</td><td>98</td><td>100</td><td>99</td><td>ناجح</td></tr>
+                        <tr><td>الرياضيات</td><td>85</td><td>92</td><td>88.5</td><td>ناجح</td></tr>
+                        <tr><td>اللغة العربية</td><td>90</td><td>94</td><td>92</td><td>ناجح</td></tr>
+                    </table>
+                    <div class="stamp">ختم الإدارة</div>
+                    <button onclick="window.print()" style="padding:10px 20px; background:#800020; color:white; border:none; cursor:pointer;">طباعة التقرير</button>
+                </body>
+                </html>
+            `);
+        }
+
+        function goToStep(s) {
+            for(let i=1; i<=4; i++) {
+                document.getElementById('step-'+i).classList.add('step-hidden');
+            }
+            document.getElementById('step-'+s).classList.remove('step-hidden');
+            window.scrollTo(0, 0);
+        }
     </script>
 </body>
 </html>
