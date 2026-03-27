@@ -9,10 +9,12 @@
     <style>
         :root { --burgundy: #800020; --beige: #F8F8F4; }
         body { font-family: 'Tajawal', sans-serif; background-color: var(--beige); margin: 0; padding: 0; }
-        .bg-burgundy { background-color: var(--burgundy); }
-        .text-burgundy { color: var(--burgundy); }
+        .bg-burgundy { background-color: var(--burgundy) !important; }
+        .text-burgundy { color: var(--burgundy) !important; }
         .step-hidden { display: none !important; }
-        table, th, td { border: 1px solid #e5e7eb; }
+        .custom-card { background: white; border-radius: 1.5rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #e5e7eb; padding: 0.75rem; }
     </style>
 </head>
 <body class="pb-10">
@@ -20,40 +22,40 @@
     <nav class="bg-burgundy text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">🏫 نظام رواد المستقبل</h1>
-            <button onclick="location.reload()" class="text-xs bg-white bg-opacity-20 px-3 py-1 rounded">الرئيسية</button>
+            <button onclick="location.reload()" class="text-xs bg-white bg-opacity-20 px-4 py-2 rounded-lg">الرئيسية</button>
         </div>
     </nav>
 
     <div class="max-w-6xl mx-auto px-4 mt-8">
 
-        <section id="step-1" class="text-center py-10 bg-white rounded-3xl shadow-sm border">
+        <section id="step-1" class="custom-card p-10 text-center">
             <h2 class="text-2xl font-black text-burgundy mb-8">اختر القسم</h2>
             <div class="flex justify-center gap-6">
-                <button onclick="setGender('بنين')" class="w-40 p-6 bg-blue-50 border rounded-2xl hover:bg-blue-100 transition">
-                    <span class="text-5xl block">👨‍🎓</span>
+                <button onclick="setGender('بنين')" class="w-40 p-6 bg-blue-50 border-2 border-blue-100 rounded-2xl hover:bg-blue-100 transition shadow-sm">
+                    <span class="text-5xl block mb-2">👨‍🎓</span>
                     <span class="font-bold text-blue-800">بنين</span>
                 </button>
-                <button onclick="setGender('بنات')" class="w-40 p-6 bg-pink-50 border rounded-2xl hover:bg-pink-100 transition">
-                    <span class="text-5xl block">👩‍🎓</span>
+                <button onclick="setGender('بنات')" class="w-40 p-6 bg-pink-50 border-2 border-pink-100 rounded-2xl hover:bg-pink-100 transition shadow-sm">
+                    <span class="text-5xl block mb-2">👩‍🎓</span>
                     <span class="font-bold text-pink-800">بنات</span>
                 </button>
             </div>
         </section>
 
-        <section id="step-2" class="step-hidden bg-white p-8 rounded-3xl shadow-sm border">
+        <section id="step-2" class="step-hidden custom-card p-8">
             <h2 class="text-xl font-black text-burgundy mb-6">تحديد الصف والشعبة</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-bold mb-2">اختر الصف الدراسي:</label>
-                    <select id="grade-select" class="w-full p-4 border rounded-xl outline-none">
+                    <select id="grade-select" class="w-full p-4 border rounded-xl outline-none focus:ring-2 focus:ring-burgundy">
                         <option value="الخامس" selected>الصف الخامس الابتدائي</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold mb-2">اختر الشعبة:</label>
+                    <label class="block text-sm font-bold mb-2 text-right">اختر الشعبة:</label>
                     <div class="flex gap-4">
-                        <button onclick="loadStudents('أ')" class="flex-1 py-4 bg-burgundy text-white rounded-xl font-bold">شعبة (أ)</button>
-                        <button onclick="loadStudents('ب')" class="flex-1 py-4 bg-gray-200 rounded-xl font-bold">شعبة (ب)</button>
+                        <button onclick="loadStudents('أ')" class="flex-1 py-4 bg-burgundy text-white rounded-xl font-bold shadow-md">شعبة (أ)</button>
+                        <button onclick="loadStudents('ب')" class="flex-1 py-4 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300">شعبة (ب)</button>
                     </div>
                 </div>
             </div>
@@ -61,7 +63,7 @@
         </section>
 
         <section id="step-3" class="step-hidden">
-            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl border">
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl border shadow-sm">
                 <h3 id="list-title" class="font-black text-burgundy text-lg"></h3>
                 <button onclick="goToStep(2)" class="text-xs bg-gray-200 px-3 py-1 rounded">تغيير الصف</button>
             </div>
@@ -69,42 +71,42 @@
         </section>
 
         <section id="step-4" class="step-hidden">
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border">
+            <div class="custom-card overflow-hidden">
                 <div class="bg-burgundy p-6 text-white flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <div id="det-avatar" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl font-bold border-2 border-white border-opacity-50"></div>
+                    <div class="flex items-center gap-4 text-right">
+                        <div id="det-avatar" class="w-12 h-12 bg-white text-burgundy rounded-full flex items-center justify-center text-xl font-bold border-2 border-white"></div>
                         <div>
                             <h2 id="det-name" class="font-bold text-lg leading-tight"></h2>
                             <p id="det-meta" class="text-xs opacity-80"></p>
                         </div>
                     </div>
-                    <button onclick="goToStep(3)" class="text-xl">✕</button>
+                    <button onclick="goToStep(3)" class="text-xl font-bold bg-white bg-opacity-20 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
                 </div>
 
                 <div class="p-4 bg-gray-100 border-b flex flex-wrap gap-4 items-center justify-between">
-                    <select id="month-select" onchange="renderGrades()" class="p-2 rounded border text-sm font-bold">
+                    <select id="month-select" onchange="renderGrades()" class="p-2 rounded border text-sm font-bold bg-white">
                         <option value="سبتمبر">سبتمبر</option>
                         <option value="أكتوبر">أكتوبر</option>
                         <option value="نوفمبر">نوفمبر</option>
                         <option value="ديسمبر">ديسمبر</option>
                         <option value="مارس" selected>مارس</option>
                     </select>
-                    <button onclick="showYearlySummary()" class="bg-blue-800 text-white px-4 py-2 rounded-lg font-bold text-xs">📊 المحصلة السنوية</button>
+                    <button onclick="showYearlySummary()" class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md hover:bg-blue-800 transition">📊 المحصلة السنوية</button>
                 </div>
 
                 <div class="p-6">
                     <div id="attendance-box" class="grid grid-cols-2 gap-4 mb-6"></div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm border-collapse">
+                        <table class="w-full text-center border-collapse text-sm">
                             <thead>
-                                <tr class="bg-gray-100 text-burgundy text-center">
+                                <tr class="bg-gray-50 text-burgundy font-bold">
                                     <th class="p-3 text-right">المادة</th>
                                     <th class="p-3">اختبار (40)</th>
                                     <th class="p-3">مواظبة (10)</th>
                                     <th class="p-3 bg-burgundy text-white">المحصلة (50)</th>
                                 </tr>
                             </thead>
-                            <tbody id="grades-body"></tbody>
+                            <tbody id="grades-body" class="bg-white"></tbody>
                         </table>
                     </div>
                 </div>
@@ -112,70 +114,63 @@
         </section>
 
         <section id="step-5" class="step-hidden">
-            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-blue-900">
+            <div class="custom-card overflow-hidden border-2 border-blue-900">
                 <div class="bg-blue-900 p-6 text-white text-center">
                     <h2 class="text-2xl font-black mb-1">كشف أعمال السنة</h2>
-                    <p id="yearly-student-name" class="text-sm opacity-90"></p>
+                    <p id="yearly-student-name" class="text-sm opacity-90 italic"></p>
                 </div>
                 <div class="p-6">
                     <div class="overflow-x-auto">
                         <table class="w-full text-center border-collapse text-sm">
                             <thead>
-                                <tr class="bg-gray-200">
-                                    <th class="p-3 border">المادة</th>
+                                <tr class="bg-gray-100 font-bold">
+                                    <th class="p-3 border text-right">المادة</th>
                                     <th class="p-3 border">الفصل الأول (50)</th>
                                     <th class="p-3 border">الفصل الثاني (50)</th>
-                                    <th class="p-3 border bg-yellow-100 font-bold">المجموع (100)</th>
+                                    <th class="p-3 border bg-yellow-50 font-black text-red-800">المجموع (100)</th>
                                     <th class="p-3 border">التقدير</th>
                                 </tr>
                             </thead>
-                            <tbody id="yearly-body"></tbody>
+                            <tbody id="yearly-body" class="bg-white"></tbody>
                         </table>
                     </div>
-                    <button onclick="goToStep(4)" class="w-full mt-6 py-3 bg-gray-800 text-white font-bold rounded-xl">عودة</button>
+                    <button onclick="goToStep(4)" class="w-full mt-6 py-3 bg-gray-800 text-white font-bold rounded-xl shadow-lg">← العودة</button>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        // توحيد المسميات تماماً لضمان ظهور الب
         const studentsDB = {
-    1: {
-        name: "ماجد قاسم مبارك",
-        gender: "بنين", grade: "الخامس", section: "أ",
-        monthlyData: {
-            "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [38, 10], "الرياضيات": [40, 10], "العربية": [39, 10], "العلوم": [37, 9] } },
-            "مارس": { attend: 21, absent: 1, grades: { "القرآن": [39, 10], "الرياضيات": [38, 10], "العربية": [40, 10], "العلوم": [38, 10] } }
-        }
-    },
-    2: {
-        name: "أحمد علي سالم",
-        gender: "بنين", grade: "الخامس", section: "ب",
-        monthlyData: {
-            "سبتمبر": { attend: 15, absent: 7, grades: { "القرآن": [20, 5], "الرياضيات": [15, 4], "العربية": [18, 5], "العلوم": [20, 6] } },
-            "مارس": { attend: 18, absent: 4, grades: { "القرآن": [30, 8], "الرياضيات": [28, 7], "العربية": [32, 8], "العلوم": [31, 7] } }
-        }
-    },
-    3: {
-        name: "فاطمة الزهراء",
-        gender: "بنات", grade: "الخامس", section: "ب",
-        monthlyData: {
-            "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [40, 10], "العربية": [40, 10], "العلوم": [40, 10] } },
-            "مارس": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [39, 10], "العربية": [40, 10], "العلوم": [40, 10] } }
-        }
-    }, // هنا كان الخطأ (استبدلنا ; بـ ,)
-    4: {
-        name: "زهراء علي",
-        gender: "بنات", grade: "الخامس", section: "أ",
-        monthlyData: {
-            "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [40, 10], "العربية": [40, 10], "العلوم": [40, 10] } },
-            "مارس": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [39, 10], "العربية": [40, 10], "العلوم": [40, 10] } }
-        }
-    }
-}; // الفاصلة المنقوطة تكون في النهاية فقط
-
-
+            1: {
+                name: "ماجد قاسم مبارك", gender: "بنين", grade: "الخامس", section: "أ",
+                monthlyData: {
+                    "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [38, 10], "الرياضيات": [40, 10], "العربية": [39, 10], "العلوم": [37, 9] } },
+                    "مارس": { attend: 21, absent: 1, grades: { "القرآن": [39, 10], "الرياضيات": [38, 10], "العربية": [40, 10], "العلوم": [38, 10] } }
+                }
+            },
+            2: {
+                name: "أحمد علي سالم", gender: "بنين", grade: "الخامس", section: "ب",
+                monthlyData: {
+                    "سبتمبر": { attend: 15, absent: 7, grades: { "القرآن": [20, 5], "الرياضيات": [15, 4], "العربية": [18, 5], "العلوم": [20, 6] } },
+                    "مارس": { attend: 18, absent: 4, grades: { "القرآن": [30, 8], "الرياضيات": [28, 7], "العربية": [32, 8], "العلوم": [31, 7] } }
+                }
+            },
+            3: {
+                name: "فاطمة الزهراء", gender: "بنات", grade: "الخامس", section: "ب",
+                monthlyData: {
+                    "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [40, 10], "العربية": [40, 10], "العلوم": [40, 10] } },
+                    "مارس": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [39, 10], "العربية": [40, 10], "العلوم": [40, 10] } }
+                }
+            },
+            4: {
+                name: "زهراء علي", gender: "بنات", grade: "الخامس", section: "أ",
+                monthlyData: {
+                    "سبتمبر": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [40, 10], "العربية": [40, 10], "العلوم": [40, 10] } },
+                    "مارس": { attend: 22, absent: 0, grades: { "القرآن": [40, 10], "الرياضيات": [39, 10], "العربية": [40, 10], "العلوم": [40, 10] } }
+                }
+            }
+        };
 
         let currentStudentId = null;
         let currentGender = '';
@@ -186,6 +181,7 @@
                 if(el) el.classList.add('step-hidden');
             }
             document.getElementById('step-'+s).classList.remove('step-hidden');
+            window.scrollTo(0, 0);
         }
 
         function setGender(g) { currentGender = g; goToStep(2); }
@@ -198,9 +194,9 @@
                 const s = studentsDB[id];
                 if(s.gender === currentGender && s.section === sec) {
                     const card = document.createElement('div');
-                    card.className = "bg-white p-4 rounded-xl border cursor-pointer text-center";
+                    card.className = "bg-white p-4 rounded-xl border-2 hover:border-burgundy cursor-pointer text-center transition shadow-sm hover:shadow-md";
                     card.onclick = () => showDetails(id);
-                    card.innerHTML = `<div class="w-10 h-10 bg-gray-100 text-burgundy rounded-full flex items-center justify-center mx-auto mb-2 font-bold">${s.name[0]}</div><p class="text-xs font-bold">${s.name}</p>`;
+                    card.innerHTML = `<div class="w-10 h-10 bg-gray-100 text-burgundy rounded-full flex items-center justify-center mx-auto mb-2 font-bold border">${s.name[0]}</div><p class="text-xs font-bold text-gray-800">${s.name}</p>`;
                     grid.appendChild(card);
                 }
             });
@@ -212,7 +208,7 @@
             const s = studentsDB[id];
             document.getElementById('det-name').innerText = s.name;
             document.getElementById('det-avatar').innerText = s.name[0];
-            document.getElementById('det-meta').innerText = `شعبة ${s.section}`;
+            document.getElementById('det-meta').innerText = `الصف الخامس | شعبة ${s.section}`;
             renderGrades();
             goToStep(4);
         }
@@ -222,21 +218,18 @@
             const table = document.getElementById('grades-body');
             const attendanceBox = document.getElementById('attendance-box');
             const student = studentsDB[currentStudentId];
-            
-            // جلب بيانات الشهر المختار أو وضع أصفار إذا لم يوجد
             const data = student.monthlyData[month] || { attend: 0, absent: 0, grades: {} };
 
             attendanceBox.innerHTML = `
-                <div class="bg-green-50 p-3 rounded-xl border border-green-200 text-center text-green-700">
-                    <p class="text-[10px] font-bold">حضور</p><p class="text-lg font-black">${data.attend}</p>
+                <div class="bg-green-50 p-4 rounded-xl border-2 border-green-100 text-center text-green-700">
+                    <p class="text-xs font-bold mb-1">حضور</p><p class="text-2xl font-black">${data.attend}</p>
                 </div>
-                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-center text-red-700">
-                    <p class="text-[10px] font-bold">غياب</p><p class="text-lg font-black">${data.absent}</p>
+                <div class="bg-red-50 p-4 rounded-xl border-2 border-red-100 text-center text-red-700">
+                    <p class="text-xs font-bold mb-1">غياب</p><p class="text-2xl font-black">${data.absent}</p>
                 </div>
             `;
 
             table.innerHTML = '';
-            // مسميات المواد مطابقة تماماً لمفاتيح الـ JSON
             const subjects = [
                 { label: "القرآن الكريم", key: "القرآن" },
                 { label: "الرياضيات", key: "الرياضيات" },
@@ -248,11 +241,11 @@
                 const g = data.grades[sub.key] || [0, 0];
                 const total = g[0] + g[1];
                 table.innerHTML += `
-                    <tr class="text-center">
-                        <td class="p-3 font-bold text-right">${sub.label}</td>
-                        <td class="p-3">${g[0]}</td>
-                        <td class="p-3">${g[1]}</td>
-                        <td class="p-3 font-bold text-red-800 bg-gray-50">${total}</td>
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="p-3 font-bold text-right border">${sub.label}</td>
+                        <td class="p-3 text-center border">${g[0]}</td>
+                        <td class="p-3 text-center border">${g[1]}</td>
+                        <td class="p-3 text-center font-bold text-red-800 bg-gray-50 border">${total}</td>
                     </tr>
                 `;
             });
@@ -263,15 +256,20 @@
             document.getElementById('yearly-student-name').innerText = `الطالب: ${s.name}`;
             const body = document.getElementById('yearly-body');
             body.innerHTML = '';
-
             const subjects = ["القرآن الكريم", "الرياضيات", "اللغة العربية", "العلوم"];
             subjects.forEach(sub => {
-                const term1 = 48, term2 = 49; // بيانات ثابتة للسنة
-                const total = term1 + term2;
-                body.innerHTML += `<tr><td class="p-3 font-bold border">${sub}</td><td class="p-3 border">${term1}</td><td class="p-3 border">${term2}</td><td class="p-3 border font-black text-red-800 bg-yellow-50">${total}</td><td class="p-3 border font-bold text-blue-700">ممتاز</td></tr>`;
+                body.innerHTML += `
+                    <tr class="hover:bg-blue-50 transition text-center">
+                        <td class="p-3 font-bold border text-right">${sub}</td>
+                        <td class="p-3 border">48</td>
+                        <td class="p-3 border">49</td>
+                        <td class="p-3 border font-black text-red-800 bg-yellow-50 text-lg">97</td>
+                        <td class="p-3 border font-bold text-blue-700">ممتاز</td>
+                    </tr>`;
             });
             goToStep(5);
         }
     </script>
 </body>
 </html>
+
