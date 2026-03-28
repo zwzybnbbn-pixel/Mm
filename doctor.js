@@ -23,6 +23,7 @@ function getTodayKey() {
 // دالة العرض المنفصلة (لتسهيل تحديث الشاشة عند وجود جديد)
 function renderDoctorUI(doctor) {
     if (!doctor) return;
+    document.title = `دكتور ${doctor.name} - تفاصيل الحجز والدوام`;
 
     document.getElementById('docName').textContent = doctor.name || 'دكتور';
     document.getElementById('docSpec').textContent = doctor.specialty || 'تخصص عام';
