@@ -331,10 +331,7 @@
                 </div>
             </div>
             
-            <div class="help-links">
-                <a href="#" id="forgotPassword">نسيت كلمة المرور؟</a>
-                <a href="#" id="demoLogin">تسجيل تجريبي</a>
-            </div>
+           
             
             <button type="submit" id="loginButton">
                 <span id="buttonText">تسجيل الدخول</span>
@@ -360,7 +357,8 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // عناصر DOM
+        
+                // عناصر DOM الأساسية
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -372,8 +370,10 @@
         const errorText = document.getElementById('errorText');
         const successMessage = document.getElementById('successMessage');
         const successText = document.getElementById('successText');
-        const forgotPasswordLink = document.getElementById('forgotPassword');
-        const demoLoginLink = document.getElementById('demoLogin');
+
+
+
+        
         
         // إظهار/إخفاء كلمة المرور
         togglePassword.addEventListener('click', function() {
@@ -508,32 +508,7 @@
         }
         
         // تسجيل الدخول التجريبي
-        function demoLogin() {
-            // بيانات تجريبية
-            const demoAccounts = [
-                { email: 'admin@medical.com', password: 'Admin@123' },
-                { email: 'doctor@medical.com', password: 'Doctor@123' },
-                { email: 'manager@medical.com', password: 'Manager@123' }
-            ];
-            
-            const randomAccount = demoAccounts[Math.floor(Math.random() * demoAccounts.length)];
-            
-            emailInput.value = randomAccount.email;
-            passwordInput.value = randomAccount.password;
-            
-            // إضافة تأثير مرئي
-            loginForm.classList.add('pulse');
-            setTimeout(() => {
-                loginForm.classList.remove('pulse');
-            }, 2000);
-            
-            showSuccessMessage(`جاري استخدام حساب تجريبي: ${randomAccount.email}`);
-            
-            // محاكاة الضغط على زر تسجيل الدخول بعد تأخير قصير
-            setTimeout(() => {
-                loginButton.click();
-            }, 1000);
-        }
+        
         
         // عرض رسالة الخطأ
         function showErrorMessage(message) {
@@ -610,66 +585,10 @@
         }
         
         // إضافة مستخدم تجريبي (للاستخدام الأولي)
-        async function createDemoUser() {
-            try {
-                const demoEmail = 'admin@medical.com';
-                const demoPassword = 'Admin@123';
-                
-                // التحقق إذا كان المستخدم موجوداً بالفعل
-                const { data: existingUsers } = await supabase
-                    .from('users')
-                    .select('email')
-                    .eq('email', demoEmail)
-                    .limit(1);
-                
-                if (existingUsers && existingUsers.length > 0) {
-                    console.log('المستخدم التجريبي موجود بالفعل');
-                    return;
-                }
+     
                 
                 // تسجيل مستخدم جديد
-                const { data, error } = await supabase.auth.signUp({
-                    email: demoEmail,
-                    password: demoPassword,
-                    options: {
-                        data: {
-                            name: 'مدير النظام',
-                            role: 'admin',
-                            created_at: new Date().toISOString()
-                        }
-                    }
-                });
-                
-                if (error) {
-                    console.warn('خطأ في إنشاء المستخدم التجريبي:', error);
-                    return;
-                }
-                
-                // إضافة المستخدم إلى جدول users
-                if (data.user) {
-                    const { error: insertError } = await supabase
-                        .from('users')
-                        .insert([{
-                            id: data.user.id,
-                            email: demoEmail,
-                            name: 'مدير النظام',
-                            role: 'admin',
-                            status: 'active',
-                            created_at: new Date().toISOString(),
-                            updated_at: new Date().toISOString()
-                        }]);
-                    
-                    if (insertError) {
-                        console.warn('خطأ في إضافة المستخدم إلى الجدول:', insertError);
-                    } else {
-                        console.log('تم إنشاء المستخدم التجريبي بنجاح');
-                    }
-                }
-                
-            } catch (error) {
-                console.error('خطأ في إنشاء المستخدم التجريبي:', error);
-            }
-        }
+               
         
         // معالجة تسجيل الدخول
         loginForm.addEventListener('submit', async (e) => {
@@ -688,10 +607,7 @@
         
         
         // تسجيل الدخول التجريبي
-        demoLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            demoLogin();
-        });
+        
         
         // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', async () => {
