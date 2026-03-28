@@ -101,7 +101,11 @@
     white-space: nowrap;
     height: 45px;
   }
-  
+  /* أضف هذا في قسم الـ style إذا لم يكن موجوداً */
+.td-doctor div {
+    flex-shrink: 0; /* يمنع انكماش الدائرة في الشاشات الصغيرة */
+}
+
   .nav-item:hover {
     background: rgba(255,255,255,0.1);
     color: white;
@@ -1239,10 +1243,19 @@ function navigateTo(page) {
   navMenu.classList.remove('mobile-open');
   
   // Load data if needed
+    
   if (page !== 'dashboard') {
-    loadTableData(page);
+    // التحقق: هل البيانات موجودة مسبقاً في الذاكرة؟
+    if (allData[page] && allData[page].length > 0) {
+      // عرض البيانات فوراً من الذاكرة دون طلب جديد من السيرفر
+      renderTableData(page, allData[page]);
+    } else {
+      // إذا كانت المصفوفة فارغة (أول مرة)، اطلبها من Supabase
+      loadTableData(page);
+    }
   }
 }
+
 
 // Event Listeners for Navigation
 navItems.forEach(item => {
@@ -1360,11 +1373,21 @@ function renderTableData(tableName, data) {
   switch (tableName) {
     case 'doctors':
       data.forEach(item => {
+        // فحص: هل الرابط موجود وهل هو رابط حقيقي (ليس placeholder)؟
+        const hasRealImg = item.img && 
+                          item.img.trim() !== '' && 
+                          !item.img.includes('placeholder');
+
+        // إذا كانت صورة حقيقية نضعها، وإذا لا نضع أيقونة محلية 👨‍⚕️
+        const doctorImg = hasRealImg 
+          ? `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" onerror="this.src='https://via.placeholder.com/100'">`
+          : `<div style="width:50px; height:50px; border-radius:50%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; font-size:24px; border:2px solid #ddd;">👨‍⚕️</div>`;
+
         html += `
           <tr>
             <td>
               <div class="td-doctor">
-                <img src="${escapeHtml(item.img || 'https://via.placeholder.com/100')}" alt="${escapeHtml(item.name)}" onerror="this.src='https://via.placeholder.com/100'">
+                ${doctorImg}
                 <div style="text-align:right">
                   <div style="font-weight:800">${escapeHtml(item.name || '')}</div>
                   <div class="muted">${escapeHtml(item.specialty || '')}</div>
@@ -1392,6 +1415,9 @@ function renderTableData(tableName, data) {
         `;
       });
       break;
+
+
+
       
     case 'hospitals':
     case 'clinics':
@@ -1986,4 +2012,4 @@ window.loadTableData = loadTableData;
 
 </body>
 
-</html>
+  </html>
