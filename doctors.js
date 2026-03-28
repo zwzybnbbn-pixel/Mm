@@ -132,7 +132,7 @@ async function loadDoctors() {
                 // جلب الحقول المطلوبة فقط لتقليل الحجم (حل مشكلة الـ 600KB)
                 const { data, error } = await supabase
                     .from('doctors')
-                    .select('id, name, specialty, phone, img,experience') 
+                    .select('id, name, specialty, phone, img') 
                     .order('name');
                 
                 if (error) throw error;
