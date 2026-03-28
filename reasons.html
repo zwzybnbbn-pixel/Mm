@@ -145,11 +145,7 @@ function formatDate(dateString) {
   
   try {
     const date = new Date(dateString);
-    
-    // التحقق من أن التاريخ صالح
-    if (isNaN(date.getTime())) {
-      return "تاريخ غير صالح";
-    }
+    if (isNaN(date.getTime())) return "تاريخ غير صالح";
     
     return date.toLocaleString("ar-EG", {
       year: "numeric",
@@ -167,17 +163,13 @@ function formatDate(dateString) {
 // دالة لتحميل وعرض أسباب الانقطاع
 async function loadReasons() {
   try {
-    // جلب البيانات من جدول reasons في Supabase
     const { data: reasons, error } = await supabase
       .from('reasons')
       .select('*')
-      .order('updated_at', { ascending: false }); // ترتيب تنازلي حسب تاريخ التحديث
+      .order('updated_at', { ascending: false });
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
-    // التحقق من وجود بيانات
     if (!reasons || reasons.length === 0) {
       box.innerHTML = `
         <div class="no-data">
@@ -188,11 +180,8 @@ async function loadReasons() {
       return;
     }
 
-    // بناء واجهة البيانات
     let html = '';
-    
     reasons.forEach((reason, index) => {
-      // إضافة فاصل للأسباب القديمة (ما عدا الأول)
       if (index === 1) {
         html += `<div style="text-align:center; margin:20px 0; color:#666; font-size:14px;">——— أسباب سابقة ———</div>`;
       }
@@ -222,45 +211,12 @@ async function loadReasons() {
   }
 }
 
-// دالة للاشتراك في التحديثات المباشرة
-function subscribeToRealtimeUpdates() {
-  try {
-    const channel = supabase
-      .channel('reasons-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // الاستماع لجميع الأحداث (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'reasons'
-        },
-        () => {
-          // عند أي تغيير، أعِد تحميل البيانات
-          console.log('تم تحديث البيانات، إعادة التحميل...');
-          loadReasons();
-        }
-      )
-      .subscribe();
-
-    // إضافة Channel إلى window للوصول إليه إذا لزم الأمر
-    window.reasonsChannel = channel;
-
-  } catch (error) {
-    console.error("Error setting up realtime subscription:", error);
-  }
-}
-
-// تحميل البيانات عند فتح الصفحة
+// تحميل البيانات مرة واحدة عند فتح الصفحة فقط
 loadReasons();
 
-// الاشتراك في التحديثات المباشرة (اختياري)
-subscribeToRealtimeUpdates();
-
-// تحميل البيانات كل 30 ثانية للتأكد من التحديثات
-setInterval(() => {
-  loadReasons();
-}, 30000);
+// ملاحظة: تم حذف دالة subscribeToRealtimeUpdates و setInterval لضمان عدم التحديث التلقائي.
 </script>
+
 
 </body>
 </html>
