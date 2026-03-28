@@ -20,20 +20,29 @@ function createEl(tag, props = {}, text = '') {
 function setDoctorImage(container, imageUrl, name) {
     container.textContent = ''; 
 
-    if (imageUrl && imageUrl.trim() !== '') {
+    // فحص صارم: هل الرابط موجود، نصي، وطويل كفاية ليكون رابطاً؟
+    const hasImage = imageUrl && typeof imageUrl === 'string' && imageUrl.trim().length > 10;
+
+    if (hasImage) {
         const img = createEl('img', {
             className: 'doctor-img',
-            src: imageUrl,
+            src: imageUrl.trim(),
             alt: `صورة ${name}`,
             loading: 'lazy'
         });
 
-        img.onerror = () => renderPlaceholder(container);
+        // في حال كان الرابط في القاعدة "خربان" أو مكسور
+        img.onerror = () => {
+            container.textContent = '';
+            renderPlaceholder(container);
+        };
         container.appendChild(img);
     } else {
+        // إذا كان الحقل فارغاً أو null، تظهر السماعة فوراً
         renderPlaceholder(container);
     }
 }
+
 
 function renderPlaceholder(container) {
     const fallback = createEl('div', { className: 'no-image' });
@@ -46,7 +55,7 @@ function createDoctorCard(doctor) {
     const card = createEl('div', { className: 'doctor-card', id: `doctor-${doctor.id}` });
 
     const imgContainer = createEl('div', { className: 'doctor-img-container' });
-    setDoctorImage(imgContainer, doctor.image_url || doctor.img, doctor.name);
+    setDoctorImage(imgContainer, doctor.img || doctor.img, doctor.name);
 
     const header = createEl('div', { className: 'doctor-header' });
     header.appendChild(createEl('h3', {}, doctor.name || 'دكتور غير معروف'));
@@ -123,7 +132,7 @@ async function loadDoctors() {
                 // جلب الحقول المطلوبة فقط لتقليل الحجم (حل مشكلة الـ 600KB)
                 const { data, error } = await supabase
                     .from('doctors')
-                    .select('id, name, specialty, phone, image_url') 
+                    .select('id, name, specialty, phone, img,experience') 
                     .order('name');
                 
                 if (error) throw error;
