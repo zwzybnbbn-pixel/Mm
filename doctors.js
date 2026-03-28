@@ -113,31 +113,38 @@ function handleSearch() {
 }
 
 // ======== نظام الكاش وتحميل البيانات ========
+// ======== نظام الكاش وتحميل البيانات (النسخة المصححة) ========
 async function loadDoctors() {
     try {
         // استخدام الكاش الذكي (تخزين دائم + تحديث صامت)
         allDoctors = await fetchWithSmartCache(
             CACHE_KEY,
             async () => {
-                const { data, error } = await supabase.from('doctors').select('*').order('name');
+                // جلب الحقول المطلوبة فقط لتقليل الحجم (حل مشكلة الـ 600KB)
+                const { data, error } = await supabase
+                    .from('doctors')
+                    .select('id, name, specialty, phone, image_url') 
+                    .order('name');
+                
                 if (error) throw error;
                 return data;
             },
             (updatedData) => {
-                // تحديث الواجهة فوراً إذا تغيرت البيانات في سوبابيس عن الكاش
+                // تحديث الواجهة فوراً إذا تغيرت البيانات في سوبابيس
                 allDoctors = updatedData;
-                handleSearch(); // تحديث العرض الحالي (مع الحفاظ على الفلترة إن وجدت)
+                handleSearch(); 
             }
         );
 
-        // عرض البيانات الأولية (من الكاش)
+        // عرض البيانات الأولية (سواء من الكاش أو سوبابيس)
         handleSearch();
         
     } catch (err) {
-        console.error('خطأ:', err);
+        console.error('خطأ في جلب البيانات:', err);
         doctorsList.textContent = 'حدث خطأ أثناء جلب البيانات.';
     }
 }
+
 
 // ======== تهيئة الأحداث ========
 function init() {
