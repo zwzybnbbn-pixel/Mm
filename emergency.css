@@ -1,74 +1,302 @@
+/* ===========================
+   🌑 مركز طوارئ شبوة - عتق
+   التصميم الأسود الفاخر
+   =========================== */
+
 :root {
-    --gov-green: #004d40;
-    --urgent-red: #d32f2f;
-    --calm-green: #2e7d32;
-    --info-blue: #0277bd;
-    --light-bg: #f8f9fa;
+  --deep-black: #0a0c0f;
+  --dark-panel: #14181f;
+  --gold-accent: #c9a84c;
+  --emerald-green: #0d9488;
+  --urgent-red: #ef4444;
+  --info-blue: #3b82f6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glow-green: rgba(13, 148, 136, 0.3);
+  --glow-red: rgba(239, 68, 68, 0.3);
+  --glow-blue: rgba(59, 130, 246, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: var(--light-bg);
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    direction: rtl;
+  background: var(--deep-black);
+  background-image: 
+    radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 90%, rgba(59, 130, 246, 0.03) 0%, transparent 55%);
+  margin: 0;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  direction: rtl;
+  min-height: 100vh;
+  color: var(--text-primary);
+  /* نمط شبكي خافت */
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
 }
 
-.emergency-app { max-width: 600px; margin: 0 auto; padding: 15px; }
+.emergency-app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
 
+/* ========== الهيدر الحكومي الفاخر ========== */
 .gov-header {
-    background: var(--gov-green);
-    color: white;
-    padding: 25px;
-    border-radius: 15px;
-    text-align: center;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background: var(--dark-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 28px 24px 24px;
+  text-align: center;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  backdrop-filter: blur(10px);
+}
+
+/* خط ذهبي علوي */
+.gov-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+  border-radius: 0 0 4px 4px;
+}
+
+/* شعار النسر أو الجهة */
+.gov-header::after {
+  content: '🛡️';
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  font-size: 1.6rem;
+  opacity: 0.7;
 }
 
 .status-indicator {
-    font-size: 0.8rem;
-    background: rgba(255,255,255,0.2);
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fecaca;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 30px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
 }
 
 .pulse-dot {
-    width: 8px; height: 8px;
-    background: #ff5252;
-    border-radius: 50%;
-    margin-left: 8px;
-    animation: pulse 1.5s infinite;
+  width: 9px;
+  height: 9px;
+  background: var(--urgent-red);
+  border-radius: 50%;
+  margin-left: 10px;
+  box-shadow: 0 0 12px var(--urgent-red);
+  animation: pulse 1.6s infinite;
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+    box-shadow: 0 0 0 18px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }
 
+.gov-header h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.gov-header p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* ========== بطاقات التنبيه الفاخرة ========== */
 .alert-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-right: 6px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    animation: slideIn 0.4s ease-out;
+  background: var(--dark-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  margin-bottom: 18px;
+  border-right: 5px solid #555;
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: slideIn 0.5s ease-out;
+  backdrop-filter: blur(6px);
 }
 
-.alert-urgent { border-right-color: var(--urgent-red); background: #fff5f5; }
-.alert-calm { border-right-color: var(--calm-green); background: #f1f8e9; }
-.alert-info { border-right-color: var(--info-blue); background: #e1f5fe; }
+/* تأثير hover */
+.alert-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+}
 
-.alert-card h3 { margin: 0 0 10px 0; color: #333; }
-.alert-time { font-size: 0.75rem; color: #777; display: block; margin-bottom: 10px; }
-.alert-text { line-height: 1.6; color: #444; }
+/* حالات الطوارئ */
+.alert-urgent {
+  border-right-color: var(--urgent-red);
+  background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, var(--dark-panel) 40%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 30px var(--glow-red);
+}
 
+.alert-calm {
+  border-right-color: var(--emerald-green);
+  background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, var(--dark-panel) 40%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px var(--glow-green);
+}
+
+.alert-info {
+  border-right-color: var(--info-blue);
+  background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, var(--dark-panel) 40%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px var(--glow-blue);
+}
+
+/* أيقونة الحالة */
+.alert-card::before {
+  font-family: 'Segoe UI', sans-serif;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 1.4rem;
+  opacity: 0.8;
+}
+.alert-urgent::before { content: '🚨'; }
+.alert-calm::before  { content: '✅'; }
+.alert-info::before  { content: 'ℹ️'; }
+
+.alert-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  padding-left: 30px; /* لإفساح مجال للأيقونة */
+}
+
+.alert-time {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.75;
+}
+
+.alert-text {
+  line-height: 1.8;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+/* علامة تاريخ صغيرة */
+.alert-card .badge-time {
+  display: inline-block;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  margin-top: 12px;
+  color: #94a3b8;
+}
+
+/* ========== أنيميشن الظهور ========== */
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.initial-loader { text-align: center; padding: 50px; color: #888; }
+/* ========== اللودر الأولي ========== */
+.initial-loader {
+  text-align: center;
+  padding: 60px 30px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  background: var(--dark-panel);
+  border-radius: 20px;
+  border: 1px dashed var(--glass-border);
+  animation: pulseText 2s infinite;
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ========== الفوتر الحكومي ========== */
+.gov-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 18px;
+  color: #64748b;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.gov-footer p {
+  opacity: 0.6;
+}
+
+/* ========== تجاوب مع الجوال ========== */
+@media (max-width: 480px) {
+  .emergency-app {
+    padding: 12px;
+  }
+  .gov-header {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+  .gov-header h1 {
+    font-size: 1.5rem;
+  }
+  .alert-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+}
