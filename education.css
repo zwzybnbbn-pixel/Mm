@@ -1,0 +1,584 @@
+/* ============================================
+   🎓 التصميم الملكي المختلف - قطاع التربية
+   Royal Glassmorphism + Claymorphism Design
+   أحدث تقنيات 2025
+   ============================================ */
+
+/* ========== استيراد الخطوط ========== */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@400;700&display=swap');
+
+/* ========== المتغيرات ========== */
+:root {
+  /* لوحة الألوان */
+  --bg-deep: #030b17;
+  --bg-panel: rgba(10, 22, 45, 0.7);
+  --bg-card: rgba(15, 30, 55, 0.6);
+  
+  /* الذهب */
+  --gold: #d4a843;
+  --gold-light: #f0d78c;
+  --gold-glow: rgba(212, 168, 67, 0.5);
+  
+  /* الأزرق التعليمي */
+  --blue-royal: #0e6b9e;
+  --blue-deep: #0a4a6e;
+  --blue-glow: rgba(14, 107, 158, 0.5);
+  
+  /* النصوص */
+  --text-primary: #e8e2d0;
+  --text-secondary: #a8b8c8;
+  --text-muted: #6a7a8a;
+  
+  /* الزجاج */
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shine: rgba(255, 255, 255, 0.03);
+}
+
+/* ========== إعادة ضبط ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========== الجسم ========== */
+body {
+  background: var(--bg-deep);
+  font-family: 'Tajawal', 'Cairo', system-ui, sans-serif;
+  direction: rtl;
+  min-height: 100vh;
+  color: var(--text-primary);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ========== كرات زجاجية متحركة في الخلفية ========== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* كرة 1 */
+    radial-gradient(circle at 15% 20%, rgba(14, 107, 158, 0.15) 0%, transparent 35%),
+    /* كرة 2 */
+    radial-gradient(circle at 85% 75%, rgba(212, 168, 67, 0.1) 0%, transparent 35%),
+    /* كرة 3 */
+    radial-gradient(circle at 50% 50%, rgba(14, 107, 158, 0.08) 0%, transparent 40%),
+    /* كرة 4 */
+    radial-gradient(circle at 70% 10%, rgba(212, 168, 67, 0.08) 0%, transparent 30%),
+    /* شبكة */
+    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px);
+  animation: bgOrbs 20s ease-in-out infinite;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 41px 41px, 41px 41px;
+}
+
+@keyframes bgOrbs {
+  0%, 100% { opacity: 1; }
+  25% { opacity: 0.8; }
+  50% { opacity: 1.1; }
+  75% { opacity: 0.9; }
+}
+
+/* ========== جزيئات عائمة ========== */
+.floating-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,168,67,0.4) 0%, transparent 70%);
+  animation: particleFloat 15s ease-in-out infinite;
+}
+
+.particle:nth-child(1) { width: 6px; height: 6px; top: 10%; left: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { width: 4px; height: 4px; top: 30%; left: 70%; animation-delay: 2s; }
+.particle:nth-child(3) { width: 8px; height: 8px; top: 60%; left: 15%; animation-delay: 4s; }
+.particle:nth-child(4) { width: 3px; height: 3px; top: 80%; left: 80%; animation-delay: 6s; }
+.particle:nth-child(5) { width: 5px; height: 5px; top: 40%; left: 50%; animation-delay: 8s; }
+.particle:nth-child(6) { width: 7px; height: 7px; top: 20%; left: 90%; animation-delay: 10s; }
+.particle:nth-child(7) { width: 4px; height: 4px; top: 70%; left: 35%; animation-delay: 12s; }
+.particle:nth-child(8) { width: 6px; height: 6px; top: 50%; left: 10%; animation-delay: 14s; }
+
+@keyframes particleFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0; }
+  20% { opacity: 0.8; }
+  50% { transform: translate(40px, -60px) scale(2); opacity: 0.4; }
+  80% { opacity: 0.8; }
+}
+
+/* ========== الحاوية ========== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== الهيدر الزجاجي ========== */
+.edu-header {
+  background: rgba(10, 22, 45, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 70px 0 65px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+/* تأثير التوهج العلوي */
+.edu-header::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(14, 107, 158, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* انعكاس زجاجي */
+.edu-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,67,0.4), rgba(240,215,140,0.7), rgba(212,168,67,0.4), transparent);
+}
+
+.edu-header h1 {
+  font-family: 'Aref Ruqaa', 'El Messiri', 'Tajawal', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, #faf0d7 0%, #f0d78c 30%, #d4a843 60%, #a07828 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.edu-header h1 i {
+  font-size: 2.8rem;
+  background: linear-gradient(180deg, #f0d78c, #d4a843);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px var(--gold-glow));
+  animation: iconBounce 3s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.edu-header p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+/* ========== شريط الأخبار العاجلة - تصميم مختلف ========== */
+.urgent-box {
+  background: rgba(15, 30, 55, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.4),
+    0 0 50px rgba(220, 38, 38, 0.15),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  margin-bottom: 35px;
+  position: relative;
+}
+
+/* خط أحمر نبضي علوي */
+.urgent-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(220,38,38,0.6), transparent);
+  animation: redLinePulse 2s ease-in-out infinite;
+}
+
+@keyframes redLinePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.urgent-label {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  color: white;
+  padding: 20px 28px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 1px;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.urgent-label::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: labelShine 2.5s infinite;
+}
+
+@keyframes labelShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.urgent-label i {
+  animation: urgentShake 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes urgentShake {
+  0% { transform: rotate(-15deg) scale(1); }
+  100% { transform: rotate(15deg) scale(1.15); }
+}
+
+.urgent-content {
+  flex: 1;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+.urgent-content marquee {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fecaca;
+}
+
+/* ========== قسم القرارات - تصميم Claymorphism ========== */
+.decisions-section {
+  background: rgba(15, 30, 55, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 30px;
+  padding: 36px 32px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* إطار مزدوج */
+.decisions-section::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 25px;
+  pointer-events: none;
+}
+
+.section-title {
+  font-family: 'Aref Ruqaa', 'El Messiri', 'Tajawal', serif;
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  font-weight: 700;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title i {
+  color: var(--gold);
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 10px var(--gold-glow));
+}
+
+/* ========== بطاقة القرار - تصميم 3D Glass ========== */
+.decision-card {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 38, 65, 0.6) 0%,
+    rgba(12, 26, 50, 0.5) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 4px solid var(--blue-royal);
+  border-radius: 20px;
+  padding: 24px 26px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+  animation: cardSlideIn 0.7s ease-out both;
+}
+
+.decision-card:nth-child(1) { animation-delay: 0.05s; }
+.decision-card:nth-child(2) { animation-delay: 0.12s; }
+.decision-card:nth-child(3) { animation-delay: 0.19s; }
+.decision-card:nth-child(4) { animation-delay: 0.26s; }
+.decision-card:nth-child(5) { animation-delay: 0.33s; }
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.95);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* توهج عند hover */
+.decision-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(14,107,158,0.15), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.decision-card:hover::before {
+  opacity: 1;
+}
+
+/* انعكاس علوي */
+.decision-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.decision-card:hover {
+  transform: translateX(-10px) translateY(-4px);
+  border-right-color: var(--gold);
+  border-color: rgba(255,255,255,0.12);
+  border-right: 4px solid var(--gold);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.5),
+    0 0 40px rgba(14,107,158,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.decision-card:hover::after {
+  opacity: 1;
+}
+
+.decision-info h4 {
+  font-family: 'El Messiri', 'Tajawal', sans-serif;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #e8e2d0;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.decision-info .meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.decision-info .meta i {
+  color: var(--gold);
+  font-size: 0.7rem;
+}
+
+/* ========== زر التفاصيل ========== */
+.btn-details {
+  background: rgba(14, 107, 158, 0.2);
+  border: 1px solid rgba(14, 107, 158, 0.3);
+  color: #ffffff;
+  padding: 11px 22px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(4px);
+}
+
+.btn-details:hover {
+  background: linear-gradient(135deg, var(--gold), #a07828);
+  border-color: var(--gold-light);
+  color: #030b17;
+  box-shadow: 0 10px 30px var(--gold-glow);
+  transform: translateY(-3px);
+  gap: 14px;
+}
+
+.btn-details i {
+  transition: transform 0.4s;
+}
+
+.btn-details:hover i {
+  transform: translateX(-6px);
+}
+
+/* ========== حالات التحميل ========== */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.loading-ring {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 18px;
+  border: 3px solid rgba(212,168,67,0.12);
+  border-top-color: var(--gold);
+  border-right-color: var(--gold-light);
+  border-radius: 50%;
+  animation: ringRotate 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  box-shadow: 0 0 25px rgba(212,168,67,0.2);
+}
+
+@keyframes ringRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ========== الفوتر ========== */
+.edu-footer {
+  text-align: center;
+  margin: 50px 0 30px;
+  padding: 20px;
+}
+
+.edu-footer .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(14, 107, 158, 0.15);
+  border: 1px solid rgba(14, 107, 158, 0.25);
+  color: var(--text-secondary);
+  padding: 14px 30px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.4s;
+  backdrop-filter: blur(8px);
+}
+
+.edu-footer .back-link:hover {
+  background: rgba(14, 107, 158, 0.3);
+  border-color: var(--blue-royal);
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(14,107,158,0.3);
+  transform: translateY(-4px);
+}
+
+/* ========== سكرول بار ========== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212,168,67,0.7); }
+
+/* ========== تجاوب ========== */
+@media (max-width: 768px) {
+  .edu-header h1 { font-size: 2rem; }
+  .edu-header h1 i { font-size: 2rem; }
+  .section-title { font-size: 1.4rem; }
+  
+  .decision-card {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .decision-info .meta {
+    justify-content: center;
+  }
+  
+  .btn-details {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+  
+  .urgent-box {
+    flex-direction: column;
+  }
+  
+  .urgent-label {
+    width: 100%;
+    clip-path: none;
+    justify-content: center;
+    padding: 14px;
+  }
+  
+  .urgent-content marquee {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 14px; }
+  .edu-header h1 { font-size: 1.5rem; }
+  .decisions-section { padding: 20px 14px; border-radius: 22px; }
+}
