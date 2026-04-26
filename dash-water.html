@@ -1,80 +1,392 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم توزيع المياه</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<style>
-body { font-family:'Cairo',sans-serif; margin:0; background:#f0f0f0; }
-header { background:#0099ff; color:white; text-align:center; padding:1rem; }
-main { max-width:1000px; margin:2rem auto; padding:1rem; background:white; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-input, button, select { padding:0.5rem; margin:0.2rem 0; border-radius:6px; border:1px solid #ccc; font-size:1rem; }
-button { background:#0099ff; color:white; border:none; cursor:pointer; transition:0.3s;}
-button:hover { background:#007acc; }
-table { width:100%; border-collapse:collapse; margin-top:1rem; }
-th, td { border:1px solid #ccc; padding:0.5rem; text-align:center; }
-th { background:#0099ff; color:white; }
-.message-box { background:#f0faff; padding:1rem 1.5rem; border-radius:10px; margin-bottom:1rem; font-size:1.1rem;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>لوحة تحكم توزيع المياه | AquaFlow Pro</title>
+  <!-- أيقونات من Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- خط Cairo من Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* فقاعات مائية متحركة في الخلفية */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 153, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 200, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 90%, rgba(0, 100, 200, 0.2) 0%, transparent 50%);
+      animation: floatBg 12s infinite alternate ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes floatBg {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      100% { transform: translateY(-20px) scale(1.05); opacity: 1; }
+    }
+
+    /* الحاوية الرئيسية - زجاجية معتمة */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 32px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 153, 255, 0.2);
+      width: 100%;
+      max-width: 1300px;
+      padding: 2rem 2.5rem;
+      color: #e2e8f0;
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    /* ترويسة التطبيق */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 1.5rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, #0099ff, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 3rem;
+      filter: drop-shadow(0 0 10px rgba(0,153,255,0.6));
+    }
+
+    .logo-text h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #ffffff, #b0e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .logo-text span {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      font-weight: 300;
+    }
+
+    /* حالة المستخدم */
+    .user-status {
+      background: rgba(0, 153, 255, 0.2);
+      border-radius: 40px;
+      padding: 0.5rem 1.8rem;
+      border: 1px solid rgba(0, 153, 255, 0.5);
+      font-weight: 600;
+      color: #b0e0ff;
+    }
+
+    /* نموذج تسجيل الدخول */
+    .auth-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 450px;
+      margin: 0 auto;
+    }
+
+    .auth-container h3 {
+      margin-bottom: 2rem;
+      font-weight: 600;
+      color: #ccf0ff;
+    }
+
+    .input-group {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #0099ff;
+      font-size: 1.2rem;
+    }
+
+    .modern-input {
+      width: 100%;
+      padding: 1rem 2.8rem 1rem 1rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      color: white;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .modern-input:focus {
+      outline: none;
+      border-color: #0099ff;
+      box-shadow: 0 0 15px rgba(0, 153, 255, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn {
+      padding: 0.9rem 2rem;
+      border-radius: 14px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: none;
+      background: linear-gradient(135deg, #0099ff, #0066cc);
+      color: white;
+      box-shadow: 0 10px 20px -8px rgba(0, 153, 255, 0.5);
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px -8px rgba(0, 153, 255, 0.7);
+      background: linear-gradient(135deg, #00aaff, #0077ee);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff4d4d, #c92a2a);
+      box-shadow: 0 10px 20px -8px rgba(255, 77, 77, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #0099ff;
+      color: #0099ff;
+      box-shadow: none;
+      width: auto;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .glass-panel {
+        padding: 1.5rem;
+      }
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: #b0e0ff;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin: 1.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    th {
+      background: rgba(0, 153, 255, 0.25);
+      color: white;
+      font-weight: 700;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    td {
+      padding: 1rem 0.8rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+    }
+
+    .badge {
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .badge-active { background: #10b981; color: white; }
+    .badge-stopped { background: #ef4444; color: white; }
+    .badge-limited { background: #f59e0b; color: black; }
+
+    .action-btns {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .icon-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .icon-btn:hover {
+      background: #0099ff;
+    }
+    dialog {
+      background: #1e293b;
+      border: 1px solid #0099ff;
+      border-radius: 24px;
+      padding: 2rem;
+      color: white;
+      width: 90%;
+      max-width: 500px;
+    }
+    dialog::backdrop {
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>لوحة تحكم توزيع المياه</h1>
-</header>
+<div class="glass-panel">
+  
+  <div class="app-header">
+    <div class="logo-area">
+      <i class="fas fa-water logo-icon"></i>
+      <div class="logo-text">
+        <h1>AquaFlow Pro</h1>
+        <span>لوحة التحكم المركزية</span>
+      </div>
+    </div>
+    <div id="authStatusArea"></div>
+  </div>
 
-<main>
-  <!-- تسجيل الدخول -->
+  <!-- قسم تسجيل الدخول -->
   <div id="authSection">
-    <input type="email" id="email" placeholder="البريد الإلكتروني">
-    <input type="password" id="password" placeholder="كلمة المرور">
-    <button id="loginBtn">تسجيل الدخول</button>
+    <div class="auth-container">
+      <h3><i class="fas fa-lock"></i> تسجيل الدخول للنظام</h3>
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" class="modern-input" placeholder="البريد الإلكتروني">
+      </div>
+      <div class="input-group">
+        <i class="fas fa-key"></i>
+        <input type="password" id="password" class="modern-input" placeholder="كلمة المرور">
+      </div>
+      <button id="loginBtn" class="btn"><i class="fas fa-arrow-left"></i> دخول</button>
+    </div>
   </div>
 
-  <!-- لوحة التحكم بعد تسجيل الدخول -->
+  <!-- لوحة التحكم الرئيسية -->
   <div id="dashboard" style="display:none;">
-    <div class="user-info" id="userInfo" style="margin-bottom:1rem; padding:0.5rem; background:#e6f2ff; border-radius:6px;"></div>
+    <div id="userInfo" class="user-status" style="margin-bottom:2rem;"></div>
 
-    <h3>تحديث الرسالة العامة</h3>
-    <input type="text" id="newMessage" placeholder="أدخل الرسالة هنا" style="width:70%;"/>
-    <button id="updateMessageBtn">تحديث الرسالة</button>
+    <!-- بطاقة تحديث الرسالة -->
+    <div class="grid-2col">
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="section-title"><i class="fas fa-bullhorn"></i> الرسالة العامة</div>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <input type="text" id="newMessage" class="modern-input" placeholder="أدخل الرسالة العامة هنا" style="flex:2;">
+          <button id="updateMessageBtn" class="btn" style="width:auto; padding:0.9rem 1.5rem;"><i class="fas fa-paper-plane"></i> تحديث</button>
+        </div>
+      </div>
+      <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
+        <button id="logoutBtn" class="btn btn-danger" style="width:auto;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+      </div>
+    </div>
 
-    <h3>جدول التوزيع</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>التاريخ</th>
-          <th>الساعة</th>
-          <th>الحي</th>
-          <th>الحالة</th>
-          <th>الحي التالي</th>
-          <th>ملاحظة</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody id="tablesContainer"></tbody>
-    </table>
+    <!-- جدول التوزيع -->
+    <div class="section-title"><i class="fas fa-table"></i> جدول توزيع المياه الحالي</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>التاريخ</th><th>الساعة</th><th>الحي</th><th>الحالة</th><th>الحي التالي</th><th>ملاحظة</th><th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="tablesContainer"></tbody>
+      </table>
+    </div>
 
-    <h3>إضافة توزيع جديد</h3>
-    <input type="date" id="newDate">
-    <input type="time" id="newTime">
-    <input type="text" id="newArea" placeholder="الحي الحالي">
-    <select id="newStatus">
-      <option value="نشط">نشط</option>
-      <option value="متوقف">متوقف</option>
-      <option value="محدود">محدود</option>
-    </select>
-    <input type="text" id="newNextArea" placeholder="الحي التالي">
-    <input type="text" id="newNote" placeholder="ملاحظة">
-    <button id="addBtn">إضافة التوزيع</button>
-    <button id="logoutBtn" style="background:#ff4d4d;">تسجيل الخروج</button>
+    <!-- إضافة توزيع جديد -->
+    <div class="section-title"><i class="fas fa-plus-circle"></i> إضافة توزيع جديد</div>
+    <div style="display:flex; flex-wrap:wrap; gap:0.8rem; align-items:center; background:rgba(0,0,0,0.2); padding:1.5rem; border-radius:20px;">
+      <input type="date" id="newDate" class="modern-input" style="flex:1;">
+      <input type="time" id="newTime" class="modern-input" style="flex:1;">
+      <input type="text" id="newArea" class="modern-input" placeholder="الحي الحالي" style="flex:2;">
+      <select id="newStatus" class="modern-input" style="flex:1;">
+        <option value="نشط">نشط</option>
+        <option value="متوقف">متوقف</option>
+        <option value="محدود">محدود</option>
+      </select>
+      <input type="text" id="newNextArea" class="modern-input" placeholder="الحي التالي" style="flex:2;">
+      <input type="text" id="newNote" class="modern-input" placeholder="ملاحظة" style="flex:2;">
+      <button id="addBtn" class="btn" style="width:auto; flex:0;"><i class="fas fa-save"></i> إضافة</button>
+    </div>
   </div>
-</main>
+</div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// إعداد Supabase - نفس البيانات المستخدمة في صفحة العرض
 const supabaseUrl = "https://gxuumjhtutkipvkljjhj.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI";
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -83,115 +395,70 @@ const authSection = document.getElementById("authSection");
 const dashboard = document.getElementById("dashboard");
 const userInfo = document.getElementById("userInfo");
 
-// تحقق من حالة تسجيل الدخول عند التحميل
 checkAuth();
 
 async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    showDashboard(session.user);
-  }
+  if (session) showDashboard(session.user);
 }
 
-// تسجيل الدخول
 document.getElementById("loginBtn").addEventListener("click", async ()=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  
-  const { data, error } = await supabase.auth.signInWithPassword({ 
-    email, 
-    password 
-  });
-  
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if(error) return alert("خطأ في تسجيل الدخول: " + error.message);
-  
   showDashboard(data.user);
 });
 
 function showDashboard(user) {
   authSection.style.display = "none";
   dashboard.style.display = "block";
-  userInfo.innerHTML = `👤 مسجل دخول كـ: <strong>${user.email}</strong>`;
+  userInfo.innerHTML = `<i class="fas fa-user-circle"></i> مسجل كـ: <strong>${user.email}</strong>`;
   loadDistributions();
   loadGeneralMessage();
 }
 
-// تسجيل الخروج
 document.getElementById("logoutBtn").addEventListener("click", async ()=>{
-  const { error } = await supabase.auth.signOut();
-  if(error) alert("خطأ في تسجيل الخروج: " + error.message);
-  
+  await supabase.auth.signOut();
   authSection.style.display = "block";
   dashboard.style.display = "none";
   document.getElementById("email").value = "";
   document.getElementById("password").value = "";
 });
 
-// تحديث الرسالة العامة - تتطابق مع صفحة العرض
 document.getElementById("updateMessageBtn").addEventListener("click", async ()=>{
   const message = document.getElementById("newMessage").value;
   if(!message) return alert("أدخل رسالة صحيحة");
-
-  const { error } = await supabase
-    .from('general_message')
-    .upsert({ id: 1, message }, { onConflict: 'id' })
-    .select();
-    
-  if(error) {
-    alert("خطأ: " + error.message);
-  } else {
-    alert("تم تحديث الرسالة بنجاح!");
-    loadGeneralMessage();
-  }
+  const { error } = await supabase.from('general_message').upsert({ id: 1, message }, { onConflict: 'id' });
+  if(error) alert("خطأ: " + error.message);
+  else { alert("تم تحديث الرسالة بنجاح!"); loadGeneralMessage(); }
 });
 
-// تحميل الرسالة العامة - تتطابق مع صفحة العرض
 async function loadGeneralMessage() {
-  const { data, error } = await supabase
-    .from('general_message')
-    .select('message')
-    .eq('id', 1)
-    .single();
-    
-  if(data && !error) {
-    document.getElementById("newMessage").value = data.message || "";
-  }
+  const { data } = await supabase.from('general_message').select('message').eq('id', 1).single();
+  if(data) document.getElementById("newMessage").value = data.message || "";
 }
 
-// تحميل وعرض الجداول - هيكل مطابق لصفحة العرض
 const tablesContainer = document.getElementById("tablesContainer");
 async function loadDistributions(){
-  const { data, error } = await supabase
-    .from('water_distribution')
-    .select('*')
-    .order('date', { ascending: true }); // نفس ترتيب صفحة العرض
-    
-  if(error) {
-    console.error("خطأ في تحميل البيانات:", error);
-    return;
-  }
-  
+  const { data, error } = await supabase.from('water_distribution').select('*').order('date', { ascending: true });
+  if(error) return;
   tablesContainer.innerHTML = "";
-
   data.forEach(r=>{
+    const statusClass = r.status === 'نشط' ? 'badge-active' : (r.status === 'متوقف' ? 'badge-stopped' : 'badge-limited');
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${r.date}</td>
-      <td>${r.time}</td>
-      <td>${r.area}</td>
-      <td>${r.status}</td>
-      <td>${r.next_area || ''}</td>
-      <td>${r.note || ''}</td>
-      <td>
-        <button onclick="editDistribution('${r.id}')">تعديل كامل</button>
-        <button onclick="deleteRow('${r.id}')">حذف</button>
-      </td>
-    `;
+      <td>${r.date}</td><td>${r.time}</td><td>${r.area}</td>
+      <td><span class="badge ${statusClass}">${r.status}</span></td>
+      <td>${r.next_area || '—'}</td><td>${r.note || '—'}</td>
+      <td class="action-btns">
+        <button class="icon-btn" onclick="editDistribution('${r.id}')"><i class="fas fa-edit"></i></button>
+        <button class="icon-btn" onclick="deleteRow('${r.id}')"><i class="fas fa-trash"></i></button>
+      </td>`;
     tablesContainer.appendChild(tr);
   });
 }
 
-// إضافة توزيع جديد - هيكل مطابق لصفحة العرض
 document.getElementById("addBtn").addEventListener("click", async ()=>{
   const date = document.getElementById("newDate").value;
   const time = document.getElementById("newTime").value;
@@ -199,168 +466,53 @@ document.getElementById("addBtn").addEventListener("click", async ()=>{
   const status = document.getElementById("newStatus").value;
   const next_area = document.getElementById("newNextArea").value;
   const note = document.getElementById("newNote").value;
-  
-  if(!date || !time || !area) {
-    return alert("الرجاء ملء جميع الحقول الأساسية (التاريخ، الساعة، الحي)");
-  }
-
-  const { error } = await supabase
-    .from('water_distribution')
-    .insert([{
-      date, time, area, status, next_area, note,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }])
-    .select();
-    
-  if(error) {
-    alert("خطأ: " + error.message);
-  } else {
-    alert("تم إضافة التوزيع بنجاح!");
-    
-    // تفريغ الحقول
-    document.getElementById("newDate").value = "";
-    document.getElementById("newTime").value = "";
-    document.getElementById("newArea").value = "";
-    document.getElementById("newNextArea").value = "";
-    document.getElementById("newNote").value = "";
-    
-    loadDistributions();
-  }
+  if(!date || !time || !area) return alert("الرجاء ملء جميع الحقول الأساسية");
+  const { error } = await supabase.from('water_distribution').insert([{ date, time, area, status, next_area, note }]);
+  if(error) alert("خطأ: " + error.message);
+  else { alert("تمت الإضافة!"); loadDistributions(); }
 });
 
-// دوال تعديل وحذف
 window.deleteRow = async (id)=>{
   if(!confirm("هل تريد حذف هذا التوزيع؟")) return;
-  
-  const { error } = await supabase
-    .from('water_distribution')
-    .delete()
-    .eq('id', id)
-    .select();
-    
-  if(error) {
-    alert("خطأ: " + error.message);
-  } else {
-    alert("تم الحذف بنجاح");
-    loadDistributions();
-  }
+  await supabase.from('water_distribution').delete().eq('id', id);
+  loadDistributions();
 };
 
-// دالة تعديل كاملة بمربع حوار مخصص
 window.editDistribution = async (id) => {
-  // جلب البيانات الحالية
-  const { data, error: fetchError } = await supabase
-    .from('water_distribution')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (fetchError) return alert('خطأ في جلب البيانات: ' + fetchError.message);
-  if (!data) return alert('لم يتم العثور على السجل');
-
-  // إنشاء عنصر dialog للتعديل
+  const { data } = await supabase.from('water_distribution').select('*').eq('id', id).single();
+  if(!data) return;
   const dialog = document.createElement('dialog');
-  dialog.style.cssText = `
-    width: 400px;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #0099ff;
-    direction: rtl;
-    text-align: right;
-  `;
-
   dialog.innerHTML = `
-    <h3 style="margin-top:0; color:#0099ff;">تعديل توزيع المياه</h3>
-    
-    <div style="margin-bottom:15px;">
-      <label style="display:block; margin-bottom:5px;">التاريخ:</label>
-      <input type="date" id="editDate" value="${data.date}" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <label style="display:block; margin-bottom:5px;">الوقت:</label>
-      <input type="text" id="editTime" value="${data.time}" placeholder="مثال: صباحاً" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <label style="display:block; margin-bottom:5px;">اسم الحي:</label>
-      <input type="text" id="editArea" value="${data.area}" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <label style="display:block; margin-bottom:5px;">الحالة:</label>
-      <select id="editStatus" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-        <option value="نشط" ${data.status === 'نشط' ? 'selected' : ''}>نشط</option>
-        <option value="متوقف" ${data.status === 'متوقف' ? 'selected' : ''}>متوقف</option>
-        <option value="محدود" ${data.status === 'محدود' ? 'selected' : ''}>محدود</option>
-      </select>
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <label style="display:block; margin-bottom:5px;">الحي التالي:</label>
-      <input type="text" id="editNextArea" value="${data.next_area || ''}" placeholder="(اختياري)" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-    </div>
-    
-    <div style="margin-bottom:20px;">
-      <label style="display:block; margin-bottom:5px;">ملاحظات:</label>
-      <textarea id="editNote" rows="3" placeholder="(اختياري)" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">${data.note || ''}</textarea>
-    </div>
-    
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
-      <button id="cancelEdit" style="padding:10px 20px; background:#ccc; border:none; border-radius:5px; cursor:pointer;">إلغاء</button>
-      <button id="saveEdit" style="padding:10px 20px; background:#0099ff; color:white; border:none; border-radius:5px; cursor:pointer;">حفظ التعديلات</button>
-    </div>
-  `;
-
-  // إضافة dialog إلى الصفحة
+    <h3 style="color:#0099ff;"><i class="fas fa-edit"></i> تعديل التوزيع</h3>
+    <input type="date" id="editDate" value="${data.date}" class="modern-input" style="margin:10px 0; width:100%;">
+    <input type="text" id="editTime" value="${data.time}" class="modern-input" style="margin:10px 0; width:100%;">
+    <input type="text" id="editArea" value="${data.area}" class="modern-input" style="margin:10px 0; width:100%;">
+    <select id="editStatus" class="modern-input" style="margin:10px 0; width:100%;">
+      <option value="نشط" ${data.status==='نشط'?'selected':''}>نشط</option>
+      <option value="متوقف" ${data.status==='متوقف'?'selected':''}>متوقف</option>
+      <option value="محدود" ${data.status==='محدود'?'selected':''}>محدود</option>
+    </select>
+    <input type="text" id="editNextArea" value="${data.next_area||''}" class="modern-input" style="margin:10px 0; width:100%;">
+    <textarea id="editNote" class="modern-input" style="margin:10px 0; width:100%;">${data.note||''}</textarea>
+    <div style="display:flex; gap:1rem; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="this.closest('dialog').close(); this.closest('dialog').remove();">إلغاء</button>
+      <button class="btn" id="saveEditBtn">حفظ</button>
+    </div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
-
-  // أحداث الأزرار
-  document.getElementById('cancelEdit').onclick = () => {
-    dialog.close();
-    dialog.remove();
-  };
-
-  document.getElementById('saveEdit').onclick = async () => {
-    const updatedData = {
+  document.getElementById('saveEditBtn').onclick = async () => {
+    const updated = {
       date: document.getElementById('editDate').value,
       time: document.getElementById('editTime').value,
       area: document.getElementById('editArea').value,
       status: document.getElementById('editStatus').value,
-      next_area: document.getElementById('editNextArea').value || null,
-      note: document.getElementById('editNote').value || null,
-      updated_at: new Date().toISOString()
+      next_area: document.getElementById('editNextArea').value,
+      note: document.getElementById('editNote').value,
     };
-
-    // التحقق من البيانات
-    if (!updatedData.date || !updatedData.time || !updatedData.area || !updatedData.status) {
-      alert('الرجاء ملء جميع الحقول الأساسية');
-      return;
-    }
-
-    // تنفيذ التحديث
-    const { error } = await supabase
-      .from('water_distribution')
-      .update(updatedData)
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      alert('خطأ في التحديث: ' + error.message);
-    } else {
-      alert('✅ تم التعديل بنجاح!');
-      dialog.close();
-      dialog.remove();
-      loadDistributions();
-    }
+    await supabase.from('water_distribution').update(updated).eq('id', id);
+    dialog.close(); dialog.remove(); loadDistributions();
   };
 };
-// تحميل الرسالة عند بدء التشغيل
-document.addEventListener('DOMContentLoaded', () => {
-  loadGeneralMessage();
-});
 </script>
 </body>
 </html>
