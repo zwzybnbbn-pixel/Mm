@@ -4,11 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>دليل السياحة – اكتشف مدينتك</title>
+
+<!-- الخطوط -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
+/* ============================================
+   🏛️ دليل السياحة - تصميم خرافي فخم
+   ألوان ملكية ساحرة - Ultra Premium
+   ============================================ */
+
+:root {
+  /* ألوان خرافية */
+  --deep-navy: #020b1a;
+  --royal-blue: #0a1628;
+  --midnight: #06101f;
+  --ocean-deep: #0b3d5c;
+  --turquoise: #0d9488;
+  --teal-glow: rgba(13, 148, 136, 0.5);
+  
+  /* الذهب */
+  --gold: #d4a843;
+  --gold-light: #f0d78c;
+  --gold-glow: rgba(212, 168, 67, 0.5);
+  
+  /* أرجواني ملكي */
+  --royal-purple: #7c3aed;
+  --purple-glow: rgba(124, 58, 237, 0.4);
+  
+  /* زهري فاخر */
+  --rose: #e11d48;
+  --rose-glow: rgba(225, 29, 72, 0.4);
+  
+  /* نصوص */
+  --text-divine: #e8e2d0;
+  --text-soft: #a8b8c8;
+  --text-muted: #6a7a8a;
+  
+  /* زجاج */
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.06);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -17,15 +56,68 @@
 }
 
 body {
-  background: linear-gradient(135deg, #eef3ff 0%, #f0f7ff 100%);
-  color: #003f63;
+  background: var(--deep-navy);
+  color: var(--text-divine);
   overflow-x: hidden;
   line-height: 1.6;
+  position: relative;
 }
 
+/* خلفية متحركة خرافية */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 70%, rgba(212, 168, 67, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 90%, rgba(225, 29, 72, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(13, 148, 136, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.008) 60px, rgba(255,255,255,0.008) 61px),
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.008) 60px, rgba(255,255,255,0.008) 61px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 61px 61px, 61px 61px;
+  animation: bgKaleidoscope 25s ease-in-out infinite;
+}
+
+@keyframes bgKaleidoscope {
+  0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+  33% { opacity: 0.85; filter: hue-rotate(15deg); }
+  66% { opacity: 0.95; filter: hue-rotate(-10deg); }
+}
+
+/* جزيئات ملونة */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(2px 2px at 8% 15%, rgba(13,148,136,0.7), transparent),
+    radial-gradient(3px 3px at 22% 55%, rgba(212,168,67,0.6), transparent),
+    radial-gradient(1px 1px at 38% 30%, rgba(124,58,237,0.7), transparent),
+    radial-gradient(2px 2px at 55% 65%, rgba(225,29,72,0.5), transparent),
+    radial-gradient(3px 3px at 70% 20%, rgba(13,148,136,0.6), transparent),
+    radial-gradient(1px 1px at 85% 50%, rgba(212,168,67,0.7), transparent),
+    radial-gradient(2px 2px at 12% 80%, rgba(124,58,237,0.5), transparent),
+    radial-gradient(1px 1px at 62% 40%, rgba(225,29,72,0.6), transparent),
+    radial-gradient(3px 3px at 92% 75%, rgba(13,148,136,0.5), transparent),
+    radial-gradient(1px 1px at 35% 10%, rgba(212,168,67,0.7), transparent);
+  animation: particlesShimmer 8s ease-in-out infinite;
+}
+
+@keyframes particlesShimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ========== الهيرو ========== */
 .hero {
-  height: 90vh;
-  min-height: 650px;
+  height: 100vh;
+  min-height: 700px;
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -33,7 +125,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: #000;
+  z-index: 1;
 }
 
 .hero-img {
@@ -44,23 +136,43 @@ body {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  display: block;
-  animation: zoomEffect 25s ease-in-out infinite alternate;
+  animation: majesticZoom 30s ease-in-out infinite alternate;
+  filter: brightness(0.5) saturate(1.3);
 }
 
-@keyframes zoomEffect {
+@keyframes majesticZoom {
   0% { transform: scale(1); }
-  100% { transform: scale(1.1); }
+  100% { transform: scale(1.15); }
 }
 
 .overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 63, 99, 0.6));
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 11, 26, 0.5) 0%,
+    rgba(6, 16, 31, 0.6) 30%,
+    rgba(2, 11, 26, 0.8) 70%,
+    rgba(2, 11, 26, 0.95) 100%
+  );
   z-index: 2;
+}
+
+/* نقوش زخرفية على الهيرو */
+.overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(13,148,136,0.2) 0%, transparent 40%),
+    radial-gradient(circle at 70% 30%, rgba(124,58,237,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(212,168,67,0.1) 0%, transparent 30%);
+  animation: overlayGlow 10s ease-in-out infinite;
+}
+
+@keyframes overlayGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .hero .content {
@@ -69,50 +181,96 @@ body {
   color: #fff;
   padding: 0 20px;
   max-width: 900px;
-  animation: fadeInUp 1.2s ease-out;
+  animation: heroReveal 1.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-@keyframes fadeInUp {
+@keyframes heroReveal {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(60px);
+    filter: blur(10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
+.hero h1 {
+  font-family: 'Aref Ruqaa', 'El Messiri', 'Cairo', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #faf0d7 20%,
+    #f0d78c 40%,
+    #d4a843 65%,
+    #0d9488 85%,
+    #7c3aed 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+  animation: titleShine 6s ease-in-out infinite;
+}
 
+@keyframes titleShine {
+  0%, 100% { filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5)) brightness(1); }
+  50% { filter: drop-shadow(0 8px 35px rgba(212,168,67,0.7)) brightness(1.2); }
+}
 
 .hero p {
-  margin-top: 10px;
-  font-size: 1.5rem;
-  opacity: 0.9;
+  margin-top: 12px;
+  font-size: 1.4rem;
+  opacity: 0.85;
   max-width: 700px;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
+  color: #c8d8e8;
+  line-height: 1.7;
 }
 
+/* ========== صندوق البحث ========== */
 .search-box {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 50px;
-  padding: 12px 25px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 60px;
+  padding: 14px 28px;
   width: 90%;
-  max-width: 500px;
+  max-width: 550px;
   margin: 30px auto 0;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .search-box:focus-within {
-  transform: scale(1.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.04);
+  border-color: rgba(13, 148, 136, 0.6);
+  box-shadow:
+    0 25px 50px rgba(0,0,0,0.4),
+    0 0 60px rgba(13, 148, 136, 0.2),
+    0 0 100px rgba(124, 58, 237, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.search-box i {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.3rem;
+  transition: color 0.4s;
+}
+
+.search-box:focus-within i {
+  color: var(--turquoise);
 }
 
 .search-box input {
@@ -120,44 +278,45 @@ body {
   border: none;
   width: 100%;
   color: white;
-  font-size: 1.1rem;
-  padding-right: 15px;
+  font-size: 1.15rem;
+  padding-right: 16px;
   outline: none;
+  font-weight: 500;
 }
 
 .search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.search-box i {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .clear-search {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 1rem;
   cursor: pointer;
-  padding: 5px;
+  padding: 6px;
   display: none;
+  transition: all 0.3s;
+  border-radius: 50%;
 }
 
 .clear-search:hover {
-  color: white;
+  color: #fff;
+  background: rgba(255,255,255,0.1);
 }
 
 .search-results {
-  margin-top: 15px;
-  color: rgba(255, 255, 255, 0.9);
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
   min-height: 24px;
+  font-weight: 500;
 }
 
 .no-results {
-  color: #ff6b6b;
+  color: #fca5a5;
   font-weight: 600;
 }
 
+/* ========== الموجة ========== */
 .wave {
   position: absolute;
   bottom: 0;
@@ -168,49 +327,61 @@ body {
   pointer-events: none;
 }
 
+/* ========== الأقسام ========== */
 .section {
-  padding: 80px 20px;
+  padding: 100px 20px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .section h2 {
-  font-size: 2.8rem;
-  color: #005f87;
-  margin-bottom: 50px;
-  position: relative;
+  font-family: 'Aref Ruqaa', 'El Messiri', 'Cairo', serif;
+  font-size: 3rem;
+  background: linear-gradient(180deg, #ffffff, #f0d78c, #0d9488);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 60px;
   display: inline-block;
+  position: relative;
 }
 
 .section h2::after {
   content: '';
   position: absolute;
-  bottom: -15px;
+  bottom: -18px;
   right: 50%;
   transform: translateX(50%);
-  width: 80px;
+  width: 100px;
   height: 4px;
-  background: linear-gradient(to right, #0077b6, #00b4d8);
+  background: linear-gradient(90deg, #0d9488, #d4a843, #7c3aed);
   border-radius: 2px;
 }
 
+/* ========== البطاقات ========== */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 32px;
   padding: 0 10px;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  padding: 0;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  cursor: pointer;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 30, 55, 0.7) 0%,
+    rgba(8, 18, 36, 0.8) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
   overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
   position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 .card::before {
@@ -219,162 +390,198 @@ body {
   top: 0;
   right: 0;
   width: 100%;
-  height: 5px;
-  background: linear-gradient(to left, #0077b6, #00b4d8);
+  height: 4px;
+  background: linear-gradient(90deg, #0d9488, #d4a843, #7c3aed);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card:hover {
-  transform: translateY(-15px) scale(1.03);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-18px) scale(1.03);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.6),
+    0 0 50px rgba(13, 148, 136, 0.15),
+    0 0 80px rgba(124, 58, 237, 0.08);
 }
 
 .card img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 20px 20px 0 0;
-  transition: transform 0.5s;
+  transition: transform 0.7s;
+  filter: brightness(0.8);
 }
 
 .card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  filter: brightness(1);
 }
 
 .card-content {
-  padding: 20px;
+  padding: 22px;
 }
 
 .card h3 {
-  margin: 15px 0 10px;
-  color: #005f87;
-  font-size: 1.6rem;
+  margin: 12px 0 10px;
+  font-family: 'El Messiri', 'Cairo', sans-serif;
+  font-size: 1.5rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  background: linear-gradient(180deg, #f0d78c, #d4a843);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card h3 i {
+  background: linear-gradient(135deg, #0d9488, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .card p {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  color: #a8b8c8;
+  line-height: 1.7;
 }
 
 .card-cta {
-  display: inline-block;
-  margin-top: 15px;
-  color: #0077b6;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: #0d9488;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.4s;
 }
 
 .card:hover .card-cta {
-  color: #00b4d8;
-  transform: translateX(-5px);
+  color: #f0d78c;
+  gap: 14px;
 }
 
+/* ========== الشارة ========== */
 .badge {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #0077b6;
-  padding: 6px 15px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.85rem;
+  top: 14px;
+  left: 14px;
+  background: linear-gradient(135deg, rgba(124,58,237,0.8), rgba(13,148,136,0.8));
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 7px 16px;
+  border-radius: 24px;
+  font-weight: 800;
+  font-size: 0.8rem;
   z-index: 10;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  letter-spacing: 0.5px;
 }
 
 .hidden {
   display: none !important;
 }
 
-footer {
-  margin-top: 80px;
-  padding: 40px 20px;
-  text-align: center;
-  color: #555;
-  background: linear-gradient(to right, #eef3ff, #e0ebff);
-  border-top: 1px solid rgba(0, 119, 182, 0.1);
-  position: relative;
-}
-
-footer p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
-
-footer .developer {
-  font-weight: 700;
-  color: #0077b6;
-  margin-top: 20px;
-}
-
+/* ========== زر الرجوع ========== */
 .back-btn {
   position: fixed;
-  top: 25px;
-  right: 25px;
-  background: rgba(0, 119, 182, 0.9);
+  top: 22px;
+  right: 22px;
+  background: rgba(13, 148, 136, 0.7);
+  backdrop-filter: blur(12px);
   color: #fff;
-  padding: 12px 22px;
+  padding: 13px 24px;
   border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   z-index: 9999;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .back-btn:hover {
-  background: #005f87;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  background: rgba(124, 58, 237, 0.9);
+  transform: translateY(-5px) scale(1.06);
+  box-shadow: 0 15px 35px rgba(124,58,237,0.4), 0 0 40px rgba(13,148,136,0.3);
 }
 
+/* ========== الفوتر ========== */
+footer {
+  margin-top: 80px;
+  padding: 50px 20px;
+  text-align: center;
+  background: rgba(6, 16, 31, 0.8);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  z-index: 1;
+}
+
+footer p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: var(--text-soft);
+}
+
+footer .developer {
+  font-family: 'El Messiri', 'Cairo', sans-serif;
+  font-weight: 700;
+  background: linear-gradient(90deg, #0d9488, #d4a843, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-top: 18px;
+  font-size: 1.15rem;
+}
+
+/* ========== سكرول بار ========== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0d9488, #7c3aed); border-radius: 3px; }
+
+/* ========== تجاوب ========== */
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-  }
-  
-  .section h2 {
-    font-size: 2.2rem;
-  }
-  
-  .cards {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .back-btn {
-    top: 15px;
-    right: 15px;
-    padding: 10px 18px;
-    font-size: 1rem;
-  }
+  .hero h1 { font-size: 2.5rem; }
+  .hero p { font-size: 1.1rem; }
+  .section h2 { font-size: 2rem; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .back-btn { top: 12px; right: 12px; padding: 10px 16px; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.8rem; }
+  .hero p { font-size: 0.95rem; }
+  .section h2 { font-size: 1.6rem; }
+  .search-box { padding: 10px 18px; }
+  .search-box input { font-size: 1rem; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- زر الرجوع -->
 <a href="all-index.html" class="back-btn">
-  <i class="fas fa-arrow-right"></i> رجوع
+  <span>⬅️</span> رجوع
 </a>
 
+<!-- الهيرو -->
 <div class="hero">
   <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2068&q=80" class="hero-img" alt="صورة مدينة">
   
@@ -385,28 +592,28 @@ footer .developer {
     <p>أماكن مميزة، مطاعم فاخرة، فنادق راقية، فعاليات حصرية... كل ما تحتاجه لاكتشاف المدينة بين يديك</p>
     
     <div class="search-box">
-      <i class="fas fa-search"></i>
+      <span>🔍</span>
       <input type="text" id="searchInput" placeholder="ابحث عن: كافيهات، فنادق، فعاليات، مطاعم...">
-      <div class="clear-search" id="clearSearch">
-        <i class="fas fa-times"></i>
-      </div>
+      <div class="clear-search" id="clearSearch">✕</div>
     </div>
     <div class="search-results" id="searchResults"></div>
   </div>
   
   <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-    <path fill="#eef3ff" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,138.7C672,139,768,181,864,192C960,203,1056,181,1152,160C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    <path fill="#020b1a" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,138.7C672,139,768,181,864,192C960,203,1056,181,1152,160C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
   </svg>
 </div>
 
+<!-- الأقسام -->
 <div class="section">
   <h2>الأقسام السياحية</h2>
   
   <div class="cards" id="cardsContainer">
-    <!-- البطاقات سيتم توليدها ديناميكياً عبر JavaScript -->
+    <!-- البطاقات يتم توليدها ديناميكياً -->
   </div>
 </div>
 
+<!-- الفوتر -->
 <footer>
   <p>دليل السياحة الشامل – اكتشف مدينتك بكل سهولة</p>
   <p class="developer">مطور: م/ماجد قاسم حسن مبارك بن عمرو</p>
@@ -419,7 +626,7 @@ const cardsData = [
   {
     id: 1,
     title: "كافيهات",
-    icon: "fa-coffee",
+    icon: "☕",
     description: "جلسات راقية، أجواء هادئة، ومشروبات فاخرة تناسب جميع الأذواق. اكتشف أفضل الكافيهات في المدينة.",
     image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
     link: "cafes.html",
@@ -429,7 +636,7 @@ const cardsData = [
   {
     id: 2,
     title: "فنادق",
-    icon: "fa-hotel",
+    icon: "🏨",
     description: "أفضل الفنادق بخدمات مميزة، إقامة مريحة، وتجارب فاخرة تناسب جميع الميزانيات.",
     image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     link: "hotels.html",
@@ -439,28 +646,26 @@ const cardsData = [
   {
     id: 3,
     title: "مراكز تسوق",
-    icon: "fa-calendar-alt",
+    icon: "🛍️",
     description: "أكبر المراكز التجارية والأسواق الشعبية لتجربة تسوق مميزة مع عروض متنوعة.",
     image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     link: "markets.html",
     badge: "",
-    tags: ["فعالية", "مناسبة", "حفل", "مهرجان", "معرض", "حدث", "ترفيه"]
+    tags: ["تسوق", "سوق", "مركز تجاري", "مول", "عروض", "أسواق"]
   },
   {
     id: 4,
     title: "مطاعم",
-    icon: "fa-utensils",
+    icon: "🍽️",
     description: "أفضل المأكولات المحلية والعالمية، تجارب طعام لا تُنسى في أجواء مميزة ومذاقات فريدة.",
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     link: "restaurants.html",
     badge: "جديد",
     tags: ["مطعم", "طعام", "مأكولات", "وجبة", "عشاء", "غداء", "مطاعم"]
-  },
-  
-  
+  }
 ];
 
-// توليد البطاقات في الصفحة
+// توليد البطاقات
 function generateCards(cards) {
   const container = document.getElementById('cardsContainer');
   container.innerHTML = '';
@@ -475,11 +680,11 @@ function generateCards(cards) {
     cardElement.innerHTML = `
       <div class="card" data-id="${card.id}">
         ${badgeHTML}
-        <img src="${card.image}" alt="${card.title}">
+        <img src="${card.image}" alt="${card.title}" loading="lazy">
         <div class="card-content">
-          <h3><i class="fas ${card.icon}"></i> ${card.title}</h3>
+          <h3><span>${card.icon}</span> ${card.title}</h3>
           <p>${card.description}</p>
-          <div class="card-cta">اكتشف الآن <i class="fas fa-arrow-left"></i></div>
+          <div class="card-cta">اكتشف الآن <span>⬅️</span></div>
         </div>
       </div>
     `;
@@ -488,13 +693,12 @@ function generateCards(cards) {
   });
 }
 
-// وظيفة البحث
+// البحث
 function performSearch(searchTerm) {
   const resultsContainer = document.getElementById('searchResults');
   const clearSearchBtn = document.getElementById('clearSearch');
   
   if (searchTerm.trim() === '') {
-    // إذا كان البحث فارغاً، عرض جميع البطاقات
     generateCards(cardsData);
     resultsContainer.innerHTML = '';
     resultsContainer.classList.remove('no-results');
@@ -502,68 +706,49 @@ function performSearch(searchTerm) {
     return;
   }
   
-  // البحث في البطاقات
   const searchTermLower = searchTerm.toLowerCase();
   const filteredCards = cardsData.filter(card => {
-    // البحث في العنوان
     if (card.title.toLowerCase().includes(searchTermLower)) return true;
-    
-    // البحث في الوصف
     if (card.description.toLowerCase().includes(searchTermLower)) return true;
-    
-    // البحث في الوسوم (Tags)
     if (card.tags.some(tag => tag.toLowerCase().includes(searchTermLower))) return true;
-    
     return false;
   });
   
-  // عرض النتائج
   generateCards(filteredCards);
   
-  // عرض عدد النتائج
   if (filteredCards.length > 0) {
-    resultsContainer.innerHTML = `تم العثور على ${filteredCards.length} نتيجة لـ "${searchTerm}"`;
+    resultsContainer.innerHTML = `✅ تم العثور على ${filteredCards.length} نتيجة لـ "${searchTerm}"`;
     resultsContainer.classList.remove('no-results');
   } else {
-    resultsContainer.innerHTML = `لا توجد نتائج لـ "${searchTerm}". جرب كلمات أخرى مثل: كافيهات، فنادق، مطاعم`;
+    resultsContainer.innerHTML = `❌ لا توجد نتائج لـ "${searchTerm}". جرب: كافيهات، فنادق، مطاعم`;
     resultsContainer.classList.add('no-results');
   }
   
-  // إظهار زر مسح البحث
   clearSearchBtn.style.display = 'block';
 }
 
 // تهيئة الصفحة
 document.addEventListener('DOMContentLoaded', function() {
-  // توليد البطاقات عند تحميل الصفحة
   generateCards(cardsData);
   
-  // البحث عند الكتابة
   const searchInput = document.getElementById('searchInput');
   const clearSearchBtn = document.getElementById('clearSearch');
   
-  // بحث فوري أثناء الكتابة
   searchInput.addEventListener('input', function() {
     performSearch(this.value);
   });
   
-  // مسح البحث
   clearSearchBtn.addEventListener('click', function() {
     searchInput.value = '';
     performSearch('');
     searchInput.focus();
   });
   
-  // البحث عند الضغط على Enter
   searchInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      performSearch(this.value);
-    }
+    if (e.key === 'Enter') performSearch(this.value);
   });
   
-  // تأثيرات تفاعلية إضافية
-  const cards = document.querySelectorAll('.card');
-  
+  // Intersection Observer للأنيميشن
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -573,41 +758,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, { threshold: 0.1 });
   
-  cards.forEach(card => {
+  document.querySelectorAll('.card').forEach(card => {
     card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)';
     observer.observe(card);
   });
-  
-  // تأثير للبحث
-  searchInput.addEventListener('focus', function() {
-    document.querySelector('.search-box').classList.add('focused');
-  });
-  
-  searchInput.addEventListener('blur', function() {
-    document.querySelector('.search-box').classList.remove('focused');
-  });
-});
-
-// اقتراحات تلقائية للبحث (ميزة إضافية)
-const searchSuggestions = [
-  "كافيهات",
-  "فنادق",
-  "مطاعم",
-  "فعاليات",
-  "معالم تاريخية",
-  "مراكز تسوق",
-  "أماكن ترفيهية",
-  "مقاهي",
-  "مطاعم عربية",
-  "فنادق فاخرة"
-];
-
-// عرض الاقتراحات عند النقر على حقل البحث
-document.getElementById('searchInput').addEventListener('click', function() {
-  // يمكن إضافة قائمة اقتراحات هنا إذا أردت
-  console.log("يمكن إضافة قائمة اقتراحات للبحث هنا");
 });
 </script>
 
