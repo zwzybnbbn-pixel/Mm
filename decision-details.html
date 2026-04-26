@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تفاصيل القرار الرسمي | قطاع التربية والتعليم</title>
-    <!-- أيقونات من CDN مدعوم على Vercel -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- الخطوط -->
+    
+    <!-- الخطوط فقط -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-    <!-- الأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         /* ============================================
            📜 التصميم الملكي لتفاصيل القرار
            Royal Decision Details - Ultra Premium
+           جميع الأيقونات Unicode (لا تحتاج مكتبات خارجية)
            ============================================ */
 
         :root {
@@ -75,7 +73,7 @@
             50% { opacity: 0.85; }
         }
 
-        /* جزيئات */
+        /* جزيئات عائمة */
         .particles {
             position: fixed;
             inset: 0;
@@ -173,7 +171,7 @@
             position: relative;
         }
 
-        /* أيقونة القرار */
+        /* أيقونة القرار - Unicode */
         .decision-icon {
             display: inline-flex;
             align-items: center;
@@ -184,7 +182,7 @@
             border: 1px solid rgba(212, 168, 67, 0.3);
             border-radius: 18px;
             margin-bottom: 16px;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             color: var(--gold);
             box-shadow: 0 0 30px rgba(212,168,67,0.2);
         }
@@ -215,9 +213,9 @@
             color: var(--text-secondary);
         }
 
-        .date-badge i {
+        .date-badge .calendar-icon {
             color: var(--gold);
-            font-size: 0.75rem;
+            font-size: 0.9rem;
         }
 
         /* ========== محتوى القرار ========== */
@@ -271,14 +269,24 @@
             box-shadow: 0 12px 30px rgba(220, 38, 38, 0.2);
         }
 
-        .download-link i {
-            font-size: 1.5rem;
+        .download-link .pdf-icon {
+            font-size: 1.8rem;
             animation: pdfBounce 2s ease-in-out infinite;
         }
 
         @keyframes pdfBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
+        }
+
+        .download-link .download-arrow {
+            margin-right: auto;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .download-link:hover .download-arrow {
+            transform: translateY(4px);
         }
 
         /* ========== أزرار التنقل ========== */
@@ -318,11 +326,12 @@
             gap: 14px;
         }
 
-        .back-btn i {
+        .back-btn .arrow-icon {
             transition: transform 0.4s;
+            font-size: 1.1rem;
         }
 
-        .back-btn:hover i {
+        .back-btn:hover .arrow-icon {
             transform: translateX(-5px);
         }
 
@@ -349,6 +358,10 @@
             border-color: var(--gold);
             color: #ffffff;
             box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .share-btn .share-icon {
+            font-size: 1.1rem;
         }
 
         /* ========== حالة التحميل ========== */
@@ -387,7 +400,7 @@
 
         .error-state .error-icon {
             font-size: 4rem;
-            color: rgba(255,255,255,0.1);
+            opacity: 0.2;
             margin-bottom: 16px;
         }
 
@@ -448,7 +461,7 @@
             .decision-icon {
                 width: 44px;
                 height: 44px;
-                font-size: 1.3rem;
+                font-size: 1.4rem;
                 border-radius: 14px;
             }
         }
@@ -496,12 +509,10 @@
             if (data) {
                 box.innerHTML = `
                     <div class="header-meta">
-                        <div class="decision-icon">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
+                        <div class="decision-icon">📄</div>
                         <h1 class="decision-title">${data.title}</h1>
                         <div class="date-badge">
-                            <i class="far fa-calendar-alt"></i>
+                            <span class="calendar-icon">📅</span>
                             نُشر في: ${new Date(data.created_at).toLocaleDateString('ar-SA', { 
                                 weekday: 'long', 
                                 year: 'numeric', 
@@ -517,19 +528,19 @@
 
                     ${data.file_url ? `
                         <a href="${data.file_url}" target="_blank" class="download-link">
-                            <i class="fas fa-file-pdf"></i>
+                            <span class="pdf-icon">📕</span>
                             <span>تحميل المرفق الرسمي (PDF)</span>
-                            <i class="fas fa-download" style="margin-right: auto;"></i>
+                            <span class="download-arrow">⬇️</span>
                         </a>
                     ` : ''}
 
                     <div class="nav-buttons">
                         <a href="education.html" class="back-btn">
-                            <i class="fas fa-arrow-right"></i>
+                            <span class="arrow-icon">⬅️</span>
                             العودة لقائمة القرارات
                         </a>
-                        <button class="share-btn" onclick="shareDecision('${data.title}')">
-                            <i class="fas fa-share-alt"></i>
+                        <button class="share-btn" onclick="shareDecision('${data.title.replace(/'/g, "\\'")}')">
+                            <span class="share-icon">🔗</span>
                             مشاركة القرار
                         </button>
                     </div>
@@ -537,12 +548,10 @@
             } else {
                 box.innerHTML = `
                     <div class="error-state">
-                        <div class="error-icon">
-                            <i class="fas fa-file-excel"></i>
-                        </div>
+                        <div class="error-icon">📂</div>
                         <p>عذراً، القرار غير موجود أو تم حذفه من النظام.</p>
                         <a href="education.html" class="back-btn">
-                            <i class="fas fa-arrow-right"></i>
+                            <span class="arrow-icon">⬅️</span>
                             العودة للقائمة الرئيسية
                         </a>
                     </div>
