@@ -3,96 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل القرار الرسمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <title>تفاصيل القرار الرسمي | قطاع التربية والتعليم</title>
+    
+    <!-- الخطوط -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <!-- الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #1a5f7a; --bg: #f4f7fa; }
-        
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 15px; /* تقليل الحواف في الجوال */
+        /* ============================================
+           📜 التصميم الملكي لتفاصيل القرار
+           Royal Decision Details - Ultra Premium
+           ============================================ */
+
+        :root {
+            --bg-void: #030b17;
+            --bg-panel: rgba(10, 22, 45, 0.6);
+            --bg-card: rgba(15, 30, 55, 0.5);
+            --gold: #d4a843;
+            --gold-light: #f0d78c;
+            --gold-pale: #faf0d7;
+            --gold-glow: rgba(212, 168, 67, 0.5);
+            --blue-royal: #0e6b9e;
+            --blue-glow: rgba(14, 107, 158, 0.4);
+            --text-primary: #e8e2d0;
+            --text-secondary: #a8b8c8;
+            --text-muted: #6a7a8a;
+            --glass-border: rgba(255, 255, 255, 0.06);
         }
 
-        .details-card {
-            max-width: 800px; 
-            margin: 20px auto; /* تقليل الهامش العلوي */
-            background: white;
-            padding: 25px; /* تقليل الحشوة الداخلية لتناسب الشاشات الصغيرة */
-            border-radius: 15px; /* زوايا أنعم قليلاً */
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            word-wrap: break-word; /* منع خروج النص الطويل عن الشاشة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .header-meta { 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 15px; 
-            margin-bottom: 20px; 
-        }
-
-        .decision-title { 
-            color: var(--primary); 
-            font-size: 22px; /* تصغير العنوان قليلاً ليناسب عرض الجوال */
-            margin: 0 0 10px 0; 
-            line-height: 1.4;
-        }
-
-        .date { 
-            color: #888; 
-            font-size: 13px; 
-            display: block;
-        }
-
-        .content { 
-            line-height: 1.8; 
-            font-size: 16px; /* حجم خط مريح للقراءة من الهاتف */
-            color: #444; 
-            white-space: pre-wrap; 
-        }
-
-        /* زر التحميل بشكل واضح وسهل اللمس */
-        .download-link {
+        body {
+            background: var(--bg-void);
+            font-family: 'Tajawal', 'Cairo', system-ui, sans-serif;
+            direction: rtl;
+            min-height: 100vh;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 25px;
-            padding: 15px;
-            background: #fff5f5;
-            color: #e53e3e;
-            text-decoration: none;
-            border-radius: 10px;
-            border: 1px dashed #e53e3e;
-            font-weight: bold;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .back-btn { 
+        /* خلفية متحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(14, 107, 158, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 70%, rgba(212, 168, 67, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(14, 107, 158, 0.06) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.006) 50px, rgba(255,255,255,0.006) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.006) 50px, rgba(255,255,255,0.006) 51px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 51px 51px, 51px 51px;
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        /* جزيئات */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,168,67,0.5) 0%, transparent 70%);
+            animation: floatUp 12s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 5px; height: 5px; bottom: 10%; left: 15%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 3px; height: 3px; bottom: 20%; left: 75%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 6px; height: 6px; bottom: 5%; left: 45%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 4px; height: 4px; bottom: 15%; left: 85%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 5px; height: 5px; bottom: 25%; left: 30%; animation-delay: 8s; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.9; }
+            50% { transform: translateY(-120px) scale(2.5); opacity: 0.3; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-200px) scale(1); opacity: 0; }
+        }
+
+        /* ========== البطاقة الملكية ========== */
+        .details-card {
+            max-width: 850px;
+            width: 100%;
+            margin: 0 auto;
+            background: linear-gradient(
+                180deg,
+                rgba(15, 30, 55, 0.7) 0%,
+                rgba(10, 22, 45, 0.75) 100%
+            );
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 32px;
+            padding: 44px 40px;
+            position: relative;
+            z-index: 1;
+            box-shadow:
+                0 40px 80px rgba(0,0,0,0.6),
+                0 0 60px rgba(14, 107, 158, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+            word-wrap: break-word;
+            overflow: hidden;
+            animation: cardReveal 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.94);
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* إطار داخلي ذهبي */
+        .details-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(212, 168, 67, 0.1);
+            border-radius: 26px;
+            pointer-events: none;
+        }
+
+        /* خط ذهبي علوي */
+        .details-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* ========== رأس القرار ========== */
+        .header-meta {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 22px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        /* أيقونة القرار */
+        .decision-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(160,120,40,0.1));
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 18px;
+            margin-bottom: 16px;
+            font-size: 1.6rem;
+            color: var(--gold);
+            box-shadow: 0 0 30px rgba(212,168,67,0.2);
+        }
+
+        .decision-title {
+            font-family: 'Aref Ruqaa', 'El Messiri', 'Tajawal', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(180deg, #faf0d7 0%, #f0d78c 30%, #d4a843 60%, #a07828 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+
+        /* شارة التاريخ */
+        .date-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 30px; 
-            text-decoration: none; 
-            color: var(--primary); 
-            font-weight: bold; 
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 18px;
+            border-radius: 24px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .date-badge i {
+            color: var(--gold);
+            font-size: 0.75rem;
+        }
+
+        /* ========== محتوى القرار ========== */
+        .content {
+            line-height: 2;
+            font-size: 1.05rem;
+            color: #c8d0d8;
+            white-space: pre-wrap;
+            text-align: justify;
             padding: 10px 0;
         }
 
-        /* تعديلات مخصصة للشاشات الكبيرة (الكمبيوتر) */
-        @media (min-width: 768px) {
-            body { padding: 40px; }
-            .details-card { padding: 40px; }
-            .decision-title { font-size: 28px; }
-            .content { font-size: 18px; }
+        .content::first-letter {
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            float: right;
+            line-height: 0.8;
+            margin-left: 10px;
+            margin-right: 4px;
+            background: linear-gradient(180deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========== زر تحميل المرفق ========== */
+        .download-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 30px;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(185, 28, 28, 0.05));
+            color: #fca5a5;
+            text-decoration: none;
+            border-radius: 18px;
+            border: 1px dashed rgba(220, 38, 38, 0.4);
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(6px);
+        }
+
+        .download-link:hover {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(185, 28, 28, 0.15));
+            border-style: solid;
+            border-color: rgba(220, 38, 38, 0.7);
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(220, 38, 38, 0.2);
+        }
+
+        .download-link i {
+            font-size: 1.5rem;
+            animation: pdfBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes pdfBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ========== أزرار التنقل ========== */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(14, 107, 158, 0.15);
+            border: 1px solid rgba(14, 107, 158, 0.25);
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 12px 24px;
+            border-radius: 14px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(8px);
+        }
+
+        .back-btn:hover {
+            background: rgba(14, 107, 158, 0.3);
+            border-color: var(--blue-royal);
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(14, 107, 158, 0.3);
+            transform: translateY(-3px);
+            gap: 14px;
+        }
+
+        .back-btn i {
+            transition: transform 0.4s;
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* زر المشاركة */
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            color: var(--gold-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 12px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .share-btn:hover {
+            background: rgba(212, 168, 67, 0.2);
+            border-color: var(--gold);
+            color: #ffffff;
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* ========== حالة التحميل ========== */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-ring {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 18px;
+            border: 3px solid rgba(212,168,67,0.12);
+            border-top-color: var(--gold);
+            border-right-color: var(--gold-light);
+            border-radius: 50%;
+            animation: ringSpin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 30px rgba(212,168,67,0.2);
+        }
+
+        @keyframes ringSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ========== حالة الخطأ ========== */
+        .error-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .error-state .error-icon {
+            font-size: 4rem;
+            color: rgba(255,255,255,0.1);
+            margin-bottom: 16px;
+        }
+
+        .error-state p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* ========== سكرول بار ========== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.3); border-radius: 3px; }
+
+        /* ========== تجاوب ========== */
+        @media (max-width: 768px) {
+            .details-card {
+                padding: 28px 20px;
+                border-radius: 24px;
+            }
+            
+            .decision-title {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                font-size: 0.95rem;
+                line-height: 1.9;
+            }
+            
+            .content::first-letter {
+                font-size: 2.2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .back-btn,
+            .share-btn {
+                justify-content: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            
+            .details-card {
+                padding: 22px 14px;
+                border-radius: 20px;
+            }
+            
+            .decision-title {
+                font-size: 1.3rem;
+            }
+            
+            .decision-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.3rem;
+                border-radius: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- الجزيئات العائمة -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- بطاقة التفاصيل -->
     <div class="details-card" id="detailsBox">
-        <p style="text-align:center">
-            <i class="fas fa-spinner fa-spin"></i> جاري تحميل تفاصيل القرار...
-        </p>
+        <div class="loading-state">
+            <div class="loading-ring"></div>
+            <p>📜 جاري تحميل تفاصيل القرار...</p>
+        </div>
     </div>
 
     <script type="module">
@@ -102,7 +479,10 @@
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
 
-            if (!id) { window.location.href = 'education.html'; return; }
+            if (!id) {
+                window.location.href = 'education.html';
+                return;
+            }
 
             const { data, error } = await supabase
                 .from('decisions')
@@ -110,38 +490,80 @@
                 .eq('id', id)
                 .single();
 
+            const box = document.getElementById('detailsBox');
+
             if (data) {
-                document.getElementById('detailsBox').innerHTML = `
+                box.innerHTML = `
                     <div class="header-meta">
+                        <div class="decision-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
                         <h1 class="decision-title">${data.title}</h1>
-                        <span class="date"><i class="far fa-calendar-alt"></i> نشر في: ${new Date(data.created_at).toLocaleDateString('ar-SA')}</span>
+                        <div class="date-badge">
+                            <i class="far fa-calendar-alt"></i>
+                            نُشر في: ${new Date(data.created_at).toLocaleDateString('ar-SA', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}
+                        </div>
                     </div>
+
                     <div class="content">
                         ${data.content || 'لا يوجد نص متاح لهذا القرار حالياً.'}
                     </div>
+
                     ${data.file_url ? `
                         <a href="${data.file_url}" target="_blank" class="download-link">
                             <i class="fas fa-file-pdf"></i>
-                            تحميل المرفق الرسمي (PDF)
+                            <span>تحميل المرفق الرسمي (PDF)</span>
+                            <i class="fas fa-download" style="margin-right: auto;"></i>
                         </a>
                     ` : ''}
-                    <a href="education.html" class="back-btn">
-                        <i class="fas fa-arrow-right"></i> العودة لقائمة القرارات
-                    </a>
+
+                    <div class="nav-buttons">
+                        <a href="education.html" class="back-btn">
+                            <i class="fas fa-arrow-right"></i>
+                            العودة لقائمة القرارات
+                        </a>
+                        <button class="share-btn" onclick="shareDecision('${data.title}')">
+                            <i class="fas fa-share-alt"></i>
+                            مشاركة القرار
+                        </button>
+                    </div>
                 `;
             } else {
-                document.getElementById('detailsBox').innerHTML = `
-                    <div style="text-align:center; padding: 20px;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ccc;"></i>
-                        <p>القرار غير موجود أو تم حذفه.</p>
-                        <a href="education.html" class="back-btn">العودة للرئيسية</a>
+                box.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <p>عذراً، القرار غير موجود أو تم حذفه من النظام.</p>
+                        <a href="education.html" class="back-btn">
+                            <i class="fas fa-arrow-right"></i>
+                            العودة للقائمة الرئيسية
+                        </a>
                     </div>
                 `;
             }
         }
 
+        // دالة مشاركة القرار
+        window.shareDecision = function(title) {
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('✅ تم نسخ الرابط للمشاركة!');
+                });
+            }
+        };
+
         loadDetails();
     </script>
 </body>
 </html>
-
