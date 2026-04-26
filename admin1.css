@@ -1,73 +1,383 @@
+/* ============================================
+   💰 لوحة تحكم أسعار الصرف - تصميم متناسق
+   سوق عتق - محافظة شبوة
+   ============================================ */
+
 :root {
     --primary: #004d40;
     --accent: #27ae60;
     --error: #e74c3c;
     --text: #333;
     --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --border: #e0e0e0;
+    --buy-color: #10b981;
+    --sell-color: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     background-color: var(--bg);
     margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
-.main-wrapper { width: 100%; max-width: 500px; padding: 20px; }
-
-.auth-card, .dashboard-card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-}
-
-.form-group { margin-bottom: 15px; }
-
-input {
+.main-wrapper {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    max-width: 550px;
+    padding: 0;
+}
+
+/* ========== البطاقات ========== */
+.auth-card,
+.dashboard-card {
+    background: var(--card-bg);
+    padding: 35px 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* ========== هيدر البطاقة ========== */
+.card-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card-header h2 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.card-header p {
+    color: #777;
+    font-size: 0.95rem;
+}
+
+/* ========== حقول الإدخال ========== */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     box-sizing: border-box;
     font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    color: var(--text);
 }
 
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0, 77, 64, 0.08);
+    background: #fff;
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+/* ========== الأزرار ========== */
 button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
 }
 
-.primary-btn { background: var(--primary); color: white; }
-.save-btn { background: var(--accent); color: white; margin-top: 20px; }
-.outline-btn { background: transparent; border: 1px solid var(--error); color: var(--error); width: auto; padding: 5px 15px; }
-
-.error-msg { color: var(--error); font-size: 0.9rem; text-align: center; margin-top: 10px; }
-
-.admin-rate-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
+.primary-btn {
+    background: var(--primary);
+    color: white;
+    margin-top: 5px;
 }
 
-.admin-rate-item label { flex: 1; font-weight: bold; color: var(--primary); }
-.admin-rate-item input { width: 100px; text-align: center; }
+.primary-btn:hover {
+    background: #00695c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 77, 64, 0.2);
+}
 
+.save-btn {
+    background: var(--accent);
+    color: white;
+    margin-top: 20px;
+    font-size: 1.05rem;
+}
+
+.save-btn:hover {
+    background: #219a52;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.25);
+}
+
+.outline-btn {
+    background: transparent;
+    border: 2px solid var(--error);
+    color: var(--error);
+    width: auto;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+}
+
+.outline-btn:hover {
+    background: var(--error);
+    color: white;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+}
+
+/* ========== رسالة الخطأ ========== */
+.error-msg {
+    color: var(--error);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 12px;
+    min-height: 20px;
+}
+
+/* ========== هيدر لوحة التحكم ========== */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--bg);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+}
+
+.titles h2 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 2px;
+}
+
+.titles span {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: 500;
+}
+
+/* ========== جدول الأسعار ========== */
+.rates-management {
+    padding: 5px 0;
+}
+
+/* رأس الجدول */
+.table-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 10px;
+    background: #f5f7fa;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.table-header span:first-child {
+    flex: 1;
+    text-align: center;
+}
+
+.table-header span:nth-child(2),
+.table-header span:nth-child(3) {
+    width: 110px;
+    text-align: center;
+}
+
+/* ========== صف العملة - تخطيط أفقي ========== */
+#admin-rates-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-rate-item,
+.rate-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 15px 10px !important;
+    border-bottom: 1px solid #eee !important;
+    flex-direction: row !important;
+}
+
+.admin-rate-item:last-child,
+.rate-row:last-child {
+    border-bottom: none !important;
+}
+
+/* اسم العملة */
+.admin-rate-item label,
+.rate-row .currency-name {
+    flex: 1 !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+}
+
+.rate-row .currency-icon {
+    font-size: 1.3rem;
+}
+
+/* ========== حقول الشراء والبيع ========== */
+.admin-rate-item input,
+.rate-row input {
+    width: 110px !important;
+    text-align: center !important;
+    padding: 10px 8px !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 10px !important;
+    font-family: 'Cairo', sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    background: #fafafa !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+}
+
+.admin-rate-item input:focus,
+.rate-row input:focus {
+    outline: none !important;
+    background: #fff !important;
+}
+
+/* ✅ حقل الشراء - أخضر */
+.buy-input {
+    color: #10b981 !important;
+    border-color: #d1fae5 !important;
+}
+
+.buy-input:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* ✅ حقل البيع - أحمر */
+.sell-input {
+    color: #ef4444 !important;
+    border-color: #fee2e2 !important;
+}
+
+.sell-input:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ========== تذييل لوحة التحكم ========== */
+.dashboard-footer {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#save-status {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #888;
+    min-height: 20px;
+}
+
+/* ========== حالة التحميل ========== */
+.loading-state {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.loading-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+    0%, 80%, 100% { transform: scale(0.3); opacity: 0.3; }
+    40% { transform: scale(1.3); opacity: 1; }
+}
+
+/* ========== تجاوب ========== */
+@media (max-width: 500px) {
+    .auth-card,
+    .dashboard-card {
+        padding: 22px 14px;
+        border-radius: 14px;
+    }
+
+    .card-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .table-header span:nth-child(2),
+    .table-header span:nth-child(3) {
+        width: 85px;
+        font-size: 0.75rem;
+    }
+
+    .admin-rate-item,
+    .rate-row {
+        gap: 5px !important;
+        padding: 10px 5px !important;
+    }
+
+    .admin-rate-item input,
+    .rate-row input {
+        width: 85px !important;
+        padding: 8px 5px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .admin-rate-item label,
+    .rate-row .currency-name {
+        font-size: 0.9rem !important;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
 }
