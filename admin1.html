@@ -9,6 +9,8 @@
 <body>
 
     <div class="main-wrapper">
+        
+        <!-- تسجيل الدخول -->
         <section id="auth-section" class="auth-card">
             <div class="card-header">
                 <h2>دخول الإدارة</h2>
@@ -24,23 +26,30 @@
             <p id="auth-msg" class="error-msg"></p>
         </section>
 
+        <!-- لوحة التحكم -->
         <section id="dashboard-section" class="dashboard-card" style="display: none;">
             <div class="dashboard-header">
                 <div class="titles">
                     <h2>لوحة تحكم الصرف</h2>
                     <span id="user-display"></span>
                 </div>
-                <button id="btn-logout" class="outline-btn">تسجيل الخروج</button>
+                <button id="btn-logout" class="outline-btn">🚪 تسجيل الخروج</button>
             </div>
 
             <div class="rates-management">
                 <div class="table-header">
-                    <span>العملة</span>
-                    <span>شراء</span>
-                    <span>بيع</span>
+                    <span>💱 العملة</span>
+                    <span>🟢 شراء</span>
+                    <span>🔴 بيع</span>
                 </div>
                 <div id="admin-rates-list">
+                    <div class="loading-state">
+                        <div class="loading-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        جاري تحميل الأسعار...
                     </div>
+                </div>
             </div>
 
             <div class="dashboard-footer">
@@ -48,6 +57,7 @@
                 <p id="save-status"></p>
             </div>
         </section>
+        
     </div>
 
     <script type="module" src="admin1.js"></script>
