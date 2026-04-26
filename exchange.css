@@ -1,489 +1,498 @@
+/* ============================================
+   💰 التصميم الملكي لأسعار الصرف
+   سوق عتق - محافظة شبوة
+   Royal Exchange Rates - Ultra Premium
+   ============================================ */
+
+/* ========== استيراد الخطوط ========== */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Cairo:wght@400;600;700;900&display=swap');
+
+/* ========== المتغيرات ========== */
 :root {
-    --primary-color: #004d40;
-    --accent-color: #27ae60;
-    --loss-color: #e74c3c;
-    --gold-gradient: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
-    --silver-gradient: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
-    --bg-color: #f4f7f6;
-    --card-bg: linear-gradient(145deg, #ffffff 0%, #f9fbfa 100%);
-    --shadow-color: rgba(0, 77, 64, 0.1);
-    --glass-effect: rgba(255, 255, 255, 0.95);
+  --bg-void: #030b17;
+  --bg-abyss: #060e1f;
+  --bg-panel: rgba(10, 22, 45, 0.7);
+  --bg-card: rgba(15, 30, 55, 0.5);
+  
+  /* الذهب */
+  --gold: #d4a843;
+  --gold-light: #f0d78c;
+  --gold-pale: #faf0d7;
+  --gold-dark: #a07828;
+  --gold-glow: rgba(212, 168, 67, 0.5);
+  --gold-intense: rgba(212, 168, 67, 0.8);
+  
+  /* الأخضر المالي */
+  --money-green: #10b981;
+  --money-green-glow: rgba(16, 185, 129, 0.4);
+  
+  /* الأحمر */
+  --loss-red: #ef4444;
+  --loss-red-glow: rgba(239, 68, 68, 0.3);
+  
+  /* النصوص */
+  --text-divine: #e8e2d0;
+  --text-royal: #d4c8a0;
+  --text-soft: #a8b8c8;
+  --text-muted: #6a7a8a;
+  
+  /* الزجاج */
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-shine: rgba(255, 255, 255, 0.03);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ========== إعادة ضبط ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* ========== الجسم ========== */
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    font-family: 'Segoe UI', 'Cairo', sans-serif;
+  background: var(--bg-void);
+  font-family: 'Tajawal', 'Cairo', system-ui, sans-serif;
+  direction: rtl;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--text-divine);
+  position: relative;
+  overflow-x: hidden;
 }
 
+/* ========== خلفية متحركة ========== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* دوائر مالية */
+    radial-gradient(circle at 20% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(212, 168, 67, 0.07) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(14, 107, 158, 0.05) 0%, transparent 50%),
+    /* شبكة مالية */
+    repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(255,255,255,0.005) 35px, rgba(255,255,255,0.005) 36px),
+    repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(255,255,255,0.005) 35px, rgba(255,255,255,0.005) 36px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  animation: bgShift 20s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+  0%, 100% { opacity: 1; }
+  33% { opacity: 0.85; }
+  66% { opacity: 0.95; }
+}
+
+/* جزيئات ذهبية */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(2px 2px at 10% 20%, rgba(212,168,67,0.6), transparent),
+    radial-gradient(3px 3px at 25% 60%, rgba(212,168,67,0.5), transparent),
+    radial-gradient(1px 1px at 40% 35%, rgba(240,215,140,0.7), transparent),
+    radial-gradient(2px 2px at 55% 70%, rgba(212,168,67,0.4), transparent),
+    radial-gradient(3px 3px at 70% 15%, rgba(240,215,140,0.5), transparent),
+    radial-gradient(1px 1px at 85% 55%, rgba(212,168,67,0.6), transparent),
+    radial-gradient(2px 2px at 15% 85%, rgba(240,215,140,0.5), transparent),
+    radial-gradient(1px 1px at 60% 45%, rgba(212,168,67,0.7), transparent),
+    radial-gradient(2px 2px at 90% 30%, rgba(240,215,140,0.4), transparent),
+    radial-gradient(1px 1px at 35% 10%, rgba(212,168,67,0.6), transparent);
+  animation: particlesGlow 8s ease-in-out infinite;
+}
+
+@keyframes particlesGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ========== البطاقة الملكية ========== */
 .exchange-card {
-    background: var(--glass-effect);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 30px;
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    padding: 40px;
-    max-width: 1200px;
-    width: 100%;
-    margin: 20px;
-    direction: rtl;
-    position: relative;
-    overflow: hidden;
+  max-width: 520px;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 26, 48, 0.75) 0%,
+    rgba(8, 18, 36, 0.8) 100%
+  );
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 2px solid rgba(212, 168, 67, 0.2);
+  border-radius: 32px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.6),
+    0 0 80px rgba(212, 168, 67, 0.08),
+    0 0 150px rgba(16, 185, 129, 0.04),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  animation: cardEntry 0.9s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* تأثيرات زخرفية */
+@keyframes cardEntry {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* إطار داخلي ذهبي */
 .exchange-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: float 20s linear infinite;
-    z-index: 0;
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(212, 168, 67, 0.08);
+  border-radius: 27px;
+  pointer-events: none;
+  z-index: 2;
 }
 
+/* خط ذهبي علوي */
 .exchange-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 300px;
-    background: var(--gold-gradient);
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
-    z-index: 0;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  border-radius: 0 0 4px 4px;
+  z-index: 3;
 }
 
-@keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(30px, 30px) rotate(360deg); }
-}
-
+/* ========== الهيدر ========== */
 .exchange-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    position: relative;
-    z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 38, 60, 0.6) 0%,
+    rgba(10, 20, 38, 0.4) 100%
+  );
+  padding: 30px 28px 24px;
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid rgba(212, 168, 67, 0.12);
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+/* أيقونة الصرافة */
+.exchange-header::before {
+  content: '💱';
+  display: block;
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 6px 20px rgba(212,168,67,0.5));
+  animation: coinFloat 4s ease-in-out infinite;
 }
 
-.exchange-icon {
-    width: 70px;
-    height: 70px;
-    background: var(--gold-gradient);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
-    animation: pulse 2s infinite;
+@keyframes coinFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-10px) rotate(5deg); }
+  60% { transform: translateY(-3px) rotate(-3deg); }
 }
 
-.exchange-icon i {
-    font-size: 32px;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+.exchange-header h2 {
+  font-family: 'El Messiri', 'Tajawal', 'Cairo', serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(180deg, #faf0d7 0%, #f0d78c 30%, #d4a843 60%, #a07828 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.exchange-header h1 {
-    color: var(--primary-color);
-    margin: 0;
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.exchange-header h1 span {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
+/* شارة الحالة */
 .status-badge {
-    background: linear-gradient(135deg, var(--accent-color) 0%, #2ecc71 100%);
-    color: white;
-    padding: 12px 25px;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
-    position: relative;
-    z-index: 1;
-    transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  padding: 7px 18px;
+  border-radius: 24px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  animation: badgePulse 3s ease-in-out infinite;
 }
 
-.status-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(39, 174, 96, 0.4);
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.15); }
+  50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
 }
 
-.status-badge i {
-    animation: spin 3s linear infinite;
+/* نقطة مباشر */
+.status-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: liveDot 1.5s infinite;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes liveDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.8); opacity: 0.4; }
 }
 
-/* جدول الأسعار */
-.exchange-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    position: relative;
-    z-index: 1;
-    margin-bottom: 30px;
+/* ========== الجدول الملكي ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.exchange-table thead {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #00695c 100%);
+/* رأس الجدول */
+thead tr {
+  background: rgba(212, 168, 67, 0.08);
+  border-bottom: 2px solid rgba(212, 168, 67, 0.2);
 }
 
-.exchange-table th {
-    color: white;
-    padding: 25px 20px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-align: center;
-    position: relative;
+th {
+  padding: 16px 20px;
+  font-family: 'El Messiri', 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.exchange-table th:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 60%;
-    background: rgba(255, 255, 255, 0.2);
+th:first-child {
+  text-align: right;
+  padding-right: 28px;
 }
 
-.exchange-table th:first-child {
-    text-align: right;
-    padding-right: 30px;
+th:last-child {
+  text-align: left;
+  padding-left: 28px;
 }
 
-.exchange-table tbody tr {
-    transition: all 0.3s ease;
-    position: relative;
+/* جسم الجدول */
+tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.4s ease;
 }
 
-.exchange-table tbody tr:hover {
-    background: linear-gradient(90deg, rgba(39, 174, 96, 0.05) 0%, rgba(39, 174, 96, 0.02) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+tbody tr:hover {
+  background: rgba(212, 168, 67, 0.06);
 }
 
-.exchange-table tbody tr::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 5%;
-    width: 90%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #eee, transparent);
+tbody tr:last-child {
+  border-bottom: none;
 }
 
-.exchange-table td {
-    padding: 25px 20px;
-    text-align: center;
-    font-size: 1.2rem;
-    color: #444;
-    font-weight: 500;
+td {
+  padding: 18px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-divine);
+  text-align: center;
 }
 
-.exchange-table td:first-child {
-    text-align: right;
-    padding-right: 30px;
+/* اسم العملة */
+td:first-child {
+  font-family: 'El Messiri', 'Tajawal', sans-serif;
+  text-align: right;
+  padding-right: 28px;
+  color: #f5e6d0;
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* تصميم خلية العملة */
-.currency-cell {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    justify-content: flex-end;
+/* أيقونة العملة */
+.currency-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(160,120,40,0.1));
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  border-radius: 12px;
+  font-size: 1.2rem;
 }
 
-.currency-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+/* سعر الشراء */
+td:nth-child(2) {
+  color: #6ee7b7;
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
-.usd-icon { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
-.eur-icon { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
-.gbp-icon { background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); }
-.sar-icon { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); }
-.gold-icon { background: var(--gold-gradient); }
-
-.currency-info {
-    text-align: right;
+/* سعر البيع */
+td:nth-child(3) {
+  color: #fca5a5;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-align: left;
+  padding-left: 28px;
 }
 
-.currency-name {
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: #222;
-    margin-bottom: 5px;
+/* أنيميشن دخول الصفوف */
+tbody tr {
+  animation: rowSlideIn 0.6s ease-out both;
 }
 
-.currency-code {
-    color: #777;
-    font-size: 0.9rem;
-    font-weight: 500;
+tbody tr:nth-child(1) { animation-delay: 0.1s; }
+tbody tr:nth-child(2) { animation-delay: 0.2s; }
+tbody tr:nth-child(3) { animation-delay: 0.3s; }
+tbody tr:nth-child(4) { animation-delay: 0.4s; }
+tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes rowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* تصميم الأسعار */
-.price-cell {
-    position: relative;
-}
-
-.price-value {
-    font-size: 1.4rem;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 15px;
-    display: inline-block;
-    min-width: 140px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.buy-price .price-value {
-    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(39, 174, 96, 0.05) 100%);
-    color: var(--accent-color);
-    border: 2px solid rgba(39, 174, 96, 0.2);
-}
-
-.buy-price .price-value:hover {
-    background: linear-gradient(135deg, var(--accent-color) 0%, #2ecc71 100%);
-    color: white;
-    transform: scale(1.05);
-}
-
-.sell-price .price-value {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
-    color: var(--loss-color);
-    border: 2px solid rgba(231, 76, 60, 0.2);
-}
-
-.sell-price .price-value:hover {
-    background: linear-gradient(135deg, var(--loss-color) 0%, #ff6b6b 100%);
-    color: white;
-    transform: scale(1.05);
-}
-
-/* نسبة التغير */
-.change-badge {
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.positive-change {
-    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15) 0%, rgba(39, 174, 96, 0.08) 100%);
-    color: var(--accent-color);
-}
-
-.negative-change {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(231, 76, 60, 0.08) 100%);
-    color: var(--loss-color);
-}
-
-/* التذييل */
-.exchange-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 2px solid rgba(0, 0, 0, 0.05);
-    position: relative;
-    z-index: 1;
-}
-
+/* ========== تذييل التحديث ========== */
 .last-update {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: #666;
-    font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 20px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
 }
 
-.update-indicator {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.last-update::before {
+  content: '🕐';
+  font-size: 0.9rem;
+  animation: clockTick 4s ease-in-out infinite;
 }
 
-.update-dot {
-    width: 12px;
-    height: 12px;
-    background: var(--accent-color);
-    border-radius: 50%;
-    animation: blink 2s infinite;
+@keyframes clockTick {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
 }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+/* ========== حالة التحميل ========== */
+.loading-row td {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
 }
 
-.refresh-btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #00695c 100%);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0, 77, 64, 0.2);
+.loading-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.refresh-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0, 77, 64, 0.3);
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: dotBounce 1.4s ease-in-out infinite;
 }
 
-.refresh-btn:active {
-    transform: translateY(-1px);
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0.4); opacity: 0.3; }
+  40% { transform: scale(1.2); opacity: 1; }
 }
 
-/* تصميم متجاوب */
-@media (max-width: 992px) {
-    .exchange-card {
-        padding: 30px;
-    }
-    
-    .exchange-header {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .exchange-header h1 {
-        font-size: 2.2rem;
-    }
-    
-    .exchange-table {
-        display: block;
-        overflow-x: auto;
-    }
+/* ========== سكرول بار ========== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212,168,67,0.6); }
+
+/* ========== تجاوب ========== */
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  
+  .exchange-card {
+    border-radius: 24px;
+  }
+  
+  .exchange-header {
+    padding: 24px 18px 20px;
+  }
+  
+  .exchange-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .exchange-header::before {
+    font-size: 2.2rem;
+  }
+  
+  th {
+    padding: 12px 10px;
+    font-size: 0.75rem;
+  }
+  
+  td {
+    padding: 14px 10px;
+    font-size: 0.9rem;
+  }
+  
+  td:first-child {
+    padding-right: 14px;
+    font-size: 0.9rem;
+  }
+  
+  td:last-child {
+    padding-left: 14px;
+  }
+  
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 5px 12px;
+  }
 }
 
-@media (max-width: 768px) {
-    .exchange-card {
-        padding: 25px;
-        border-radius: 25px;
-    }
-    
-    .exchange-table td,
-    .exchange-table th {
-        padding: 20px 15px;
-        font-size: 1rem;
-    }
-    
-    .price-value {
-        min-width: 120px;
-        padding: 8px 15px;
-        font-size: 1.2rem;
-    }
-    
-    .currency-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.3rem;
-    }
-    
-    .exchange-footer {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
+@media (max-width: 380px) {
+  .exchange-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  th { font-size: 0.7rem; }
+  td { font-size: 0.8rem; padding: 12px 6px; }
+  td:first-child { padding-right: 8px; }
+  td:last-child { padding-left: 8px; }
 }
 
-@media (max-width: 480px) {
-    .exchange-card {
-        padding: 20px;
-        margin: 10px;
-    }
-    
-    .exchange-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .currency-cell {
-        gap: 12px;
-    }
-    
-    .currency-name {
-        font-size: 1.1rem;
-    }
-    
-    .price-value {
-        min-width: 100px;
-        font-size: 1.1rem;
-    }
+/* ========== دعم الشاشات OLED ========== */
+@media (prefers-color-scheme: dark) {
+  body { background: #000000; }
 }
