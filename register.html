@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فتح حساب - محفظة المجد</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .upload-box { 
+            border: 2px dashed #cbd5e1; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer;
+            background: #f8fafc; transition: 0.3s; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .upload-box:hover { border-color: #2563eb; background: #eff6ff; }
+        .upload-box input { display: none; }
+        .upload-box img { max-width: 100%; max-height: 100px; display: none; border-radius: 8px; margin-top: 10px; }
+        .upload-box span { font-size: 0.85rem; color: #64748b; font-weight: bold; }
+        .full-width { grid-column: span 2; border-color: #f59e0b; }
+        .kyc-note { font-size: 0.75rem; color: #ef4444; text-align: center; margin-bottom: 10px; }
+
+        /* أزرار الكاميرا */
+        .btn-camera, .btn-capture {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        .btn-capture { background: #f59e0b; }
+        #camera-container { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>فتح حساب جديد</h1>
+            <p>سجل بياناتك الحقيقية لتفعيل المحفظة</p>
+        </header>
+
+        <main class="content">
+            <input type="text" id="reg-name" placeholder="الاسم الكامل (حسب الهوية)">
+            <input type="text" id="reg-phone" placeholder="رقم الهاتف (777xxxxxx)">
+            <input type="password" id="reg-password" placeholder="كلمة المرور">
+
+            <div class="upload-grid">
+                <!-- وجه الهوية -->
+                <label class="upload-box" for="f-front">
+                    <span id="t-front">📸 وجه الهوية</span>
+                    <input type="file" id="f-front" accept="image/*" onchange="preview(this, 'p-front', 't-front')">
+                    <img id="p-front">
+                </label>
+
+                <!-- ظهر الهوية -->
+                <label class="upload-box" for="f-back">
+                    <span id="t-back">📸 ظهر الهوية</span>
+                    <input type="file" id="f-back" accept="image/*" onchange="preview(this, 'p-back', 't-back')">
+                    <img id="p-back">
+                </label>
+
+                <!-- سيلفي مباشر من الكاميرا فقط -->
+                <div class="upload-box full-width" id="selfie-camera-box">
+                    <span id="t-selfie">🤳 التقاط سيلفي مباشر (كاميرا فقط)</span>
+                    <button type="button" id="btn-open-camera" class="btn-camera" onclick="openCamera()">📷 افتح الكاميرا</button>
+                    <div id="camera-container" style="display:none;">
+                        <video id="camera-video" autoplay playsinline style="width:100%; max-width:250px; border-radius:12px;"></video>
+                        <br>
+                        <button type="button" class="btn-capture" onclick="captureSelfie()">📸 التقط الصورة</button>
+                        <canvas id="camera-canvas" style="display:none;"></canvas>
+                        <img id="p-selfie" style="display:none; max-width:100%; border-radius:8px; margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+            <p class="kyc-note">* ملاحظة: السيلفي يجب أن يكون مباشراً لضمان قبول حسابك.</p>
+
+            <button onclick="handleRegister()" class="btn-primary" id="btn-reg">إنشاء الحساب وإرسال الوثائق</button>
+            <p style="text-align: center;"><a href="login.html">لديك حساب؟ سجل دخولك</a></p>
+        </main>
+    </div>
+
+    <!-- مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // إعدادات Supabase (مضمنة بدل ملف خارجي)
+        const supabaseUrl = 'https://gxuumjhtutkipvkljjhj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dXVtamh0dXRraXB2a2xqamhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1NTM2MzEsImV4cCI6MjA4MTEyOTYzMX0.rmsSRTQ57cAJ3VAiQMe0mdxEYcERh6zQDep7DN_frFI';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // تحويل رقم الهاتف إلى بريد إلكتروني وهمي
+        function phoneToEmail(phone) {
+            return phone.trim() + "@majed-wallet.com";
+        }
+
+        // معاينة الصور (لوجه وظهر الهوية)
+        function preview(input, imgId, textId) {
+            const file = input.files[0];
+            if (file) {
+                const img = document.getElementById(imgId);
+                img.src = URL.createObjectURL(file);
+                img.style.display = 'block';
+                document.getElementById(textId).style.display = 'none';
+            }
+        }
+
+        // رفع ملف إلى Supabase Storage
+        async function upload(file, folder) {
+            const ext = file.name.split('.').pop();
+            const path = `${folder}/${Date.now()}.${ext}`;
+            const { data, error } = await supabase.storage.from('kyc-documents').upload(path, file);
+            if (error) throw error;
+            return supabase.storage.from('kyc-documents').getPublicUrl(path).data.publicUrl;
+        }
+
+        // ---- الكاميرا المباشرة للسيلفي ----
+        let selfieBlob = null;  // سيحفظ الصورة الملتقطة
+
+        async function openCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user" }   // الكاميرا الأمامية
+                });
+                const video = document.getElementById('camera-video');
+                video.srcObject = stream;
+                await video.play();
+
+                document.getElementById('camera-container').style.display = 'block';
+                document.getElementById('btn-open-camera').style.display = 'none';
+            } catch (err) {
+                alert('تعذر فتح الكاميرا. تأكد من السماح بالوصول إلى الكاميرا.');
+                console.error(err);
+            }
+        }
+
+        function captureSelfie() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.getElementById('camera-canvas');
+            const img = document.getElementById('p-selfie');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+
+            // عرض الصورة الملتقطة
+            img.src = canvas.toDataURL('image/png');
+            img.style.display = 'block';
+
+            // إيقاف الكاميرا
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            video.srcObject = null;
+            document.getElementById('camera-container').style.display = 'none';
+            document.getElementById('btn-open-camera').style.display = 'block';
+
+            // تحويل الـ blob إلى File لاستخدامه في الرفع
+            canvas.toBlob((blob) => {
+                selfieBlob = new File([blob], "selfie.png", { type: "image/png" });
+            }, 'image/png');
+        }
+
+        // ---- إنشاء الحساب والتسجيل ----
+        async function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-password').value;
+            const btn = document.getElementById('btn-reg');
+
+            const fileF = document.getElementById('f-front').files[0];
+            const fileB = document.getElementById('f-back').files[0];
+
+            // التحقق من وجود ملف السيلفي الملتقط من الكاميرا فقط
+            if (!selfieBlob) {
+                return alert("الرجاء التقاط صورة السيلفي من الكاميرا أولاً");
+            }
+
+            if (!name || !phone || !pass || !fileF || !fileB) {
+                return alert("أكمل البيانات وارفع صور الهوية");
+            }
+
+            btn.disabled = true;
+            btn.innerText = "جاري الرفع...";
+
+            try {
+                const { data: auth, error: aErr } = await supabase.auth.signUp({
+                    email: phoneToEmail(phone),
+                    password: pass
+                });
+                if (aErr) throw aErr;
+
+                const urlF = await upload(fileF, 'front');
+                const urlB = await upload(fileB, 'back');
+                const urlS = await upload(selfieBlob, 'selfie');
+
+                await supabase.from('profiles').insert([{
+                    id: auth.user.id,
+                    full_name: name,
+                    phone_number: phone,
+                    id_front_url: urlF,
+                    id_back_url: urlB,
+                    selfie_url: urlS
+                }]);
+
+                alert("تم التسجيل بنجاح! حسابك قيد المراجعة من الإدارة.");
+                window.location.href = "login.html";
+            } catch (e) {
+                alert("خطأ: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "إنشاء الحساب وإرسال الوثائق";
+            }
+        }
+    </script>
+</body>
+</html>
