@@ -5,22 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>كهرباء عتق - المنصة الذكية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Reset للجوال */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-text-size-adjust: 100%;
-            -moz-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            touch-action: manipulation;
-        }
-
         :root {
-            /* ألوان متوافقة مع الشاشات الصغيرة */
             --primary: #0066ff;
             --primary-light: #4d94ff;
             --primary-dark: #0047cc;
@@ -32,11 +18,15 @@
             --dark: #0a0e1a;
             --darker: #050913;
             --light: #ffffff;
-            --gray: #8c8c8c;
             --card-bg: rgba(255, 255, 255, 0.08);
             --card-border: rgba(255, 255, 255, 0.15);
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
         }
 
         html {
@@ -48,692 +38,240 @@
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
             color: var(--light);
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             line-height: 1.5;
-            position: relative;
             overflow-x: hidden;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* إزالة تظليل الأزرار على iOS */
-        input, button, textarea, select {
-            font-family: inherit;
-            font-size: 16px; /* منع التكبير على iOS */
-        }
+        .scroll-container { overflow-y: auto; }
 
-        /* تحسين التمرير على iOS */
-        .scroll-container {
-            -webkit-overflow-scrolling: touch;
-            overflow-y: auto;
+        /* ========== SVG Icons ========== */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
+        .icon-lg { width: 1.5em; height: 1.5em; }
+        .icon-2x { width: 2em; height: 2em; }
+        .icon-3x { width: 3em; height: 3em; }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* زر الرجوع ثابت أعلى الشاشة */
+        /* زر الرجوع */
         .back-btn {
-            position: fixed;
-            top: max(12px, env(safe-area-inset-top));
-            right: 15px;
-            background: var(--primary);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            border: none;
-            font-size: 20px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            touch-action: manipulation;
+            position: fixed; top: max(12px, env(safe-area-inset-top)); right: 15px;
+            background: var(--primary); color: white; width: 48px; height: 48px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000;
+            transition: 0.2s;
         }
-
-        .back-btn:active {
-            transform: scale(0.92);
-            background: var(--primary-dark);
-        }
+        .back-btn:active { transform: scale(0.92); background: var(--primary-dark); }
 
         /* رأس الصفحة */
         .page-header {
-            padding: 70px 20px 25px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15) 0%, transparent 100%);
-            position: relative;
-            margin-bottom: 20px;
+            padding: 70px 20px 25px; text-align: center;
+            background: linear-gradient(135deg, rgba(0,102,255,0.15) 0%, transparent 100%);
+            position: relative; margin-bottom: 20px;
         }
-
         .electric-wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                var(--primary-light) 20%, 
-                var(--secondary) 50%, 
-                var(--primary-light) 80%, 
-                transparent 100%);
-            opacity: 0.3;
-            filter: blur(8px);
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 20px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary-light) 20%, var(--secondary) 50%, var(--primary-light) 80%, transparent 100%);
+            opacity: 0.3; filter: blur(8px);
         }
-
         .main-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+            font-size: 2.2rem; font-weight: 800; margin-bottom: 10px;
             background: linear-gradient(135deg, var(--light), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1.2;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
         }
+        .subtitle { font-size: 1rem; color: rgba(255,255,255,0.85); }
 
-        .subtitle {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
-
-        /* شريط الحالة السريع */
+        /* شريط الحالة */
         .status-quickview {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;
         }
-
         .status-badge {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-width: 120px;
-            justify-content: center;
-            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.1); padding: 10px 16px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            border: 1px solid rgba(255,255,255,0.1); min-width: 120px; justify-content: center;
         }
-
-        .status-badge:active {
-            transform: scale(0.98);
-        }
-
-        .status-badge i {
-            color: var(--secondary);
-            font-size: 1rem;
-        }
+        .status-badge .icon { color: var(--secondary); }
 
         /* بطاقة الأذكار */
-        .zekr-container {
-            margin: 0 15px 25px;
-            position: relative;
-        }
-
+        .zekr-container { margin: 0 15px 25px; }
         .zekr-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border-radius: 20px;
-            padding: 25px 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 20px; padding: 25px 20px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
         }
-
         .zekr-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 4px;
+            content: ''; position: absolute; top: 0; right: 0; width: 100%; height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
-
-        .zekr-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
         #zekr-text {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--light);
-            line-height: 1.6;
-            margin: 0;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 10px;
+            font-size: 1.4rem; font-weight: 700; color: var(--light); opacity: 0;
+            transition: opacity 0.3s; min-height: 60px; display: flex; align-items: center; justify-content: center;
         }
-
-        #zekr-text.show {
-            opacity: 1;
-        }
-
-        .zekr-timer {
-            position: absolute;
-            bottom: 10px;
-            left: 20px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-        }
+        #zekr-text.show { opacity: 1; }
+        .zekr-timer { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 10px; }
 
         /* القائمة الرئيسية */
-        .main-menu {
-            padding: 0 15px 30px;
-        }
-
+        .main-menu { padding: 0 15px 30px; }
         .menu-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-right: 10px;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; color: var(--light);
+            display: flex; align-items: center; gap: 10px;
         }
-
-        .menu-title i {
-            color: var(--secondary);
-        }
-
-        /* شبكة الخدمات */
         .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;
         }
-
         .service-card {
-            background: var(--card-bg);
-            border-radius: 18px;
-            padding: 20px 15px;
-            text-decoration: none;
-            color: inherit;
-            border: 1px solid var(--card-border);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            display: block;
-            touch-action: manipulation;
-            box-shadow: var(--shadow);
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background: var(--card-bg); border-radius: 18px; padding: 20px 15px; text-decoration: none;
+            color: inherit; border: 1px solid var(--card-border); transition: 0.25s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
         }
-
-        .service-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 230, 230, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .service-card:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .service-card:active::after {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: var(--secondary);
-            text-align: center;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--light);
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        .card-desc {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            line-height: 1.4;
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
+        .service-card:active { transform: scale(0.96); background: rgba(255,255,255,0.12); }
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--secondary); }
+        .card-title { font-size: 1rem; font-weight: 700; color: var(--light); margin-bottom: 8px; }
+        .card-desc { font-size: 0.85rem; color: rgba(255,255,255,0.7); flex-grow: 1; }
         .card-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(0, 204, 102, 0.2);
-            color: var(--success);
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 204, 102, 0.3);
+            position: absolute; top: 12px; left: 12px; background: rgba(0,204,102,0.2); color: var(--success);
+            font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px;
+            border: 1px solid rgba(0,204,102,0.3);
         }
 
-        /* قسم التنبيهات العاجلة */
-        .urgent-alerts {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 51, 51, 0.1) 100%);
-            border-radius: 18px;
-            padding: 20px;
-            margin: 25px 15px;
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .urgent-alerts::before {
-            content: '⚠️';
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 1.5rem;
-        }
-
-        .alert-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ff9966;
-            margin-bottom: 10px;
-            padding-right: 30px;
-        }
-
-        .alert-content {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
-        }
-
-        /* قسم التحديثات الحية */
-        .live-updates {
-            padding: 0 15px 30px;
-        }
-
+        /* قسم التحديثات */
+        .live-updates { padding: 0 15px 30px; }
         .update-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 12px;
-            border-right: 4px solid var(--primary);
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-bottom: 12px;
+            border-right: 4px solid var(--primary); display: flex; align-items: flex-start; gap: 12px;
         }
-
-        .update-item:active {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(-5px);
-        }
-
         .update-icon {
-            background: rgba(0, 102, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-light);
-            font-size: 1.2rem;
-            flex-shrink: 0;
+            background: rgba(0,102,255,0.2); width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; color: var(--primary-light);
         }
+        .update-content h4 { font-size: 0.95rem; font-weight: 700; }
+        .update-content p { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+        .update-time { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 5px; }
 
-        .update-content h4 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: var(--light);
-        }
-
-        .update-content p {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.4;
-        }
-
-        .update-time {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 5px;
-        }
-
-        /* زر الطوارئ */
-        .emergency-btn {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--danger), #ff5252);
-            color: white;
-            border: none;
-            padding: 16px 30px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            box-shadow: 0 6px 20px rgba(255, 51, 51, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 900;
-            white-space: nowrap;
-            touch-action: manipulation;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .emergency-btn:active {
-            transform: translateX(-50%) scale(0.95);
-            box-shadow: 0 4px 15px rgba(255, 51, 51, 0.6);
-        }
-
-        /* شريط التنقل السفلي */
+        /* ========== شريط التنقل السفلي - صغير جدا ========== */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(10, 14, 26, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(10,14,26,0.96); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding: 6px 0 max(6px, env(safe-area-inset-bottom));
             z-index: 1000;
+            height: auto;
         }
-
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.6);
-            flex: 1;
-            padding: 5px 0;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
+            display: flex; flex-direction: column; align-items: center; text-decoration: none;
+            color: rgba(255,255,255,0.5); flex: 1; padding: 2px 0; transition: 0.2s;
+            font-size: 0.6rem;
         }
-
-        .nav-item:active {
-            color: var(--secondary);
-            transform: translateY(-2px);
-        }
-
-        .nav-item.active {
-            color: var(--secondary);
-        }
-
+        .nav-item.active { color: var(--secondary); }
+        .nav-item:active { color: var(--secondary); transform: translateY(-1px); }
         .nav-icon {
-            font-size: 1.4rem;
-            margin-bottom: 4px;
+            font-size: 1.1rem; margin-bottom: 1px;
+            display: flex; align-items: center; justify-content: center;
         }
-
         .nav-label {
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.55rem; font-weight: 600; letter-spacing: -0.3px;
         }
 
         /* الفوتر */
         .footer {
-            padding: 30px 20px 80px;
-            text-align: center;
-            background: rgba(5, 9, 19, 0.8);
-            margin-top: 20px;
+            padding: 30px 20px 60px; text-align: center; background: rgba(5,9,19,0.8); margin-top: 20px;
         }
-
-        .footer-logo {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-
-        .footer-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--light);
-        }
-
-        .footer-subtitle {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            line-height: 1.5;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         .developer-info {
-            background: rgba(0, 102, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid rgba(0, 102, 255, 0.2);
+            background: rgba(0,102,255,0.1); border-radius: 15px; padding: 15px; margin: 20px 0;
+            border: 1px solid rgba(0,102,255,0.2);
         }
+        .developer-name { font-size: 1rem; font-weight: 700; color: var(--secondary); }
+        .copyright { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
 
-        .developer-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 5px;
-        }
-
-        .developer-role {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .copyright {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* رسائل التحميل */
-        .loading-skeleton {
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0.05) 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 10px;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* تحسينات للأجهزة المختلفة */
         @media (max-width: 320px) {
             .main-title { font-size: 1.8rem; }
             .services-grid { grid-template-columns: 1fr; }
-            .status-badge { min-width: 100px; font-size: 0.8rem; }
-        }
-
-        @media (min-width: 768px) {
-            .services-grid { grid-template-columns: repeat(2, 1fr); }
-            .back-btn { width: 56px; height: 56px; font-size: 24px; }
-        }
-
-        @media (min-width: 1024px) {
-            .services-grid { grid-template-columns: repeat(4, 1fr); }
-            body { max-width: 768px; margin: 0 auto; }
-        }
-
-        /* دعم Safe Area للأجهزة الحديثة */
-        @supports (padding: max(0px)) {
-            body {
-                padding-left: max(15px, env(safe-area-inset-left));
-                padding-right: max(15px, env(safe-area-inset-right));
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
-            }
-        }
-
-        /* منع التكبير على حقول الإدخال في iOS */
-        @media screen and (-webkit-min-device-pixel-ratio:0) {
-            select,
-            textarea,
-            input {
-                font-size: 16px !important;
-            }
-        }
-
-        /* تحسين الأداء للأنيميشن */
-        .will-change {
-            will-change: transform, opacity;
-        }
-
-        /* إخفاء شريط التمرير مع الحفاظ على إمكانية التمرير */
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        * {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
         }
     </style>
 </head>
 <body class="scroll-container">
-    <!-- زر الرجوع -->
     <a href="all-index.html" class="back-btn" aria-label="رجوع">
-        <i class="fas fa-arrow-right"></i>
+        <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
 
-    <!-- رأس الصفحة -->
     <header class="page-header">
         <div class="electric-wave"></div>
         <h1 class="main-title">
-            <i class="fas fa-bolt"></i> كهرباء عتق
+            <svg class="icon icon-2x" viewBox="0 0 24 24" style="stroke: var(--secondary);"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            كهرباء عتق
         </h1>
         <p class="subtitle">المنصة الذكية لمتابعة خدمات الكهرباء في مدينة عتق</p>
-        
-        <!-- شريط الحالة السريع -->
         <div class="status-quickview">
             <div class="status-badge">
-                <i class="fas fa-power-off"></i>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0 M12 2v4"/></svg>
                 <span id="currentStatus">الحالة: مستقرة</span>
             </div>
             <div class="status-badge">
-                <i class="fas fa-clock"></i>
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 <span id="lastUpdate">آخر تحديث: الآن</span>
             </div>
         </div>
     </header>
 
-    <!-- بطاقة الأذكار -->
     <section class="zekr-container">
         <div class="zekr-card">
-            
             <p id="zekr-text" class="loading-skeleton" style="height: 60px;"></p>
             <div class="zekr-timer">
-                <i class="fas fa-sync-alt"></i>
+                <svg class="icon" viewBox="0 0 24 24" style="color: var(--secondary);"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                 <span id="timer">5</span> ثانية للتغيير
             </div>
         </div>
     </section>
 
-  
-
-    <!-- القائمة الرئيسية -->
     <section class="main-menu">
         <h3 class="menu-title">
-            <i class="fas fa-th-large"></i> الخدمات الرئيسية
+            <svg class="icon" viewBox="0 0 24 24" style="color: var(--secondary);"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            الخدمات الرئيسية
         </h3>
-        
         <div class="services-grid">
-            <!-- آخر تنبيه -->
-            <a href="alerts.html" class="service-card" aria-label="آخر تنبيه">
-                <div class="card-badge">مهم</div>
+            <a href="alerts.html" class="service-card">
+                <span class="card-badge">مهم</span>
                 <div class="card-icon">
-                    <i class="fas fa-bell"></i>
+                    <svg class="icon icon-3x" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                 </div>
                 <h4 class="card-title">آخر تنبيه</h4>
                 <p class="card-desc" id="alertDesc"></p>
             </a>
-
-            <!-- جدول التشغيل -->
-            <a href="schedule.html" class="service-card" aria-label="جدول التشغيل">
-                <div class="card-badge" style="background: rgba(255, 153, 0, 0.2); color: var(--warning); border-color: rgba(255, 153, 0, 0.3);">
-                    اليوم
-                </div>
+            <a href="schedule.html" class="service-card">
+                <span class="card-badge" style="background:rgba(255,153,0,0.2); color:#ff9900; border-color:rgba(255,153,0,0.3);">اليوم</span>
                 <div class="card-icon">
-                    <i class="fas fa-calendar-alt"></i>
+                    <svg class="icon icon-3x" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 </div>
                 <h4 class="card-title">جدول التشغيل</h4>
                 <p class="card-desc" id="scheduleDesc"></p>
             </a>
-
-            <!-- سبب الانقطاع -->
-            <a href="reasons.html" class="service-card" aria-label="سبب الانقطاع">
+            <a href="reasons.html" class="service-card">
                 <div class="card-icon">
-                    <i class="fas fa-info-circle"></i>
+                    <svg class="icon icon-3x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 </div>
                 <h4 class="card-title">سبب الانقطاع</h4>
                 <p class="card-desc" id="reasonDesc"></p>
             </a>
-
-            <!-- البلاغات -->
-            <a href="reports.html" class="service-card" aria-label="البلاغات">
-                <div class="card-badge" style="background: rgba(0, 204, 102, 0.2); color: var(--success); border-color: rgba(0, 204, 102, 0.3);">
-                    نشط
-                </div>
+            <a href="reports.html" class="service-card">
+                <span class="card-badge" style="background:rgba(0,204,102,0.2); color:#00cc66; border-color:rgba(0,204,102,0.3);">نشط</span>
                 <div class="card-icon">
-                    <i class="fas fa-flag"></i>
+                    <svg class="icon icon-3x" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
                 </div>
                 <h4 class="card-title">البلاغات</h4>
                 <p class="card-desc" id="reportDesc">الإبلاغ عن عطل</p>
@@ -741,15 +279,14 @@
         </div>
     </section>
 
-    <!-- التحديثات الحية -->
     <section class="live-updates">
         <h3 class="menu-title">
-            <i class="fas fa-broadcast-tower"></i> تحديثات حية
+            <svg class="icon" viewBox="0 0 24 24" style="color: var(--secondary);"><path d="M19.07 4.93A10 10 0 0 1 19.07 19.07 M4.93 4.93A10 10 0 0 0 4.93 19.07 M12 8v4 M12 16h.01"/></svg>
+            تحديثات حية
         </h3>
-
         <div class="update-item">
             <div class="update-icon">
-                <i class="fas fa-chart-line"></i>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18 M3 16l4-4 4 4 6-6 M15 8h5v5"/></svg>
             </div>
             <div class="update-content">
                 <h4>استهلاك الطاقة</h4>
@@ -757,10 +294,9 @@
                 <div class="update-time">قبل 5 دقائق</div>
             </div>
         </div>
-
         <div class="update-item">
             <div class="update-icon">
-                <i class="fas fa-tools"></i>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             </div>
             <div class="update-content">
                 <h4>فريق الصيانة</h4>
@@ -768,10 +304,9 @@
                 <div class="update-time">قبل 15 دقيقة</div>
             </div>
         </div>
-
         <div class="update-item">
             <div class="update-icon">
-                <i class="fas fa-user-check"></i>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 10l-4 4-2-2"/></svg>
             </div>
             <div class="update-content">
                 <h4>خدمة العملاء</h4>
@@ -781,103 +316,58 @@
         </div>
     </section>
 
-   
-    <!-- شريط التنقل السفلي -->
+    <!-- شريط التنقل السفلي مصغر جدا -->
     <nav class="bottom-nav">
-        <a href="#home" class="nav-item active" aria-label="الرئيسية">
-            <i class="fas fa-home nav-icon"></i>
+        <a href="#home" class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
             <span class="nav-label">الرئيسية</span>
         </a>
-        <a href="alerts.html" class="nav-item" aria-label="التنبيهات">
-            <i class="fas fa-bell nav-icon"></i>
+        <a href="alerts.html" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span class="nav-label">التنبيهات</span>
         </a>
-        <a href="reports.html" class="nav-item" aria-label="البلاغات">
-            <i class="fas fa-flag nav-icon"></i>
+        <a href="reports.html" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
             <span class="nav-label">البلاغات</span>
         </a>
-        <a href="reasons.html" class="nav-item" aria-label="سبب الأنقطاع">
-            <i class="fas fa-question-circle nav-icon"></i>
-            <span class="nav-label">سبب الأنقطاع</span>
+        <a href="reasons.html" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="nav-label">الانقطاع</span>
         </a>
     </nav>
 
-    <!-- الفوتر -->
     <footer class="footer">
-        <div class="footer-logo">
-            <i class="fas fa-bolt"></i>
+        <div style="font-size: 2.5rem; color: var(--secondary); opacity:0.8; margin-bottom:15px;">
+            <svg class="icon icon-3x" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
-        <h3 class="footer-title">كهرباء عتق الذكية</h3>
-        <p class="footer-subtitle">
-            منصة متكاملة لمتابعة خدمات الكهرباء في مدينة عتق، تقدم معلومات دقيقة وآنية 
-            مع تصميم عصري متكامل 100% للجوال.
-        </p>
-
+        <h3 style="font-size:1.2rem; font-weight:700;">كهرباء عتق الذكية</h3>
+        <p style="font-size:0.9rem; color:rgba(255,255,255,0.7); max-width:500px; margin:0 auto 20px;">منصة متكاملة لمتابعة خدمات الكهرباء في مدينة عتق</p>
         <div class="developer-info">
             <div class="developer-name">م/ماجد قاسم حسن مبارك بن عمرو</div>
             <div class="developer-role">مطور ومؤسس المنصة</div>
         </div>
-
-        <div class="copyright">
-            <p>جميع الحقوق محفوظة | منصة كهرباء عتق – © 2025</p>
-            <p>صمم بكل فخر لخدمة أبناء محافظة شبوة</p>
-        </div>
+        <div class="copyright">جميع الحقوق محفوظة | منصة كهرباء عتق – © 2025</div>
     </footer>
 
     <script>
-        // تهيئة الصفحة للجوال
         document.addEventListener('DOMContentLoaded', function() {
-            // ضبط ارتفاع الصفحة ليتناسب مع الشاشة
-            function setViewportHeight() {
-                let vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
-            }
-            setViewportHeight();
-            window.addEventListener('resize', setViewportHeight);
-            window.addEventListener('orientationchange', setViewportHeight);
-
-            // بيانات الأذكار
-            const azkar = [
-                "استغفر الله العظيم",
-                "سبحان الله وبحمده، سبحان الله العظيم",
-                "اللهم صل وسلم على نبينا محمد",
-                "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير",
-                "الحمد لله الذي بنعمته تتم الصالحات",
-                "الله أكبر كبيراً، والحمد لله كثيراً، وسبحان الله بكرة وأصيلاً",
-                "سبحان الله والحمد لله ولا إله إلا الله والله أكبر",
-                "لا حول ولا قوة إلا بالله العلي العظيم",
-                "اللهم إني أسألك علماً نافعاً، ورزقاً طيباً، وعملاً متقبلاً",
-                "اللهم اكفني بحلالك عن حرامك، وأغنني بفضلك عمن سواك",
-                "اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والجبن والبخل، وغلبة الدين وقهر الرجال",
-                "اللهم افتح لي أبواب رحمتك",
-                "اللهم لا سهل إلا ما جعلته سهلاً، وأنت تجعل الحزن إذا شئت سهلاً"
-            ];
-
-            // متغيرات الأذكار
-            let zekrIndex = 0;
-            let countdown = 5;
+            const azkar = ["استغفر الله العظيم", "سبحان الله وبحمده، سبحان الله العظيم", "اللهم صل وسلم على نبينا محمد", "لا إله إلا الله وحده لا شريك له..."];
             const zekrText = document.getElementById('zekr-text');
             const timerEl = document.getElementById('timer');
+            let zekrIndex = 0, countdown = 5;
 
-            // عرض أول ذكر
             setTimeout(() => {
                 zekrText.textContent = azkar[0];
                 zekrText.classList.remove('loading-skeleton');
                 zekrText.classList.add('show');
             }, 500);
 
-            // تحديث العداد
-            function updateTimer() {
-                if (countdown > 0) {
-                    countdown--;
-                    timerEl.textContent = countdown;
-                }
-            }
+            setInterval(() => {
+                if (countdown > 0) { countdown--; timerEl.textContent = countdown; }
+            }, 1000);
 
-            // تغيير الأذكار
-            function changeZekr() {
+            setInterval(() => {
                 zekrText.classList.remove('show');
-                
                 setTimeout(() => {
                     zekrIndex = (zekrIndex + 1) % azkar.length;
                     zekrText.textContent = azkar[zekrIndex];
@@ -885,134 +375,18 @@
                     countdown = 5;
                     timerEl.textContent = countdown;
                 }, 300);
-            }
+            }, 5000);
 
-            // تشغيل المؤقتات
-            setInterval(updateTimer, 1000);
-            setInterval(changeZekr, 5000);
-
-            
-            let statusIndex = 0;
-            let updateIndex = 0;
-
-            // تحديث حالة الكهرباء
-            function updateStatus() {
-                const currentStatus = statuses[statusIndex];
-                document.getElementById('currentStatus').textContent = `الحالة: ${currentStatus.status}`;
-                document.getElementById('currentStatus').style.color = currentStatus.color;
-                
-                document.getElementById('lastUpdate').textContent = `آخر تحديث: ${updates[updateIndex]}`;
-                
-                statusIndex = (statusIndex + 1) % statuses.length;
-                updateIndex = (updateIndex + 1) % updates.length;
-            }
-
-            setInterval(updateStatus, 8000);
-
-            
-            
-
-            let serviceIndex = 0;
-
-            // تحديث بيانات الخدمات
-            function updateServices() {
-                document.getElementById('alertDesc').textContent = servicesData.alerts[serviceIndex % 4];
-                document.getElementById('scheduleDesc').textContent = servicesData.schedule[serviceIndex % 4];
-                document.getElementById('reasonDesc').textContent = servicesData.reasons[serviceIndex % 4];
-                document.getElementById('reportDesc').textContent = servicesData.reports[serviceIndex % 4];
-                
-                serviceIndex++;
-            }
-
-            // تحديث فوري ثم كل 10 ثواني
-            updateServices();
-            setInterval(updateServices, 10000);
-
-            // التنبيهات العاجلة
-            const urgentAlerts = [
-                "لا توجد تنبيهات عاجلة حالياً. الكهرباء تعمل بشكل طبيعي في جميع أحياء المدينة.",
-                "تنبيه: سيتم إجراء صيانة وقائية في منطقة وسط المدينة يوم الخميس القادم من الساعة 10 صباحاً حتى 12 ظهراً.",
-                "جميع الفرق الفنية في حالة استنفار لضمان استمرارية الخدمة في جميع الظروف.",
-                "ننصح بترشيد استهلاك الكهرباء خلال ساعات الذروة (6 مساءً - 10 مساءً)."
-            ];
-
-            let alertIndex = 0;
-
-            function updateUrgentAlert() {
-                document.getElementById('urgentAlert').textContent = urgentAlerts[alertIndex];
-                alertIndex = (alertIndex + 1) % urgentAlerts.length;
-            }
-
-            setInterval(updateUrgentAlert, 15000);
-
-            // زر الطوارئ
-            document.getElementById('emergencyBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                this.style.transform = 'translateX(-50%) scale(0.9)';
-                
-                setTimeout(() => {
-                    this.style.transform = 'translateX(-50%) scale(1)';
-                    alert('تم إرسال بلاغك العاجل. فريق الصيانة سيتواصل معك خلال 15 دقيقة.');
-                }, 150);
-                
-                // هنا يمكن إضافة كود إرسال البلاغ
-                console.log('تم إرسال بلاغ عاجل');
-            });
-
-            // تحسينات اللمس
-            const cards = document.querySelectorAll('.service-card, .update-item, .nav-item');
-            cards.forEach(card => {
-                card.addEventListener('touchstart', function() {
-                    this.style.opacity = '0.8';
-                });
-                
-                card.addEventListener('touchend', function() {
-                    this.style.opacity = '1';
-                });
-            });
-
-            // منع التمرير الجانبي
-            let startX, startY;
-            document.addEventListener('touchstart', function(e) {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-            });
-
-            document.addEventListener('touchmove', function(e) {
-                if (!startX || !startY) return;
-                
-                let diffX = e.touches[0].clientX - startX;
-                let diffY = e.touches[0].clientY - startY;
-                
-                // منع التمرير الجانبي إذا كان التمرير العامودي أكثر
-                if (Math.abs(diffY) > Math.abs(diffX)) {
-                    e.preventDefault();
-                }
-                
-                startX = null;
-                startY = null;
-            }, { passive: false });
-
-            // إضافة فئة الجوال للتحسينات
-            document.body.classList.add('mobile-optimized');
+            const statuses = [{status:"مستقرة",color:"#2ecc71"},{status:"انقطاع جزئي",color:"#f39c12"}];
+            const updates = ["الآن","قبل دقيقة","قبل 3 دقائق"];
+            let sIdx=0, uIdx=0;
+            setInterval(() => {
+                document.getElementById('currentStatus').textContent = `الحالة: ${statuses[sIdx].status}`;
+                document.getElementById('currentStatus').style.color = statuses[sIdx].color;
+                document.getElementById('lastUpdate').textContent = `آخر تحديث: ${updates[uIdx]}`;
+                sIdx = (sIdx+1)%statuses.length; uIdx = (uIdx+1)%updates.length;
+            }, 8000);
         });
-
-        // دعم Service Worker للتطبيقات التقدمية (PWA)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful');
-                }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
     </script>
 </body>
 </html>
-
-
-
-
-
-
