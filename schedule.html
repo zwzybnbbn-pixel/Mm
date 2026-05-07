@@ -1,680 +1,616 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📅 جدول التشغيل – كهرباء عتق</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>📅 جدول التشغيل – كهرباء عتق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4aa3ff;
+            --primary-dark: #2a7bcf;
+            --secondary: #ff6b6b;
+            --light-bg: rgba(255, 255, 255, 0.07);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-color: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
 
-<style>
-/* ===========================
-     إعدادات عامة
-=========================== */
-:root {
-  --primary: #4aa3ff;
-  --primary-dark: #2a7bcf;
-  --secondary: #ff6b6b;
-  --light-bg: rgba(255, 255, 255, 0.07);
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --text-color: #ffffff;
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+        html {
+            font-size: 16px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Cairo', sans-serif;
-}
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 15px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
 
-body {
-  background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #1a1a1a 100%);
-  min-height: 100vh;
-  color: var(--text-color);
-  padding: 20px;
-  line-height: 1.6;
-}
+        /* SVG icon base */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .icon-lg { width: 1.3em; height: 1.3em; }
+        .icon-2x { width: 2em; height: 2em; }
+        .icon-spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-/* ===========================
-         العنوان
-=========================== */
-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 20px 0;
-}
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: max(12px, env(safe-area-inset-top));
+            right: 12px;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 1000;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+        .back-btn:active { transform: scale(0.9); background: var(--primary-dark); }
 
+        /* Header */
+        header {
+            text-align: center;
+            margin: 60px 0 25px;
+            padding: 15px 0;
+        }
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: #ccc;
+            margin-top: 10px;
+        }
 
+        /* Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-header h1::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 3px;
-}
+        .section {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-header p {
-  font-size: 18px;
-  opacity: 0.9;
-  color: #ccc;
-  margin-top: 10px;
-}
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .info-bar h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .last-update {
+            font-size: 0.8rem;
+            color: #888;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-/* ===========================
-        صندوق المحتوى
-=========================== */
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
+        /* Filter buttons */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .filter-btn:active { background: rgba(74,163,255,0.2); }
+        .filter-btn.active {
+            background: rgba(74,163,255,0.2);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
 
-.section {
-  background: var(--light-bg);
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  margin-bottom: 30px;
-  animation: fadeIn 0.5s ease;
-}
+        /* Schedule grid */
+        .schedule-list {
+            display: grid;
+            gap: 16px;
+        }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+        .schedule-item {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .schedule-item:nth-child(1) { animation-delay: 0.05s; }
+        .schedule-item:nth-child(2) { animation-delay: 0.1s; }
+        .schedule-item:nth-child(3) { animation-delay: 0.15s; }
+        .schedule-item:nth-child(4) { animation-delay: 0.2s; }
+        .schedule-item:nth-child(5) { animation-delay: 0.25s; }
 
-/* ===========================
-       شريط المعلومات
-=========================== */
-.info-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-}
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.info-bar h2 {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--primary);
-}
+        .schedule-item:active {
+            background: rgba(255,255,255,0.08);
+            transform: scale(0.97);
+            box-shadow: 0 8px 25px rgba(74,163,255,0.2);
+        }
+        .schedule-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
 
-.last-update {
-  font-size: 14px;
-  color: #888;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-}
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .schedule-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .area-badge {
+            background: rgba(74,163,255,0.2);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
 
-.last-update i {
-  margin-left: 5px;
-  color: var(--primary);
-}
+        .schedule-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        @media (max-width: 480px) {
+            .schedule-info { grid-template-columns: 1fr; }
+        }
 
-/* ===========================
-        عناصر الجدول
-=========================== */
-.schedule-list {
-  display: grid;
-  gap: 20px;
-}
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+        }
+        .info-row .icon { color: var(--primary); width: 18px; }
 
-.schedule-item {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .status-active { background: rgba(46,204,113,0.2); color: #2ecc71; }
+        .status-inactive { background: rgba(231,76,60,0.2); color: #e74c3c; }
+        .status-scheduled { background: rgba(241,196,15,0.2); color: #f1c40f; }
 
-.schedule-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(74, 163, 255, 0.3);
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(74, 163, 255, 0.2);
-}
-
-.schedule-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--primary), var(--secondary));
-}
-
-.schedule-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.schedule-header h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary);
-  margin: 0;
-}
-
-.area-badge {
-  background: rgba(74, 163, 255, 0.2);
-  color: var(--primary);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* ===========================
-      معلومات التشغيل
-=========================== */
-.schedule-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.info-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.info-row i {
-  font-size: 18px;
-  color: var(--primary);
-  width: 24px;
-  text-align: center;
-}
-
-.info-row div {
-  flex: 1;
-}
-
-.info-row strong {
-  display: block;
-  font-size: 14px;
-  color: #aaa;
-  margin-bottom: 3px;
-}
-
-.info-row span {
-  font-size: 16px;
-  color: var(--text-color);
-  font-weight: 600;
-}
-
-/* ===========================
-       حالات خاصة
-=========================== */
-.status-badge {
-  display: inline-block;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: 10px;
-}
-
-.status-active {
-  background: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-}
-
-.status-inactive {
-  background: rgba(231, 76, 60, 0.2);
-  color: #e74c3c;
-}
-
-.status-scheduled {
-  background: rgba(241, 196, 15, 0.2);
-  color: #f1c40f;
-}
-
-/* ===========================
-        حالة التحميل
-=========================== */
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #aaa;
-  font-size: 18px;
-}
-
-.loading i {
-  font-size: 24px;
-  margin-bottom: 15px;
-  display: block;
-  color: var(--primary);
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* ===========================
-       حالة فارغة
-=========================== */
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #888;
-}
-
-.empty-state i {
-  font-size: 48px;
-  margin-bottom: 15px;
-  color: #444;
-  display: block;
-}
-
-.empty-state p {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-/* ===========================
-       فلتر المناطق
-=========================== */
-.filter-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
-}
-
-.filter-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ccc;
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-  background: rgba(74, 163, 255, 0.1);
-  color: var(--primary);
-}
-
-.filter-btn.active {
-  background: rgba(74, 163, 255, 0.2);
-  color: var(--primary);
-  border-color: var(--primary);
-}
-
-/* ===========================
-       تحديث تلقائي
-=========================== */
-.auto-refresh {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-  font-size: 14px;
-  color: #888;
-}
-
-.auto-refresh i {
-  color: var(--primary);
-}
-
-/* ===========================
-      استجابة للجوال
-=========================== */
-@media (max-width: 768px) {
-  body {
-    padding: 15px;
-  }
-  
-  header h1 {
-    font-size: 28px;
-  }
-  
-  .section {
-    padding: 20px;
-  }
-  
-  .schedule-info {
-    grid-template-columns: 1fr;
-  }
-  
-  .info-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .filter-container {
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  header h1 {
-    font-size: 24px;
-  }
-  
-  header p {
-    font-size: 16px;
-  }
-  
-  .schedule-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-}
-</style>
+        .loading, .empty-state {
+            text-align: center;
+            padding: 35px;
+            color: #aaa;
+        }
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.75rem;
+            color: #888;
+        }
+    </style>
 </head>
-
 <body>
+    <a href="index2.html" class="back-btn" aria-label="رجوع">
+        <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
 
-<div class="container">
-  
-  <!-- العنوان -->
-  <header>
-    <h1><i class="fas fa-calendar-alt"></i> جدول التشغيل</h1>
-    <p>جدول تشغيل وانقطاع الكهرباء حسب المناطق</p>
-  </header>
-  
-  <!-- القسم الرئيسي -->
-  <div class="section">
-    <div class="info-bar">
-      <h2><i class="fas fa-bolt"></i> جدول التشغيل الحالي</h2>
-      <div class="last-update" id="lastUpdate">
-        <i class="fas fa-clock"></i> آخر تحديث: <span id="updateTime">--:--</span>
-      </div>
-    </div>
-    
-    <!-- فلتر المناطق -->
-    <div class="filter-container" id="filterContainer">
-      <button class="filter-btn active" data-filter="all">
-        <i class="fas fa-list"></i> جميع المناطق
-      </button>
-      <!-- سيتم إضافة الأزرار ديناميكياً -->
-    </div>
-    
-    <!-- قائمة الجدول -->
-    <div id="list" class="loading">
-      <i class="fas fa-spinner"></i> جاري تحميل جدول التشغيل...
-    </div>
-    
-    <!-- تحديث تلقائي -->
-    <div class="auto-refresh">
-      <i class="fas fa-sync-alt"></i>
-      <span>سيتم تحديث الجدول تلقائياً كل دقيقة</span>
-    </div>
-  </div>
-</div>
+    <div class="container">
+        <header>
+            <h1>
+                <svg class="icon icon-2x" viewBox="0 0 24 24" style="stroke: var(--primary);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                جدول التشغيل
+            </h1>
+            <p>جدول تشغيل وانقطاع الكهرباء حسب المناطق</p>
+        </header>
 
-<script type="module">
-// استيراد Supabase
-import { supabase } from './supabase.js';
-
-// عناصر DOM
-const list = document.getElementById('list');
-const filterContainer = document.getElementById('filterContainer');
-const updateTime = document.getElementById('updateTime');
-
-// متغيرات
-let allSchedules = [];
-let currentFilter = 'all';
-let uniqueAreas = [];
-
-// دالة لتحديث وقت آخر تحديث
-function updateLastUpdateTime() {
-  const now = new Date();
-  const timeString = now.toLocaleString('ar-EG', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-  updateTime.textContent = timeString;
-}
-
-// دالة لإنشاء أزرار الفلتر ديناميكياً
-function createFilterButtons(areas) {
-  // أضف الأزرار لكل منطقة
-  areas.forEach(area => {
-    const button = document.createElement('button');
-    button.className = 'filter-btn';
-    button.dataset.filter = area;
-    button.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${area}`;
-    button.addEventListener('click', () => {
-      // إزالة النشط من جميع الأزرار
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      // تفعيل الزر المختار
-      button.classList.add('active');
-      
-      // تطبيق الفلتر
-      currentFilter = area;
-      filterSchedules();
-    });
-    
-    filterContainer.appendChild(button);
-  });
-}
-
-// دالة لتصفية الجدول حسب المنطقة
-function filterSchedules() {
-  let filtered = [...allSchedules];
-  
-  if (currentFilter !== 'all') {
-    filtered = filtered.filter(schedule => schedule.area === currentFilter);
-  }
-  
-  displaySchedules(filtered);
-}
-
-// دالة لعرض جدول التشغيل
-function displaySchedules(schedules) {
-  if (!schedules || schedules.length === 0) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <i class="far fa-calendar-times"></i>
-        <p>لا توجد بيانات لجدول التشغيل</p>
-        <p style="font-size: 14px; color: #666;">${currentFilter !== 'all' ? `للمنطقة: ${currentFilter}` : ''}</p>
-      </div>
-    `;
-    return;
-  }
-  
-  let html = '<div class="schedule-list">';
-  
-  schedules.forEach(schedule => {
-    const { area, on_time, off_time, notes, status } = schedule;
-    
-    // تحديد أيقونة الحالة
-    let statusClass = 'status-scheduled';
-    let statusIcon = 'fas fa-clock';
-    let statusText = 'مجدول';
-    
-    if (status === 'active') {
-      statusClass = 'status-active';
-      statusIcon = 'fas fa-bolt';
-      statusText = 'نشط';
-    } else if (status === 'inactive') {
-      statusClass = 'status-inactive';
-      statusIcon = 'fas fa-power-off';
-      statusText = 'غير نشط';
-    }
-    
-    html += `
-      <div class="schedule-item">
-        <div class="schedule-header">
-          <h3><i class="fas fa-map-marker-alt"></i> ${area || 'غير محدد'}</h3>
-          <span class="area-badge">${area || '--'}</span>
-        </div>
-        
-        <div class="schedule-info">
-          <div class="info-row">
-            <i class="fas fa-play-circle"></i>
-            <div>
-              <strong>وقت التشغيل</strong>
-              <span>${on_time || 'غير محدد'}</span>
+        <div class="section">
+            <div class="info-bar">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--primary);"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    جدول التشغيل الحالي
+                </h2>
+                <div class="last-update" id="lastUpdate">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    آخر تحديث: <span id="updateTime">--:--</span>
+                </div>
             </div>
-          </div>
-          
-          <div class="info-row">
-            <i class="fas fa-stop-circle"></i>
-            <div>
-              <strong>وقت الانطفاء</strong>
-              <span>${off_time || 'غير محدد'}</span>
+
+            <div class="filter-container" id="filterContainer"></div>
+            <div id="list"></div>
+
+            <div class="auto-refresh">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                <span>سيتم تحديث الجدول تلقائياً كل دقيقة</span>
             </div>
-          </div>
         </div>
-        
-        ${notes ? `
-          <div class="info-row" style="grid-column: 1 / -1;">
-            <i class="fas fa-sticky-note"></i>
-            <div>
-              <strong>ملاحظات</strong>
-              <span>${notes}</span>
-            </div>
-          </div>
-        ` : ''}
-        
-        <div class="${statusClass} status-badge">
-          <i class="${statusIcon}"></i> ${statusText}
-        </div>
-      </div>
-    `;
-  });
-  
-  html += '</div>';
-  list.innerHTML = html;
-}
+    </div>
 
-// دالة لتحميل جدول التشغيل من Supabase
-async function loadSchedule() {
-  list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> جاري تحميل جدول التشغيل...</div>';
-  
-  try {
-    const { data: schedules, error } = await supabase
-      .from('schedule')
-      .select('*')
-      .order('area', { ascending: true });
-    
-    if (error) throw error;
-    
-    console.log(`✅ تم تحميل ${schedules?.length || 0} منطقة`);
-    allSchedules = schedules || [];
-    
-    // استخراج المناطق الفريدة
-    uniqueAreas = [...new Set(allSchedules.map(s => s.area).filter(Boolean))];
-    
-    // تحديث أزرار الفلتر
-    filterContainer.innerHTML = `
-      <button class="filter-btn active" data-filter="all">
-        <i class="fas fa-list"></i> جميع المناطق
-      </button>
-    `;
-    createFilterButtons(uniqueAreas);
-    
-    // تطبيق الفلتر الحالي
-    filterSchedules();
-    
-    // تحديث وقت آخر تحديث
-    updateLastUpdateTime();
-    
-  } catch (error) {
-    console.error('❌ خطأ في تحميل جدول التشغيل:', error);
-    list.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-exclamation-triangle"></i>
-        <p>حدث خطأ في تحميل جدول التشغيل</p>
-        <p style="font-size: 14px; color: #e74c3c;">${error.message}</p>
-        <button onclick="loadSchedule()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: 600;">
-          <i class="fas fa-redo"></i> إعادة المحاولة
-        </button>
-      </div>
-    `;
-  }
-}
+    <script type="module">
+        import { supabase } from './supabase.js';
 
-// =========================
-// 🚀 تهيئة الصفحة
-// =========================
-async function init() {
-  console.log('🚀 بدء تحميل صفحة جدول التشغيل...');
-  
-  // تحميل البيانات أول مرة
-  await loadSchedule();
-  
-  // الاشتراك في التحديثات المباشرة
-  const channel = supabase
-    .channel('realtime-schedule')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'schedule'
-      },
-      (payload) => {
-        console.log('📡 تحديث مباشر لجدول التشغيل:', payload);
-        loadSchedule();
-      }
-    )
-    .subscribe((status) => {
-      console.log('📡 حالة اشتراك جدول التشغيل:', status);
-    });
-  
-  // تحديث تلقائي كل دقيقة
-  setInterval(() => {
-    loadSchedule();
-  }, 60000);
-  
-  // تحديث وقت العرض كل ثانية
-  setInterval(() => {
-    updateLastUpdateTime();
-  }, 1000);
-  
-  console.log('✅ تم تهيئة صفحة جدول التشغيل بنجاح');
-}
+        const list = document.getElementById('list');
+        const filterContainer = document.getElementById('filterContainer');
+        const updateTime = document.getElementById('updateTime');
 
-// بدء التطبيق
-init();
+        let allSchedules = [];
+        let currentFilter = 'all';
 
-// جعل الدالة متاحة للزر
-window.loadSchedule = loadSchedule;
-</script>
+        // SVG icon helper
+        function iconSVG(viewBox, path, className = 'icon') {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", viewBox);
+            svg.classList.add(...className.split(' '));
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            p.setAttribute("d", path);
+            svg.appendChild(p);
+            return svg;
+        }
 
+        function clearElement(el) {
+            while (el.firstChild) el.removeChild(el.firstChild);
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            updateTime.textContent = now.toLocaleString('ar-EG', {
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        function createFilterButtons(areas) {
+            clearElement(filterContainer);
+            // زر "الكل"
+            const allBtn = document.createElement('button');
+            allBtn.className = 'filter-btn active';
+            allBtn.dataset.filter = 'all';
+            allBtn.appendChild(iconSVG("0 0 24 24", "M4 6h16M4 12h16M4 18h7"));
+            allBtn.appendChild(document.createTextNode(' جميع المناطق'));
+            allBtn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                allBtn.classList.add('active');
+                currentFilter = 'all';
+                filterSchedules();
+            });
+            filterContainer.appendChild(allBtn);
+
+            areas.forEach(area => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.dataset.filter = area;
+                btn.appendChild(iconSVG("0 0 24 24", "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"));
+                btn.appendChild(document.createTextNode(' ' + area));
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = area;
+                    filterSchedules();
+                });
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function filterSchedules() {
+            const filtered = currentFilter === 'all'
+                ? allSchedules
+                : allSchedules.filter(s => s.area === currentFilter);
+            displaySchedules(filtered);
+        }
+
+        function displaySchedules(schedules) {
+            clearElement(list);
+
+            if (!schedules || schedules.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.appendChild(iconSVG("0 0 24 24", "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18 M10 14l2 2 4-4", "icon icon-2x"));
+                const p = document.createElement('p');
+                p.textContent = 'لا توجد بيانات لجدول التشغيل';
+                const sub = document.createElement('p');
+                sub.style.fontSize = '0.8rem';
+                sub.style.color = '#666';
+                sub.textContent = currentFilter !== 'all' ? `للمنطقة: ${currentFilter}` : '';
+                empty.appendChild(p);
+                empty.appendChild(sub);
+                list.appendChild(empty);
+                return;
+            }
+
+            const scheduleList = document.createElement('div');
+            scheduleList.className = 'schedule-list';
+
+            schedules.forEach(schedule => {
+                const { area, on_time, off_time, notes, status } = schedule;
+
+                let statusClass = 'status-scheduled';
+                let statusIconPath = "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z M12 6v6l4 2"; // clock
+                let statusText = 'مجدول';
+
+                if (status === 'active') {
+                    statusClass = 'status-active';
+                    statusIconPath = "M13 2L3 14h9l-1 8 10-12h-9l1-8z"; // bolt
+                    statusText = 'نشط';
+                } else if (status === 'inactive') {
+                    statusClass = 'status-inactive';
+                    statusIconPath = "M18.36 6.64a9 9 0 1 1-12.73 0 M12 2v4"; // power
+                    statusText = 'غير نشط';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'schedule-item';
+
+                // Header
+                const header = document.createElement('div');
+                header.className = 'schedule-header';
+                const h3 = document.createElement('h3');
+                h3.appendChild(iconSVG("0 0 24 24", "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"));
+                h3.appendChild(document.createTextNode(' ' + (area || 'غير محدد')));
+                header.appendChild(h3);
+                const badge = document.createElement('span');
+                badge.className = 'area-badge';
+                badge.textContent = area || '--';
+                header.appendChild(badge);
+                card.appendChild(header);
+
+                // Info grid
+                const infoGrid = document.createElement('div');
+                infoGrid.className = 'schedule-info';
+
+                // On time
+                const onRow = document.createElement('div');
+                onRow.className = 'info-row';
+                onRow.appendChild(iconSVG("0 0 24 24", "M5 3l14 9-14 9V3z")); // play
+                const onDiv = document.createElement('div');
+                const onStrong = document.createElement('strong');
+                onStrong.textContent = 'وقت التشغيل';
+                const onSpan = document.createElement('span');
+                onSpan.textContent = on_time || 'غير محدد';
+                onDiv.appendChild(onStrong);
+                onDiv.appendChild(onSpan);
+                onRow.appendChild(onDiv);
+                infoGrid.appendChild(onRow);
+
+                // Off time
+                const offRow = document.createElement('div');
+                offRow.className = 'info-row';
+                offRow.appendChild(iconSVG("0 0 24 24", "M6 6h12v12H6z")); // stop
+                const offDiv = document.createElement('div');
+                const offStrong = document.createElement('strong');
+                offStrong.textContent = 'وقت الانطفاء';
+                const offSpan = document.createElement('span');
+                offSpan.textContent = off_time || 'غير محدد';
+                offDiv.appendChild(offStrong);
+                offDiv.appendChild(offSpan);
+                offRow.appendChild(offDiv);
+                infoGrid.appendChild(offRow);
+
+                card.appendChild(infoGrid);
+
+                // Notes
+                if (notes) {
+                    const noteRow = document.createElement('div');
+                    noteRow.className = 'info-row';
+                    noteRow.style.gridColumn = '1 / -1';
+                    noteRow.appendChild(iconSVG("0 0 24 24", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"));
+                    const noteDiv = document.createElement('div');
+                    const noteStrong = document.createElement('strong');
+                    noteStrong.textContent = 'ملاحظات';
+                    const noteSpan = document.createElement('span');
+                    noteSpan.textContent = notes;
+                    noteDiv.appendChild(noteStrong);
+                    noteDiv.appendChild(noteSpan);
+                    noteRow.appendChild(noteDiv);
+                    card.appendChild(noteRow);
+                }
+
+                // Status badge
+                const statusBadge = document.createElement('div');
+                statusBadge.className = `status-badge ${statusClass}`;
+                statusBadge.appendChild(iconSVG("0 0 24 24", statusIconPath));
+                statusBadge.appendChild(document.createTextNode(' ' + statusText));
+                card.appendChild(statusBadge);
+
+                scheduleList.appendChild(card);
+            });
+
+            list.appendChild(scheduleList);
+        }
+
+        async function loadSchedule() {
+            clearElement(list);
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            const spinner = iconSVG("0 0 24 24", "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83", "icon icon-lg icon-spin");
+            loadingDiv.appendChild(spinner);
+            loadingDiv.appendChild(document.createTextNode(' جاري تحميل جدول التشغيل...'));
+            list.appendChild(loadingDiv);
+
+            try {
+                const { data: schedules, error } = await supabase
+                    .from('schedule')
+                    .select('*')
+                    .order('area', { ascending: true });
+
+                if (error) throw error;
+                allSchedules = schedules || [];
+
+                const uniqueAreas = [...new Set(allSchedules.map(s => s.area).filter(Boolean))];
+                createFilterButtons(uniqueAreas);
+                filterSchedules();
+                updateLastUpdateTime();
+
+            } catch (error) {
+                console.error('خطأ:', error);
+                clearElement(list);
+                const errDiv = document.createElement('div');
+                errDiv.className = 'empty-state';
+                errDiv.appendChild(iconSVG("0 0 24 24", "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01", "icon icon-2x"));
+                const p = document.createElement('p');
+                p.textContent = 'حدث خطأ في تحميل جدول التشغيل';
+                const sub = document.createElement('p');
+                sub.style.fontSize = '0.8rem';
+                sub.style.color = '#e74c3c';
+                sub.textContent = error.message;
+                errDiv.appendChild(p);
+                errDiv.appendChild(sub);
+                const retryBtn = document.createElement('button');
+                retryBtn.textContent = 'إعادة المحاولة';
+                retryBtn.style.cssText = 'margin-top:15px; padding:10px 20px; background:var(--primary); border:none; border-radius:10px; color:white; cursor:pointer; font-weight:600;';
+                retryBtn.addEventListener('click', loadSchedule);
+                errDiv.appendChild(retryBtn);
+                list.appendChild(errDiv);
+            }
+        }
+
+        // Init
+        async function init() {
+            await loadSchedule();
+
+            const channel = supabase
+                .channel('realtime-schedule')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'schedule' }, () => loadSchedule())
+                .subscribe();
+
+            setInterval(loadSchedule, 60000);
+            setInterval(updateLastUpdateTime, 1000);
+        }
+
+        init();
+    </script>
 </body>
 </html>
