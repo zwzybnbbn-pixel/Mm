@@ -199,7 +199,7 @@
             gap: 10px;
             align-items: center;
         }
-        .priority-badge, .status-badge {
+        .date-badge, .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 5px;
@@ -208,17 +208,9 @@
             font-size: 0.7rem;
             font-weight: 700;
         }
-        .priority-high {
-            background: rgba(255,77,77,0.2);
-            color: #ff8080;
-        }
-        .priority-medium {
-            background: rgba(255,165,0,0.2);
-            color: #ffa726;
-        }
-        .priority-low {
-            background: rgba(0,162,255,0.2);
-            color: #4db8ff;
+        .date-badge {
+            background: rgba(255,255,255,0.08);
+            color: #ccc;
         }
         .status-active {
             background: rgba(46,204,113,0.2);
@@ -299,6 +291,24 @@
             while (contentContainer.firstChild) contentContainer.removeChild(contentContainer.firstChild);
         }
 
+        // ========== Date Format ==========
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            try {
+                const d = new Date(dateString);
+                if (isNaN(d.getTime())) return '—';
+                return d.toLocaleString('ar-EG', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return '—';
+            }
+        }
+
         // ========== Filter & Stats ==========
         function updateStats(alerts) {
             totalCount.textContent = alerts.length;
@@ -343,9 +353,9 @@
             container.className = 'alerts-container';
 
             alerts.forEach((alert, index) => {
-                const { title, content, active, urgent, priority } = alert;
+                const { title, content, active, urgent, created_at } = alert;
 
-                // Status badge
+                // Status
                 let statusClass = 'status-inactive';
                 let statusIconPath = "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z M12 6v6l4 2";
                 let statusText = 'منتهي';
@@ -357,17 +367,6 @@
                     statusClass = 'status-active';
                     statusIconPath = "M13 2L3 14h9l-1 8 10-12h-9l1-8z";
                     statusText = 'نشط';
-                }
-
-                // Priority badge
-                let priorityClass = 'priority-high';
-                let priorityLabel = 'عالية';
-                if (priority === 'medium') {
-                    priorityClass = 'priority-medium';
-                    priorityLabel = 'متوسطة';
-                } else if (priority === 'low') {
-                    priorityClass = 'priority-low';
-                    priorityLabel = 'منخفضة';
                 }
 
                 const card = document.createElement('div');
@@ -387,16 +386,18 @@
                 contentEl.textContent = content || 'لا توجد تفاصيل';
                 card.appendChild(contentEl);
 
-                // Meta row (priority + status)
+                // Meta row (date + status)
                 const metaRow = document.createElement('div');
                 metaRow.className = 'meta-row';
 
-                const priorityBadge = document.createElement('span');
-                priorityBadge.className = `priority-badge ${priorityClass}`;
-                priorityBadge.appendChild(iconSVG("0 0 24 24", "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"));
-                priorityBadge.appendChild(document.createTextNode(' ' + priorityLabel));
-                metaRow.appendChild(priorityBadge);
+                // Date badge
+                const dateBadge = document.createElement('span');
+                dateBadge.className = 'date-badge';
+                dateBadge.appendChild(iconSVG("0 0 24 24", "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18"));
+                dateBadge.appendChild(document.createTextNode(' ' + formatDate(created_at)));
+                metaRow.appendChild(dateBadge);
 
+                // Status badge
                 const statusBadge = document.createElement('span');
                 statusBadge.className = `status-badge ${statusClass}`;
                 statusBadge.appendChild(iconSVG("0 0 24 24", statusIconPath));
@@ -430,13 +431,12 @@
                 if (error) throw error;
 
                 allAlerts = data || [];
-                // ترتيب تنازلي افتراضي حسب الأهمية: عاجل أولاً ثم نشط ثم منتهي
                 allAlerts.sort((a, b) => {
                     if (a.urgent && !b.urgent) return -1;
                     if (!a.urgent && b.urgent) return 1;
                     if (a.active && !b.active) return -1;
                     if (!a.active && b.active) return 1;
-                    return 0; // يحافظ على ترتيب التاريخ
+                    return 0;
                 });
 
                 applyFilter();
