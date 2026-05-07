@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>📅 جدول التشغيل – كهرباء عتق</title>
+    <title>جدول التشغيل – كهرباء عتق</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4aa3ff;
             --primary-dark: #2a7bcf;
             --secondary: #ff6b6b;
-            --light-bg: rgba(255, 255, 255, 0.07);
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text-color: #ffffff;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050913;
+            --card-bg: rgba(255,255,255,0.06);
+            --card-border: rgba(255,255,255,0.08);
+            --text-light: #fff;
+            --text-muted: #aaa;
+            --shadow: 0 8px 30px rgba(0,0,0,0.5);
+            --radius: 24px;
+            --gap: 20px;
         }
 
         * {
@@ -26,23 +30,22 @@
 
         html {
             font-size: 16px;
-            -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             height: 100%;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #1a1a1a 100%);
+            background: linear-gradient(145deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
             min-height: 100vh;
-            color: var(--text-color);
             padding: 15px;
-            line-height: 1.6;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
-        /* SVG icon base */
+        /* ========== SVG ICONS ========== */
         .icon {
             display: inline-block;
             width: 1em;
@@ -54,274 +57,313 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-        .icon-lg { width: 1.3em; height: 1.3em; }
+        .icon-lg { width: 1.4em; height: 1.4em; }
         .icon-2x { width: 2em; height: 2em; }
-        .icon-spin {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .icon-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Back button */
+        /* ========== BACK BUTTON ========== */
         .back-btn {
             position: fixed;
-            top: max(12px, env(safe-area-inset-top));
-            right: 12px;
-            background: var(--primary);
+            top: max(16px, env(safe-area-inset-top));
+            right: 16px;
+            background: rgba(74,163,255,0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             z-index: 1000;
-            transition: all 0.2s;
-            backdrop-filter: blur(10px);
+            transition: 0.25s cubic-bezier(0.4,0,0.2,1);
         }
-        .back-btn:active { transform: scale(0.9); background: var(--primary-dark); }
+        .back-btn:active {
+            transform: scale(0.92);
+            background: rgba(74,163,255,0.4);
+            border-color: var(--primary);
+        }
 
-        /* Header */
-        header {
+        /* ========== HEADER ========== */
+        .page-header {
             text-align: center;
-            margin: 60px 0 25px;
-            padding: 15px 0;
+            margin: 70px 0 35px;
+            position: relative;
         }
-        header h1 {
-            font-size: 2rem;
+        .main-title {
+            font-size: 2.2rem;
             font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff, var(--primary));
+            background: linear-gradient(135deg, #fff, #a0d2ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .subtitle {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.75);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 8px;
         }
-        header h1::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
+        .divider-wave {
             width: 120px;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 3px;
-        }
-        header p {
-            font-size: 0.9rem;
+            border-radius: 4px;
+            margin: 15px auto 0;
             opacity: 0.9;
-            color: #ccc;
-            margin-top: 10px;
         }
 
-        /* Container */
+        /* ========== MAIN CONTAINER ========== */
         .container {
-            max-width: 700px;
+            max-width: 750px;
             margin: 0 auto;
             width: 100%;
         }
 
         .section {
-            background: var(--light-bg);
-            padding: 20px;
-            border-radius: 20px;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 28px 20px;
             box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-            animation: fadeIn 0.5s ease;
+            margin-bottom: 30px;
+            animation: fadeSlide 0.5s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .info-bar h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .last-update {
-            font-size: 0.8rem;
-            color: #888;
-            background: rgba(0,0,0,0.3);
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Filter buttons */
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 18px;
-            justify-content: center;
-        }
-        .filter-btn {
-            background: rgba(255,255,255,0.05);
-            color: #ccc;
-            border: 1px solid var(--border-color);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .filter-btn:active { background: rgba(74,163,255,0.2); }
-        .filter-btn.active {
-            background: rgba(74,163,255,0.2);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        /* Schedule grid */
-        .schedule-list {
-            display: grid;
-            gap: 16px;
-        }
-
-        .schedule-item {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.4s ease forwards;
-            opacity: 0;
-        }
-        .schedule-item:nth-child(1) { animation-delay: 0.05s; }
-        .schedule-item:nth-child(2) { animation-delay: 0.1s; }
-        .schedule-item:nth-child(3) { animation-delay: 0.15s; }
-        .schedule-item:nth-child(4) { animation-delay: 0.2s; }
-        .schedule-item:nth-child(5) { animation-delay: 0.25s; }
-
-        @keyframes fadeInUp {
+        @keyframes fadeSlide {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .schedule-item:active {
-            background: rgba(255,255,255,0.08);
-            transform: scale(0.97);
-            box-shadow: 0 8px 25px rgba(74,163,255,0.2);
-        }
-        .schedule-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--primary), var(--secondary));
-        }
-
-        .schedule-header {
+        /* ========== INFO BAR ========== */
+        .info-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .schedule-header h3 {
-            font-size: 1rem;
+        .info-bar h2 {
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .area-badge {
-            background: rgba(74,163,255,0.2);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .schedule-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        @media (max-width: 480px) {
-            .schedule-info { grid-template-columns: 1fr; }
-        }
-
-        .info-row {
+            color: #cce6ff;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.8rem;
         }
-        .info-row .icon { color: var(--primary); width: 18px; }
+        .last-update {
+            font-size: 0.8rem;
+            color: #aaa;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ========== FILTERS ========== */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #ccc;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(5px);
+        }
+        .filter-btn:active {
+            background: rgba(74,163,255,0.15);
+            transform: translateY(-1px);
+        }
+        .filter-btn.active {
+            background: rgba(74,163,255,0.2);
+            color: var(--primary);
+            border-color: rgba(74,163,255,0.4);
+            box-shadow: 0 0 15px rgba(74,163,255,0.15);
+        }
+
+        /* ========== SCHEDULE LIST ========== */
+        .schedule-list {
+            display: grid;
+            gap: 22px;
+        }
+
+        .schedule-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 22px;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            animation: fadeInUp 0.45s ease forwards;
+            opacity: 0;
+        }
+        .schedule-card:nth-child(1) { animation-delay: 0.05s; }
+        .schedule-card:nth-child(2) { animation-delay: 0.1s; }
+        .schedule-card:nth-child(3) { animation-delay: 0.15s; }
+        .schedule-card:nth-child(4) { animation-delay: 0.2s; }
+        .schedule-card:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .schedule-card:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 25px rgba(74,163,255,0.15);
+        }
+
+        .schedule-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), rgba(74,163,255,0.2));
+            border-radius: 0 5px 5px 0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #dfefff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .area-badge {
+            background: rgba(74,163,255,0.2);
+            color: #b3d9ff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(74,163,255,0.25);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 500px) {
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0,0,0,0.25);
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+        .info-box:active { background: rgba(255,255,255,0.05); }
+        .info-box .icon { color: var(--primary); width: 22px; font-size: 1.2rem; }
+        .info-text strong {
+            display: block;
+            font-size: 0.7rem;
+            color: #aaa;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .info-text span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 16px;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 8px;
+            font-weight: 700;
+            margin-top: 10px;
+            border: 1px solid transparent;
         }
-        .status-active { background: rgba(46,204,113,0.2); color: #2ecc71; }
-        .status-inactive { background: rgba(231,76,60,0.2); color: #e74c3c; }
-        .status-scheduled { background: rgba(241,196,15,0.2); color: #f1c40f; }
+        .status-active { background: rgba(46,204,113,0.18); color: #2ecc71; border-color: rgba(46,204,113,0.3); }
+        .status-inactive { background: rgba(231,76,60,0.18); color: #e74c3c; border-color: rgba(231,76,60,0.3); }
+        .status-scheduled { background: rgba(241,196,15,0.18); color: #f1c40f; border-color: rgba(241,196,15,0.3); }
 
-        .loading, .empty-state {
+        /* ========== EMPTY / LOADING ========== */
+        .empty-state, .loading-state {
             text-align: center;
-            padding: 35px;
-            color: #aaa;
+            padding: 45px 25px;
+            color: #888;
+        }
+        .empty-state .icon, .loading-state .icon {
+            margin-bottom: 15px;
+            opacity: 0.7;
         }
         .auto-refresh {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.75rem;
-            color: #888;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* ========== FOOTER NOTE ========== */
+        .footer-note {
+            text-align: center;
+            margin: 20px 0 40px;
+            font-size: 0.7rem;
+            color: #555;
         }
     </style>
 </head>
@@ -330,20 +372,24 @@
         <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
 
-    <div class="container">
-        <header>
-            <h1>
-                <svg class="icon icon-2x" viewBox="0 0 24 24" style="stroke: var(--primary);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                جدول التشغيل
-            </h1>
-            <p>جدول تشغيل وانقطاع الكهرباء حسب المناطق</p>
-        </header>
+    <div class="page-header">
+        <h1 class="main-title">
+            <svg class="icon icon-2x" viewBox="0 0 24 24" style="stroke: var(--primary);"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="14" x2="9" y2="14"/><line x1="15" y1="14" x2="15" y2="14"/></svg>
+            جدول التشغيل
+        </h1>
+        <p class="subtitle">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            جدول تشغيل وانقطاع الكهرباء حسب المناطق
+        </p>
+        <div class="divider-wave"></div>
+    </div>
 
+    <div class="container">
         <div class="section">
             <div class="info-bar">
                 <h2>
                     <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--primary);"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    جدول التشغيل الحالي
+                    الجدول الحالي
                 </h2>
                 <div class="last-update" id="lastUpdate">
                     <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -352,26 +398,29 @@
             </div>
 
             <div class="filter-container" id="filterContainer"></div>
-            <div id="list"></div>
+
+            <div id="dynamicContent"></div>
 
             <div class="auto-refresh">
-                <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                <span>سيتم تحديث الجدول تلقائياً كل دقيقة</span>
+                <svg class="icon" viewBox="0 0 24 24" style="color: var(--primary);"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                <span>يُحدَّث تلقائياً كل دقيقة</span>
             </div>
         </div>
     </div>
 
+    <div class="footer-note">⚡ منصة كهرباء عتق – جميع الحقوق محفوظة © 2025</div>
+
     <script type="module">
         import { supabase } from './supabase.js';
 
-        const list = document.getElementById('list');
+        const dynamicContent = document.getElementById('dynamicContent');
         const filterContainer = document.getElementById('filterContainer');
         const updateTime = document.getElementById('updateTime');
 
         let allSchedules = [];
         let currentFilter = 'all';
 
-        // SVG icon helper
+        // ========== HELPERS ==========
         function iconSVG(viewBox, path, className = 'icon') {
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("viewBox", viewBox);
@@ -393,20 +442,15 @@
             });
         }
 
+        // ========== FILTERS ==========
         function createFilterButtons(areas) {
             clearElement(filterContainer);
-            // زر "الكل"
             const allBtn = document.createElement('button');
             allBtn.className = 'filter-btn active';
             allBtn.dataset.filter = 'all';
             allBtn.appendChild(iconSVG("0 0 24 24", "M4 6h16M4 12h16M4 18h7"));
             allBtn.appendChild(document.createTextNode(' جميع المناطق'));
-            allBtn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                allBtn.classList.add('active');
-                currentFilter = 'all';
-                filterSchedules();
-            });
+            allBtn.addEventListener('click', () => setFilter('all', allBtn));
             filterContainer.appendChild(allBtn);
 
             areas.forEach(area => {
@@ -415,189 +459,190 @@
                 btn.dataset.filter = area;
                 btn.appendChild(iconSVG("0 0 24 24", "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"));
                 btn.appendChild(document.createTextNode(' ' + area));
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = area;
-                    filterSchedules();
-                });
+                btn.addEventListener('click', () => setFilter(area, btn));
                 filterContainer.appendChild(btn);
             });
+        }
+
+        function setFilter(filter, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            currentFilter = filter;
+            filterSchedules();
         }
 
         function filterSchedules() {
             const filtered = currentFilter === 'all'
                 ? allSchedules
                 : allSchedules.filter(s => s.area === currentFilter);
-            displaySchedules(filtered);
+            renderSchedules(filtered);
         }
 
-        function displaySchedules(schedules) {
-            clearElement(list);
+        // ========== RENDER ==========
+        function renderSchedules(schedules) {
+            clearElement(dynamicContent);
 
             if (!schedules || schedules.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'empty-state';
-                empty.appendChild(iconSVG("0 0 24 24", "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18 M10 14l2 2 4-4", "icon icon-2x"));
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty-state';
+                emptyDiv.appendChild(iconSVG("0 0 24 24", "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18 M10 14l2 2 4-4", "icon icon-2x"));
                 const p = document.createElement('p');
-                p.textContent = 'لا توجد بيانات لجدول التشغيل';
-                const sub = document.createElement('p');
-                sub.style.fontSize = '0.8rem';
-                sub.style.color = '#666';
-                sub.textContent = currentFilter !== 'all' ? `للمنطقة: ${currentFilter}` : '';
-                empty.appendChild(p);
-                empty.appendChild(sub);
-                list.appendChild(empty);
+                p.textContent = 'لا توجد بيانات متاحة';
+                p.style.marginTop = '10px';
+                const hint = document.createElement('small');
+                hint.textContent = currentFilter !== 'all' ? `المنطقة: ${currentFilter}` : '';
+                hint.style.color = '#666';
+                emptyDiv.appendChild(p);
+                emptyDiv.appendChild(hint);
+                dynamicContent.appendChild(emptyDiv);
                 return;
             }
 
-            const scheduleList = document.createElement('div');
-            scheduleList.className = 'schedule-list';
+            const listContainer = document.createElement('div');
+            listContainer.className = 'schedule-list';
 
             schedules.forEach(schedule => {
                 const { area, on_time, off_time, notes, status } = schedule;
 
+                // Status config
                 let statusClass = 'status-scheduled';
-                let statusIconPath = "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z M12 6v6l4 2"; // clock
+                let statusIconPath = "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z M12 6v6l4 2";
                 let statusText = 'مجدول';
-
                 if (status === 'active') {
                     statusClass = 'status-active';
-                    statusIconPath = "M13 2L3 14h9l-1 8 10-12h-9l1-8z"; // bolt
+                    statusIconPath = "M13 2L3 14h9l-1 8 10-12h-9l1-8z";
                     statusText = 'نشط';
                 } else if (status === 'inactive') {
                     statusClass = 'status-inactive';
-                    statusIconPath = "M18.36 6.64a9 9 0 1 1-12.73 0 M12 2v4"; // power
+                    statusIconPath = "M18.36 6.64a9 9 0 1 1-12.73 0 M12 2v4";
                     statusText = 'غير نشط';
                 }
 
                 const card = document.createElement('div');
-                card.className = 'schedule-item';
+                card.className = 'schedule-card';
 
                 // Header
-                const header = document.createElement('div');
-                header.className = 'schedule-header';
+                const cardHeader = document.createElement('div');
+                cardHeader.className = 'card-header';
                 const h3 = document.createElement('h3');
                 h3.appendChild(iconSVG("0 0 24 24", "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"));
                 h3.appendChild(document.createTextNode(' ' + (area || 'غير محدد')));
-                header.appendChild(h3);
-                const badge = document.createElement('span');
-                badge.className = 'area-badge';
-                badge.textContent = area || '--';
-                header.appendChild(badge);
-                card.appendChild(header);
+                cardHeader.appendChild(h3);
+                const areaTag = document.createElement('span');
+                areaTag.className = 'area-badge';
+                areaTag.textContent = area || '--';
+                cardHeader.appendChild(areaTag);
+                card.appendChild(cardHeader);
 
-                // Info grid
+                // Info Grid
                 const infoGrid = document.createElement('div');
-                infoGrid.className = 'schedule-info';
+                infoGrid.className = 'info-grid';
 
                 // On time
-                const onRow = document.createElement('div');
-                onRow.className = 'info-row';
-                onRow.appendChild(iconSVG("0 0 24 24", "M5 3l14 9-14 9V3z")); // play
-                const onDiv = document.createElement('div');
-                const onStrong = document.createElement('strong');
-                onStrong.textContent = 'وقت التشغيل';
-                const onSpan = document.createElement('span');
-                onSpan.textContent = on_time || 'غير محدد';
-                onDiv.appendChild(onStrong);
-                onDiv.appendChild(onSpan);
-                onRow.appendChild(onDiv);
-                infoGrid.appendChild(onRow);
+                const onBox = document.createElement('div');
+                onBox.className = 'info-box';
+                onBox.appendChild(iconSVG("0 0 24 24", "M5 3l14 9-14 9V3z"));
+                const onText = document.createElement('div');
+                onText.className = 'info-text';
+                const onLabel = document.createElement('strong');
+                onLabel.textContent = 'وقت التشغيل';
+                const onVal = document.createElement('span');
+                onVal.textContent = on_time || 'غير محدد';
+                onText.appendChild(onLabel);
+                onText.appendChild(onVal);
+                onBox.appendChild(onText);
+                infoGrid.appendChild(onBox);
 
                 // Off time
-                const offRow = document.createElement('div');
-                offRow.className = 'info-row';
-                offRow.appendChild(iconSVG("0 0 24 24", "M6 6h12v12H6z")); // stop
-                const offDiv = document.createElement('div');
-                const offStrong = document.createElement('strong');
-                offStrong.textContent = 'وقت الانطفاء';
-                const offSpan = document.createElement('span');
-                offSpan.textContent = off_time || 'غير محدد';
-                offDiv.appendChild(offStrong);
-                offDiv.appendChild(offSpan);
-                offRow.appendChild(offDiv);
-                infoGrid.appendChild(offRow);
+                const offBox = document.createElement('div');
+                offBox.className = 'info-box';
+                offBox.appendChild(iconSVG("0 0 24 24", "M6 6h12v12H6z"));
+                const offText = document.createElement('div');
+                offText.className = 'info-text';
+                const offLabel = document.createElement('strong');
+                offLabel.textContent = 'وقت الانطفاء';
+                const offVal = document.createElement('span');
+                offVal.textContent = off_time || 'غير محدد';
+                offText.appendChild(offLabel);
+                offText.appendChild(offVal);
+                offBox.appendChild(offText);
+                infoGrid.appendChild(offBox);
 
                 card.appendChild(infoGrid);
 
-                // Notes
+                // Notes (if any)
                 if (notes) {
-                    const noteRow = document.createElement('div');
-                    noteRow.className = 'info-row';
-                    noteRow.style.gridColumn = '1 / -1';
-                    noteRow.appendChild(iconSVG("0 0 24 24", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"));
-                    const noteDiv = document.createElement('div');
-                    const noteStrong = document.createElement('strong');
-                    noteStrong.textContent = 'ملاحظات';
-                    const noteSpan = document.createElement('span');
-                    noteSpan.textContent = notes;
-                    noteDiv.appendChild(noteStrong);
-                    noteDiv.appendChild(noteSpan);
-                    noteRow.appendChild(noteDiv);
-                    card.appendChild(noteRow);
+                    const noteBox = document.createElement('div');
+                    noteBox.className = 'info-box';
+                    noteBox.style.marginTop = '10px';
+                    noteBox.appendChild(iconSVG("0 0 24 24", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"));
+                    const noteText = document.createElement('div');
+                    noteText.className = 'info-text';
+                    const noteLabel = document.createElement('strong');
+                    noteLabel.textContent = 'ملاحظات';
+                    const noteVal = document.createElement('span');
+                    noteVal.textContent = notes;
+                    noteText.appendChild(noteLabel);
+                    noteText.appendChild(noteVal);
+                    noteBox.appendChild(noteText);
+                    card.appendChild(noteBox);
                 }
 
-                // Status badge
+                // Status
                 const statusBadge = document.createElement('div');
                 statusBadge.className = `status-badge ${statusClass}`;
                 statusBadge.appendChild(iconSVG("0 0 24 24", statusIconPath));
                 statusBadge.appendChild(document.createTextNode(' ' + statusText));
                 card.appendChild(statusBadge);
 
-                scheduleList.appendChild(card);
+                listContainer.appendChild(card);
             });
 
-            list.appendChild(scheduleList);
+            dynamicContent.appendChild(listContainer);
         }
 
+        // ========== DATA FETCHING ==========
         async function loadSchedule() {
-            clearElement(list);
+            clearElement(dynamicContent);
             const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'loading';
-            const spinner = iconSVG("0 0 24 24", "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83", "icon icon-lg icon-spin");
-            loadingDiv.appendChild(spinner);
-            loadingDiv.appendChild(document.createTextNode(' جاري تحميل جدول التشغيل...'));
-            list.appendChild(loadingDiv);
+            loadingDiv.className = 'loading-state';
+            loadingDiv.appendChild(iconSVG("0 0 24 24", "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83", "icon icon-lg icon-spin"));
+            const loadingText = document.createElement('p');
+            loadingText.textContent = 'جاري تحميل جدول التشغيل...';
+            loadingDiv.appendChild(loadingText);
+            dynamicContent.appendChild(loadingDiv);
 
             try {
-                const { data: schedules, error } = await supabase
+                const { data, error } = await supabase
                     .from('schedule')
                     .select('*')
                     .order('area', { ascending: true });
 
                 if (error) throw error;
-                allSchedules = schedules || [];
-
+                allSchedules = data || [];
                 const uniqueAreas = [...new Set(allSchedules.map(s => s.area).filter(Boolean))];
                 createFilterButtons(uniqueAreas);
                 filterSchedules();
                 updateLastUpdateTime();
-
-            } catch (error) {
-                console.error('خطأ:', error);
-                clearElement(list);
+            } catch (err) {
+                console.error(err);
+                clearElement(dynamicContent);
                 const errDiv = document.createElement('div');
                 errDiv.className = 'empty-state';
                 errDiv.appendChild(iconSVG("0 0 24 24", "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01", "icon icon-2x"));
-                const p = document.createElement('p');
-                p.textContent = 'حدث خطأ في تحميل جدول التشغيل';
-                const sub = document.createElement('p');
-                sub.style.fontSize = '0.8rem';
-                sub.style.color = '#e74c3c';
-                sub.textContent = error.message;
-                errDiv.appendChild(p);
-                errDiv.appendChild(sub);
+                const errMsg = document.createElement('p');
+                errMsg.textContent = 'خطأ في تحميل البيانات';
+                errDiv.appendChild(errMsg);
                 const retryBtn = document.createElement('button');
                 retryBtn.textContent = 'إعادة المحاولة';
-                retryBtn.style.cssText = 'margin-top:15px; padding:10px 20px; background:var(--primary); border:none; border-radius:10px; color:white; cursor:pointer; font-weight:600;';
+                retryBtn.style.cssText = 'margin-top:15px; padding:10px 20px; background:var(--primary); border:none; border-radius:30px; color:white; font-weight:600; cursor:pointer;';
                 retryBtn.addEventListener('click', loadSchedule);
                 errDiv.appendChild(retryBtn);
-                list.appendChild(errDiv);
+                dynamicContent.appendChild(errDiv);
             }
         }
 
-        // Init
+        // ========== INIT ==========
         async function init() {
             await loadSchedule();
 
