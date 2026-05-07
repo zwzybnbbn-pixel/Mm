@@ -1,835 +1,569 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔔 جميع التنبيهات</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>جميع التنبيهات – كهرباء عتق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --primary-dark: #ff4757;
+            --bg-dark: #0a0e1a;
+            --card-bg: rgba(255,255,255,0.06);
+            --card-border: rgba(255,255,255,0.08);
+            --text-light: #fff;
+            --text-muted: #aaa;
+            --shadow: 0 8px 30px rgba(0,0,0,0.45);
+            --radius: 20px;
+            --gap: 18px;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
 
-<style>
-/* جميع أنماط CSS تبقى كما هي */
-:root {
-  --primary: #ff6b6b;
-  --primary-dark: #ff4757;
-  --dark-bg: #0a0a0a;
-  --card-bg: rgba(255, 255, 255, 0.07);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Cairo', sans-serif;
-}
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(145deg, #050913 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
 
-body {
-  background: linear-gradient(135deg, var(--dark-bg) 0%, #111 50%, #1a1a1a 100%);
-  min-height: 100vh;
-  padding: 20px;
-  color: white;
-  line-height: 1.6;
-}
+        /* ========== SVG ICONS ========== */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .icon-lg { width: 1.4em; height: 1.4em; }
+        .icon-2x { width: 2em; height: 2em; }
+        .icon-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===== شريط التنقل ===== */
-.nav {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  padding: 15px;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: space-around;
-  font-size: 16px;
-  margin-bottom: 25px;
-  border: 1px solid var(--border-color);
-}
+        /* ========== BACK BUTTON ========== */
+        .back-btn {
+            position: fixed;
+            top: max(16px, env(safe-area-inset-top));
+            right: 16px;
+            background: rgba(255,107,107,0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            z-index: 1000;
+            transition: 0.25s;
+        }
+        .back-btn:active { transform: scale(0.9); background: rgba(255,107,107,0.4); }
 
-.nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        /* ========== HEADER ========== */
+        .page-header {
+            text-align: center;
+            margin: 70px 0 35px;
+        }
+        .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
 
-.nav a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--primary);
-}
+        /* ========== STATS ========== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            max-width: 750px;
+            margin: 0 auto 25px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            backdrop-filter: blur(6px);
+            transition: 0.2s;
+        }
+        .stat-item:active { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+        .stat-item .count {
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: block;
+            color: var(--primary);
+        }
+        .stat-item .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
 
-.nav a.active {
-  background: rgba(255, 107, 107, 0.2);
-  color: var(--primary);
-}
+        /* ========== FILTERS ========== */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #ccc;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .filter-btn:active { background: rgba(255,107,107,0.15); }
+        .filter-btn.active {
+            background: rgba(255,107,107,0.2);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
 
-h2 {
-  text-align: center;
-  margin: 20px 0 30px;
-  font-size: 32px;
-  font-weight: 800;
-  color: white;
-  position: relative;
-  padding-bottom: 15px;
-}
+        /* ========== ALERTS LIST ========== */
+        .alerts-container {
+            display: grid;
+            gap: var(--gap);
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .alert-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .alert-card:nth-child(1) { animation-delay: 0.03s; }
+        .alert-card:nth-child(2) { animation-delay: 0.08s; }
+        .alert-card:nth-child(3) { animation-delay: 0.13s; }
+        .alert-card:nth-child(4) { animation-delay: 0.18s; }
+        .alert-card:nth-child(5) { animation-delay: 0.23s; }
 
-h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 150px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), #ffa726);
-  border-radius: 3px;
-}
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-/* ===== شريط الإحصائيات ===== */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  margin-bottom: 25px;
-}
+        .alert-card:active {
+            background: rgba(255,255,255,0.08);
+            transform: scale(0.98);
+        }
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), rgba(255,107,107,0.3));
+            border-radius: 0 4px 4px 0;
+        }
 
-.stat-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-}
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ffe0e0;
+        }
+        .alert-id {
+            background: rgba(255,107,107,0.2);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
 
-.stat-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-3px);
-}
+        .alert-content {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 15px;
+        }
 
-.stat-item i {
-  font-size: 24px;
-  margin-bottom: 8px;
-  color: var(--primary);
-}
+        .alert-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .meta-item {
+            background: rgba(0,0,0,0.25);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .meta-item .icon { color: var(--primary); }
+        .meta-item strong { font-size: 0.65rem; color: #aaa; }
+        .meta-item span { font-weight: 600; color: #fff; }
 
-.stat-item .count {
-  font-size: 28px;
-  font-weight: 800;
-  display: block;
-  margin: 5px 0;
-}
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        .status-active { background: rgba(46,204,113,0.18); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+        .status-inactive { background: rgba(108,117,125,0.18); color: #9aa0a6; border: 1px solid rgba(108,117,125,0.3); }
+        .status-urgent { background: rgba(231,76,60,0.18); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
-.stat-item .label {
-  font-size: 14px;
-  color: #aaa;
-}
-
-/* ===== عنصر التنبيه ===== */
-.alerts-container {
-  display: grid;
-  gap: 20px;
-}
-
-.alert-item {
-  background: var(--card-bg);
-  padding: 25px;
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease;
-  position: relative;
-  overflow: hidden;
-  border-right: 5px solid var(--primary);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.alert-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2);
-}
-
-.alert-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 5px;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--primary), #ffa726);
-}
-
-.alert-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.alert-header h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0;
-}
-
-.alert-id {
-  background: rgba(255, 107, 107, 0.2);
-  color: var(--primary);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: monospace;
-}
-
-.alert-content {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  color: #e0e0e0;
-}
-
-.alert-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.meta-item {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.meta-item strong {
-  color: var(--primary);
-  font-size: 14px;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.meta-item span {
-  font-size: 16px;
-  color: #fff;
-}
-
-.meta-item i {
-  margin-left: 5px;
-  color: var(--primary);
-}
-
-/* ===== حالات التنبيه ===== */
-.status-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 10px;
-}
-
-.status-active {
-  background: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-}
-
-.status-inactive {
-  background: rgba(108, 117, 125, 0.2);
-  color: #6c757d;
-}
-
-.status-urgent {
-  background: rgba(231, 76, 60, 0.2);
-  color: #e74c3c;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-/* ===== فلاتر ===== */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
-}
-
-.filter-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ccc;
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.filter-btn:hover {
-  background: rgba(255, 107, 107, 0.1);
-  color: var(--primary);
-}
-
-.filter-btn.active {
-  background: rgba(255, 107, 107, 0.2);
-  color: var(--primary);
-  border-color: var(--primary);
-}
-
-/* ===== حالة التحميل ===== */
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #aaa;
-  font-size: 18px;
-  grid-column: 1 / -1;
-}
-
-.loading i {
-  font-size: 24px;
-  margin-bottom: 15px;
-  display: block;
-  color: var(--primary);
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* ===== حالة فارغة ===== */
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #888;
-  grid-column: 1 / -1;
-}
-
-.empty-state i {
-  font-size: 48px;
-  margin-bottom: 15px;
-  color: #444;
-  display: block;
-}
-
-/* ===== تحديث تلقائي ===== */
-.auto-refresh {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-  font-size: 14px;
-  color: #888;
-  justify-content: center;
-}
-
-.auto-refresh i {
-  color: var(--primary);
-}
-
-/* ===== استجابة للجوال ===== */
-@media (max-width: 768px) {
-  .nav {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .alert-meta {
-    grid-template-columns: 1fr;
-  }
-  
-  .alert-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .filters {
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  h2 {
-    font-size: 24px;
-  }
-  
-  .alert-item {
-    padding: 20px;
-  }
-  
-  .alert-content {
-    font-size: 16px;
-  }
-}
-</style>
+        /* ========== STATES ========== */
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .auto-refresh {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
 </head>
-
 <body>
+    <a href="index2.html" class="back-btn" aria-label="رجوع">
+        <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
 
+    <div class="page-header">
+        <h1 class="main-title">
+            <svg class="icon icon-2x" viewBox="0 0 24 24" style="stroke: var(--primary);"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            جميع التنبيهات
+        </h1>
+        <p class="subtitle">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            متابعة آخر التحديثات والإنذارات
+        </p>
+    </div>
 
-<!-- العنوان الرئيسي -->
-<h2>🔔 جميع التنبيهات</h2>
+    <div class="stats-bar" id="statsContainer">
+        <div class="stat-item"><span class="count" id="totalCount">--</span><span class="label">الإجمالي</span></div>
+        <div class="stat-item"><span class="count" id="activeCount">--</span><span class="label">نشطة</span></div>
+        <div class="stat-item"><span class="count" id="urgentCount">--</span><span class="label">عاجلة</span></div>
+        <div class="stat-item"><span class="count" id="inactiveCount">--</span><span class="label">منتهية</span></div>
+    </div>
 
-<!-- إحصائيات -->
-<div class="stats-bar" id="statsContainer">
-  <div class="stat-item">
-    <i class="fas fa-bell"></i>
-    <span class="count" id="totalCount">0</span>
-    <span class="label">إجمالي التنبيهات</span>
-  </div>
-  <div class="stat-item">
-    <i class="fas fa-bolt"></i>
-    <span class="count" id="activeCount">0</span>
-    <span class="label">تنبيهات نشطة</span>
-  </div>
-  <div class="stat-item">
-    <i class="fas fa-exclamation-circle"></i>
-    <span class="count" id="urgentCount">0</span>
-    <span class="label">عاجلة</span>
-  </div>
-  <div class="stat-item">
-    <i class="fas fa-clock"></i>
-    <span class="count" id="inactiveCount">0</span>
-    <span class="label">منتهية</span>
-  </div>
-</div>
+    <div class="filters" id="filtersContainer">
+        <button class="filter-btn active" data-filter="all">الكل</button>
+        <button class="filter-btn" data-filter="active">نشطة</button>
+        <button class="filter-btn" data-filter="urgent">عاجلة</button>
+        <button class="filter-btn" data-filter="inactive">منتهية</button>
+    </div>
 
-<!-- فلاتر -->
-<div class="filters" id="filtersContainer">
-  <button class="filter-btn active" data-filter="all">
-    <i class="fas fa-list"></i> الكل
-  </button>
-  <button class="filter-btn" data-filter="active">
-    <i class="fas fa-bolt"></i> نشطة
-  </button>
-  <button class="filter-btn" data-filter="urgent">
-    <i class="fas fa-exclamation-circle"></i> عاجلة
-  </button>
-  <button class="filter-btn" data-filter="inactive">
-    <i class="fas fa-clock"></i> منتهية
-  </button>
-</div>
+    <div id="dynamicContent"></div>
 
-<!-- قائمة التنبيهات -->
-<div id="list" class="loading">
-  <i class="fas fa-spinner"></i> جاري تحميل التنبيهات...
-</div>
+    <div class="auto-refresh">
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        تحديث تلقائي كل 30 ثانية
+    </div>
 
-<!-- تحديث تلقائي -->
-<div class="auto-refresh">
-  <i class="fas fa-sync-alt"></i>
-  <span>سيتم تحديث التنبيهات تلقائياً كل 30 ثانية</span>
-</div>
+    <script type="module">
+        import { supabase } from './supabase.js';
 
-<script type="module">
-// استيراد Supabase
-import { supabase } from './supabase.js';
+        const dynamicContent = document.getElementById('dynamicContent');
+        const filterContainer = document.getElementById('filtersContainer');
+        const stats = {
+            total: document.getElementById('totalCount'),
+            active: document.getElementById('activeCount'),
+            urgent: document.getElementById('urgentCount'),
+            inactive: document.getElementById('inactiveCount')
+        };
 
-// عناصر DOM
-const list = document.getElementById('list');
-const filtersContainer = document.getElementById('filtersContainer');
-const stats = {
-  total: document.getElementById('totalCount'),
-  active: document.getElementById('activeCount'),
-  urgent: document.getElementById('urgentCount'),
-  inactive: document.getElementById('inactiveCount')
-};
+        let allAlerts = [];
+        let currentFilter = 'all';
 
-// متغيرات
-let allAlerts = [];
-let currentFilter = 'all';
+        // SVG helper
+        function iconSVG(viewBox, path, className = 'icon') {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", viewBox);
+            svg.classList.add(...className.split(' '));
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            p.setAttribute("d", path);
+            svg.appendChild(p);
+            return svg;
+        }
 
-// دالة لتنسيق التاريخ
-function formatDate(dateString) {
-  if (!dateString) return '—';
-  
-  const date = new Date(dateString);
-  return date.toLocaleString('ar-EG', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-}
+        function clearElement(el) { while (el.firstChild) el.removeChild(el.firstChild); }
 
-// دالة لتحديث الإحصائيات
-function updateStatistics(alerts) {
-  const total = alerts.length;
-  const active = alerts.filter(a => a.active && !a.urgent).length;
-  const urgent = alerts.filter(a => a.urgent).length;
-  const inactive = alerts.filter(a => !a.active).length;
-  
-  // استخدام textContent بدلاً من innerHTML
-  stats.total.textContent = total;
-  stats.active.textContent = active;
-  stats.urgent.textContent = urgent;
-  stats.inactive.textContent = inactive;
-}
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            try {
+                const d = new Date(dateString);
+                if (isNaN(d.getTime())) return 'تاريخ غير صالح';
+                return d.toLocaleString('ar-EG', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
+            } catch { return '—'; }
+        }
 
-// دالة لتطبيق الفلاتر
-function filterAlerts() {
-  let filtered = [...allAlerts];
-  
-  if (currentFilter === 'active') {
-    filtered = filtered.filter(alert => alert.active && !alert.urgent);
-  } else if (currentFilter === 'urgent') {
-    filtered = filtered.filter(alert => alert.urgent);
-  } else if (currentFilter === 'inactive') {
-    filtered = filtered.filter(alert => !alert.active);
-  }
-  
-  displayAlerts(filtered);
-  updateStatistics(filtered);
-}
+        // Update stats
+        function updateStats(alerts) {
+            stats.total.textContent = alerts.length;
+            stats.active.textContent = alerts.filter(a => a.active && !a.urgent).length;
+            stats.urgent.textContent = alerts.filter(a => a.urgent).length;
+            stats.inactive.textContent = alerts.filter(a => !a.active).length;
+        }
 
-// دالة لإنشاء عنصر تنبيه
-function createAlertElement(alert) {
-  const { id, title, content, active, urgent, priority, created_at, updated_at } = alert;
-  
-  // تحديد فئة الحالة
-  let statusClass = 'status-inactive';
-  let statusIcon = 'fas fa-clock';
-  let statusText = 'منتهي';
-  
-  if (urgent) {
-    statusClass = 'status-urgent';
-    statusIcon = 'fas fa-exclamation-circle';
-    statusText = 'عاجل';
-  } else if (active) {
-    statusClass = 'status-active';
-    statusIcon = 'fas fa-bolt';
-    statusText = 'نشط';
-  }
-  
-  // تحديد لون الأولوية
-  let priorityColor = '#ff6b6b';
-  if (priority === 'medium') priorityColor = '#ffa726';
-  if (priority === 'low') priorityColor = '#4db8ff';
-  
-  // إنشاء العناصر باستخدام DOM API بدلاً من innerHTML
-  const alertItem = document.createElement('div');
-  alertItem.className = 'alert-item';
-  alertItem.style.borderRightColor = priorityColor;
-  
-  // رأس التنبيه
-  const alertHeader = document.createElement('div');
-  alertHeader.className = 'alert-header';
-  
-  const titleEl = document.createElement('h3');
-  const icon = document.createElement('i');
-  icon.className = 'fas fa-exclamation-triangle';
-  titleEl.appendChild(icon);
-  titleEl.appendChild(document.createTextNode(' ' + (title || 'تنبيه')));
-  
-  const alertId = document.createElement('span');
-  alertId.className = 'alert-id';
-  alertId.textContent = '#' + id.substring(0, 8);
-  
-  alertHeader.appendChild(titleEl);
-  alertHeader.appendChild(alertId);
-  
-  // محتوى التنبيه
-  const alertContent = document.createElement('div');
-  alertContent.className = 'alert-content';
-  alertContent.textContent = content || 'لا يوجد محتوى';
-  
-  // البيانات الوصفية
-  const alertMeta = document.createElement('div');
-  alertMeta.className = 'alert-meta';
-  
-  // الأولوية
-  const priorityItem = document.createElement('div');
-  priorityItem.className = 'meta-item';
-  
-  const priorityLabel = document.createElement('strong');
-  const priorityIcon = document.createElement('i');
-  priorityIcon.className = 'fas fa-info-circle';
-  priorityLabel.appendChild(priorityIcon);
-  priorityLabel.appendChild(document.createTextNode(' الأولوية'));
-  
-  const priorityValue = document.createElement('span');
-  priorityValue.style.color = priorityColor;
-  priorityValue.textContent = priority === 'high' ? 'عالية' : priority === 'medium' ? 'متوسطة' : 'منخفضة';
-  
-  priorityItem.appendChild(priorityLabel);
-  priorityItem.appendChild(priorityValue);
-  
-  // تاريخ الإضافة
-  const createdItem = document.createElement('div');
-  createdItem.className = 'meta-item';
-  
-  const createdLabel = document.createElement('strong');
-  const createdIcon = document.createElement('i');
-  createdIcon.className = 'fas fa-calendar-plus';
-  createdLabel.appendChild(createdIcon);
-  createdLabel.appendChild(document.createTextNode(' تاريخ الإضافة'));
-  
-  const createdValue = document.createElement('span');
-  createdValue.textContent = formatDate(created_at);
-  
-  createdItem.appendChild(createdLabel);
-  createdItem.appendChild(createdValue);
-  
-  // آخر تحديث
-  const updatedItem = document.createElement('div');
-  updatedItem.className = 'meta-item';
-  
-  const updatedLabel = document.createElement('strong');
-  const updatedIcon = document.createElement('i');
-  updatedIcon.className = 'fas fa-calendar-check';
-  updatedLabel.appendChild(updatedIcon);
-  updatedLabel.appendChild(document.createTextNode(' آخر تحديث'));
-  
-  const updatedValue = document.createElement('span');
-  updatedValue.textContent = formatDate(updated_at);
-  
-  updatedItem.appendChild(updatedLabel);
-  updatedItem.appendChild(updatedValue);
-  
-  alertMeta.appendChild(priorityItem);
-  alertMeta.appendChild(createdItem);
-  alertMeta.appendChild(updatedItem);
-  
-  // حالة التنبيه
-  const statusBadge = document.createElement('div');
-  statusBadge.className = `${statusClass} status-badge`;
-  
-  const statusIconEl = document.createElement('i');
-  statusIconEl.className = statusIcon;
-  statusBadge.appendChild(statusIconEl);
-  statusBadge.appendChild(document.createTextNode(' ' + statusText));
-  
-  // تجميع جميع العناصر
-  alertItem.appendChild(alertHeader);
-  alertItem.appendChild(alertContent);
-  alertItem.appendChild(alertMeta);
-  alertItem.appendChild(statusBadge);
-  
-  return alertItem;
-}
+        // Filter
+        function filterAlerts() {
+            let filtered = [...allAlerts];
+            if (currentFilter === 'active') filtered = filtered.filter(a => a.active && !a.urgent);
+            else if (currentFilter === 'urgent') filtered = filtered.filter(a => a.urgent);
+            else if (currentFilter === 'inactive') filtered = filtered.filter(a => !a.active);
+            displayAlerts(filtered);
+        }
 
-// دالة لعرض التنبيهات
-function displayAlerts(alerts) {
-  if (!alerts || alerts.length === 0) {
-    // استخدام DOM API لإنشاء حالة فارغة
-    const emptyState = document.createElement('div');
-    emptyState.className = 'empty-state';
-    
-    const icon = document.createElement('i');
-    icon.className = 'far fa-bell-slash';
-    
-    const message = document.createElement('p');
-    message.textContent = `لا توجد تنبيهات ${currentFilter !== 'all' ? `بالفلتر: ${currentFilter}` : ''}`;
-    
-    const subMessage = document.createElement('p');
-    subMessage.style.fontSize = '14px';
-    subMessage.style.color = '#666';
-    subMessage.textContent = 'جميع الأنظمة تعمل بشكل طبيعي';
-    
-    emptyState.appendChild(icon);
-    emptyState.appendChild(message);
-    emptyState.appendChild(subMessage);
-    
-    // تفريغ القائمة وإضافة العنصر الجديد
-    while (list.firstChild) {
-      list.removeChild(list.firstChild);
-    }
-    list.appendChild(emptyState);
-    return;
-  }
-  
-  // إنشاء الحاوية
-  const container = document.createElement('div');
-  container.className = 'alerts-container';
-  
-  // إضافة كل تنبيه
-  alerts.forEach(alert => {
-    const alertElement = createAlertElement(alert);
-    container.appendChild(alertElement);
-  });
-  
-  // تفريغ القائمة وإضافة الحاوية الجديدة
-  while (list.firstChild) {
-    list.removeChild(list.firstChild);
-  }
-  list.appendChild(container);
-}
+        // Create single alert card
+        function createAlertCard(alert) {
+            const { id, title, content, active, urgent, priority, created_at, updated_at } = alert;
 
-// دالة لتحميل التنبيهات من Supabase
-async function loadAlerts() {
-  // عرض حالة التحميل باستخدام DOM API
-  const loadingDiv = document.createElement('div');
-  loadingDiv.className = 'loading';
-  
-  const spinner = document.createElement('i');
-  spinner.className = 'fas fa-spinner';
-  
-  const message = document.createElement('span');
-  message.textContent = ' جاري تحميل التنبيهات...';
-  
-  loadingDiv.appendChild(spinner);
-  loadingDiv.appendChild(message);
-  
-  while (list.firstChild) {
-    list.removeChild(list.firstChild);
-  }
-  list.appendChild(loadingDiv);
-  
-  try {
-    const { data: alerts, error } = await supabase
-      .from('alerts')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    
-    console.log(`✅ تم تحميل ${alerts?.length || 0} تنبيه`);
-    allAlerts = alerts || [];
-    
-    // تطبيق الفلتر الحالي
-    filterAlerts();
-    
-  } catch (error) {
-    console.error('❌ خطأ في تحميل التنبيهات:', error);
-    
-    // عرض حالة الخطأ باستخدام DOM API
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'empty-state';
-    
-    const errorIcon = document.createElement('i');
-    errorIcon.className = 'fas fa-exclamation-triangle';
-    
-    const errorMessage = document.createElement('p');
-    errorMessage.textContent = 'حدث خطأ في تحميل التنبيهات';
-    
-    const errorDetail = document.createElement('p');
-    errorDetail.style.fontSize = '14px';
-    errorDetail.style.color = '#e74c3c';
-    errorDetail.textContent = error.message;
-    
-    const retryButton = document.createElement('button');
-    retryButton.style.marginTop = '15px';
-    retryButton.style.padding = '10px 20px';
-    retryButton.style.background = 'var(--primary)';
-    retryButton.style.border = 'none';
-    retryButton.style.borderRadius = '10px';
-    retryButton.style.color = 'white';
-    retryButton.style.cursor = 'pointer';
-    retryButton.style.fontWeight = '600';
-    retryButton.onclick = loadAlerts;
-    
-    const buttonIcon = document.createElement('i');
-    buttonIcon.className = 'fas fa-redo';
-    retryButton.appendChild(buttonIcon);
-    retryButton.appendChild(document.createTextNode(' إعادة المحاولة'));
-    
-    errorDiv.appendChild(errorIcon);
-    errorDiv.appendChild(errorMessage);
-    errorDiv.appendChild(errorDetail);
-    errorDiv.appendChild(retryButton);
-    
-    while (list.firstChild) {
-      list.removeChild(list.firstChild);
-    }
-    list.appendChild(errorDiv);
-  }
-}
+            let statusClass = 'status-inactive';
+            let statusIconPath = "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z M12 6v6l4 2";
+            let statusText = 'منتهي';
+            if (urgent) {
+                statusClass = 'status-urgent';
+                statusIconPath = "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01";
+                statusText = 'عاجل';
+            } else if (active) {
+                statusClass = 'status-active';
+                statusIconPath = "M13 2L3 14h9l-1 8 10-12h-9l1-8z";
+                statusText = 'نشط';
+            }
 
-// =========================
-// 🚀 تهيئة الصفحة
-// =========================
-async function init() {
-  console.log('🚀 بدء تحميل صفحة التنبيهات...');
-  
-  // تحميل التنبيهات أول مرة
-  await loadAlerts();
-  
-  // إعداد الفلاتر
-  const filterButtons = filtersContainer.querySelectorAll('.filter-btn');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // إزالة النشط من جميع الأزرار
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      
-      // تفعيل الزر المختار
-      button.classList.add('active');
-      
-      // تحديث الفلتر باستخدام textContent
-      currentFilter = button.dataset.filter;
-      
-      // تطبيق الفلتر
-      filterAlerts();
-    });
-  });
-  
-  // الاشتراك في التحديثات المباشرة
-  const channel = supabase
-    .channel('realtime-alerts')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'alerts'
-      },
-      () => {
-        loadAlerts();
-      }
-    )
-    .subscribe((status) => {
-      console.log('📡 حالة اشتراك التنبيهات:', status);
-    });
-  
-  // تحديث تلقائي كل 30 ثانية
-  setInterval(() => {
-    loadAlerts();
-  }, 30000);
-  
-  console.log('✅ تم تهيئة صفحة التنبيهات بنجاح');
-}
+            let priorityColor = '#ff6b6b';
+            let priorityLabel = 'عالية';
+            if (priority === 'medium') { priorityColor = '#ffa726'; priorityLabel = 'متوسطة'; }
+            if (priority === 'low') { priorityColor = '#4db8ff'; priorityLabel = 'منخفضة'; }
 
-// بدء التطبيق
-init();
+            const card = document.createElement('div');
+            card.className = 'alert-card';
+            card.style.setProperty('--card-accent', priorityColor);
 
-// جعل الدالة متاحة للزر
-window.loadAlerts = loadAlerts;
-</script>
+            // Header
+            const header = document.createElement('div');
+            header.className = 'card-header';
+            const h3 = document.createElement('h3');
+            h3.appendChild(iconSVG("0 0 24 24", "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01"));
+            h3.appendChild(document.createTextNode(' ' + (title || 'تنبيه')));
+            header.appendChild(h3);
 
+            const idBadge = document.createElement('span');
+            idBadge.className = 'alert-id';
+            idBadge.textContent = '#' + (id ? id.substring(0, 8) : '------');
+            header.appendChild(idBadge);
+            card.appendChild(header);
+
+            // Content
+            const contentEl = document.createElement('div');
+            contentEl.className = 'alert-content';
+            contentEl.textContent = content || 'لا يوجد محتوى';
+            card.appendChild(contentEl);
+
+            // Meta
+            const meta = document.createElement('div');
+            meta.className = 'alert-meta';
+
+            const priorityMeta = document.createElement('div');
+            priorityMeta.className = 'meta-item';
+            priorityMeta.appendChild(iconSVG("0 0 24 24", "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"));
+            const pDiv = document.createElement('div');
+            const pStrong = document.createElement('strong');
+            pStrong.textContent = 'الأولوية';
+            const pVal = document.createElement('span');
+            pVal.style.color = priorityColor;
+            pVal.textContent = priorityLabel;
+            pDiv.appendChild(pStrong);
+            pDiv.appendChild(pVal);
+            priorityMeta.appendChild(pDiv);
+            meta.appendChild(priorityMeta);
+
+            const createdMeta = document.createElement('div');
+            createdMeta.className = 'meta-item';
+            createdMeta.appendChild(iconSVG("0 0 24 24", "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18"));
+            const cDiv = document.createElement('div');
+            const cStrong = document.createElement('strong');
+            cStrong.textContent = 'تاريخ الإضافة';
+            const cVal = document.createElement('span');
+            cVal.textContent = formatDate(created_at);
+            cDiv.appendChild(cStrong);
+            cDiv.appendChild(cVal);
+            createdMeta.appendChild(cDiv);
+            meta.appendChild(createdMeta);
+
+            const updatedMeta = document.createElement('div');
+            updatedMeta.className = 'meta-item';
+            updatedMeta.appendChild(iconSVG("0 0 24 24", "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"));
+            const uDiv = document.createElement('div');
+            const uStrong = document.createElement('strong');
+            uStrong.textContent = 'آخر تحديث';
+            const uVal = document.createElement('span');
+            uVal.textContent = formatDate(updated_at);
+            uDiv.appendChild(uStrong);
+            uDiv.appendChild(uVal);
+            updatedMeta.appendChild(uDiv);
+            meta.appendChild(updatedMeta);
+
+            card.appendChild(meta);
+
+            // Status
+            const statusBadge = document.createElement('div');
+            statusBadge.className = `status-badge ${statusClass}`;
+            statusBadge.appendChild(iconSVG("0 0 24 24", statusIconPath));
+            statusBadge.appendChild(document.createTextNode(' ' + statusText));
+            card.appendChild(statusBadge);
+
+            return card;
+        }
+
+        function displayAlerts(alerts) {
+            clearElement(dynamicContent);
+
+            if (!alerts || alerts.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.appendChild(iconSVG("0 0 24 24", "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0", "icon icon-2x"));
+                const p = document.createElement('p');
+                p.textContent = 'لا توجد تنبيهات حالياً';
+                empty.appendChild(p);
+                dynamicContent.appendChild(empty);
+                updateStats([]);
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'alerts-container';
+            alerts.forEach(a => container.appendChild(createAlertCard(a)));
+            dynamicContent.appendChild(container);
+            updateStats(alerts);
+        }
+
+        async function loadAlerts() {
+            clearElement(dynamicContent);
+            const loading = document.createElement('div');
+            loading.className = 'loading-state';
+            loading.appendChild(iconSVG("0 0 24 24", "M12 2v4 M12 18v4 M4.93 4.93l2.83 2.83 M16.24 16.24l2.83 2.83 M2 12h4 M18 12h4 M4.93 19.07l2.83-2.83 M16.24 7.76l2.83-2.83", "icon icon-lg icon-spin"));
+            const p = document.createElement('p');
+            p.textContent = 'جاري تحميل التنبيهات...';
+            loading.appendChild(p);
+            dynamicContent.appendChild(loading);
+
+            try {
+                const { data, error } = await supabase.from('alerts').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                allAlerts = data || [];
+                filterAlerts();
+            } catch (err) {
+                console.error(err);
+                clearElement(dynamicContent);
+                const errDiv = document.createElement('div');
+                errDiv.className = 'empty-state';
+                errDiv.appendChild(iconSVG("0 0 24 24", "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01", "icon icon-2x"));
+                const msg = document.createElement('p');
+                msg.textContent = 'خطأ في تحميل التنبيهات';
+                errDiv.appendChild(msg);
+                const retry = document.createElement('button');
+                retry.textContent = 'إعادة المحاولة';
+                retry.style.cssText = 'margin-top:15px; padding:10px 20px; background:var(--primary); border:none; border-radius:30px; color:white; font-weight:600; cursor:pointer;';
+                retry.addEventListener('click', loadAlerts);
+                errDiv.appendChild(retry);
+                dynamicContent.appendChild(errDiv);
+                updateStats([]);
+            }
+        }
+
+        async function init() {
+            await loadAlerts();
+
+            filterContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    filterAlerts();
+                });
+            });
+
+            supabase.channel('realtime-alerts')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts' }, () => loadAlerts())
+                .subscribe();
+
+            setInterval(loadAlerts, 30000);
+        }
+
+        init();
+    </script>
 </body>
 </html>
