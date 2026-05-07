@@ -1,222 +1,657 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سبب الانقطاع – كهرباء عتق</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>سبب الانقطاع – كهرباء عتق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-light: #4d94ff;
+            --primary-dark: #0047cc;
+            --secondary: #00e6e6;
+            --accent: #ff6b35;
+            --success: #00cc66;
+            --warning: #ff9900;
+            --danger: #ff3333;
+            --dark: #0a0e1a;
+            --darker: #050913;
+            --light: #ffffff;
+            --gray: #8c8c8c;
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+        html {
+            font-size: 16px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            height: 100%;
+            overflow-x: hidden;
+        }
 
-/* نفس خلفية الرئيسية */
-body{
-  background:linear-gradient(to bottom,#0a0a0a,#111,#1a1a1a,#222);
-  min-height:100vh;
-  color:white;
-  padding:15px;
-}
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            display: flex;
+            flex-direction: column;
+        }
 
-/* عنوان الصفحة */
-header{
-  text-align:center;
-  margin-bottom:25px;
-}
+        .scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 100px;
+        }
 
-header h2{
-  font-size:32px;
-  font-weight:800;
-  color:#1f6feb;
-}
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* صندوق عرض الأسباب */
-#reason-box{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  max-width:650px;
-  margin:0 auto;
-}
+        /* زر الرجوع */
+        .back-btn {
+            position: fixed;
+            top: max(15px, env(safe-area-inset-top));
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            border: none;
+            font-size: 20px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .back-btn:active {
+            transform: scale(0.92);
+            background: var(--primary-dark);
+        }
 
-/* نفس تصميم الكروت في الرئيسية */
-.item{
-  background:rgba(255,255,255,0.07);
-  padding:18px;
-  border-radius:16px;
-  backdrop-filter:blur(5px);
-  box-shadow:0 6px 18px rgba(0,0,0,0.45);
-  border:1px solid #30363d;
-  transition:0.25s;
-}
+        /* رأس الصفحة */
+        .page-header {
+            padding: 70px 20px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, transparent 100%);
+            position: relative;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .electric-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary-light) 20%, var(--secondary) 50%, var(--primary-light) 80%, transparent 100%);
+            opacity: 0.4;
+            filter: blur(6px);
+        }
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--light), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+        .subtitle {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
-.item:hover{
-  background:rgba(255,255,255,0.12);
-  transform:translateY(-3px);
-}
+        /* شريط الحالة */
+        .status-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0 15px 25px;
+        }
+        .status-badge {
+            background: rgba(255,255,255,0.08);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: 0.2s;
+        }
+        .status-badge i { color: var(--secondary); }
 
-.item p{
-  font-size:18px;
-  margin-bottom:8px;
-  line-height:1.6;
-}
+        /* صندوق الأسباب */
+        .reasons-container {
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-.item strong{
-  color:#1f6feb;
-  font-weight:700;
-}
+        .reason-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .reason-card:nth-child(1) { animation-delay: 0.05s; }
+        .reason-card:nth-child(2) { animation-delay: 0.1s; }
+        .reason-card:nth-child(3) { animation-delay: 0.15s; }
+        .reason-card:nth-child(4) { animation-delay: 0.2s; }
+        .reason-card:nth-child(5) { animation-delay: 0.25s; }
 
-.item small{
-  font-size:14px;
-  opacity:.8;
-  display:block;
-  margin-top:10px;
-  color:#aaa;
-}
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-/* زر العودة */
-.back-btn{
-  display:block;
-  width:100%;
-  max-width:250px;
-  margin:25px auto;
-  background:#1f6feb;
-  color:white;
-  text-align:center;
-  padding:12px;
-  font-size:18px;
-  text-decoration:none;
-  font-weight:700;
-  border-radius:14px;
-  transition:0.2s;
-  border:none;
-  cursor:pointer;
-}
+        .reason-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0.8;
+        }
+        .reason-card.resolved::before {
+            background: linear-gradient(90deg, var(--success), #00e676);
+        }
+        .reason-card.pending::before {
+            background: linear-gradient(90deg, var(--warning), #ffb74d);
+        }
 
-.back-btn:hover{
-  background:#2b7fff;
-  transform:scale(1.05);
-}
+        .reason-card:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.1);
+        }
 
-.no-data{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#aaa;
-  background:rgba(255,255,255,0.05);
-  border-radius:12px;
-  border:1px dashed #444;
-}
+        .reason-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .reason-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--light);
+            line-height: 1.5;
+            flex: 1;
+            min-width: 200px;
+        }
+        .reason-status {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .status-resolved {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 204, 102, 0.3);
+        }
+        .status-pending {
+            background: rgba(255, 153, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 153, 0, 0.3);
+        }
 
-.error-message{
-  text-align:center;
-  padding:30px;
-  font-size:18px;
-  color:#ff6b6b;
-  background:rgba(255,107,107,0.1);
-  border-radius:12px;
-  border:1px solid #ff6b6b;
-}
-</style>
+        .reason-details {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.85);
+            background: rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        .detail-row i {
+            color: var(--secondary);
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+        .detail-row strong {
+            color: var(--light);
+            margin-left: 5px;
+        }
+        .time-estimate {
+            color: #4ecdc4 !important;
+            font-weight: 600;
+        }
+
+        .reason-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 12px;
+        }
+
+        /* حالات فارغة وخطأ */
+        .empty-state, .error-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 24px;
+            margin: 20px 15px;
+            border: 1px dashed rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+        }
+        .empty-state i, .error-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .empty-state i { color: var(--secondary); }
+        .error-state i { color: var(--danger); }
+        .empty-state p, .error-state p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .empty-state small, .error-state small {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: rgba(255,255,255,0.5);
+            flex: 1;
+            padding: 5px 0;
+            transition: all 0.2s ease;
+        }
+        .nav-item.active { color: var(--secondary); }
+        .nav-item:active { color: var(--secondary); transform: translateY(-2px); }
+        .nav-icon { font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-label { font-size: 0.7rem; font-weight: 600; }
+    </style>
 </head>
-
 <body>
+    <div class="scroll-container" id="scrollContainer">
+        <!-- زر الرجوع -->
+        <a href="index2.html" class="back-btn" aria-label="رجوع">
+            <i class="fas fa-arrow-right"></i>
+        </a>
 
-<header>
-  <h2>⚡ أسباب الانقطاع</h2>
-  <p style="text-align:center; opacity:0.8; margin-top:10px;">قائمة بأسباب انقطاع الكهرباء المعتمدة من الإدارة</p>
-</header>
-
-<div id="reason-box">
-  <p style="text-align:center; opacity:0.7;">⏳ جاري تحميل البيانات...</p>
-</div>
-
-<a href="index2.html" class="back-btn">⬅ رجوع للرئيسية</a>
-
-<script type="module">
-// استيراد Supabase من الملف الخارجي
-import { supabase } from './supabase.js';
-
-const box = document.getElementById("reason-box");
-
-// دالة لتحويل التاريخ إلى تنسيق عربي
-function formatDate(dateString) {
-  if (!dateString) return "—";
-  
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "تاريخ غير صالح";
-    
-    return date.toLocaleString("ar-EG", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return "—";
-  }
-}
-
-// دالة لتحميل وعرض أسباب الانقطاع
-async function loadReasons() {
-  try {
-    const { data: reasons, error } = await supabase
-      .from('reasons')
-      .select('*')
-      .order('updated_at', { ascending: false });
-
-    if (error) throw error;
-
-    if (!reasons || reasons.length === 0) {
-      box.innerHTML = `
-        <div class="no-data">
-          <p>📭 لا توجد أسباب مسجلة حالياً</p>
-          <small>سيتم إضافة أسباب الانقطاع قريباً من قبل الإدارة</small>
+        <!-- رأس الصفحة -->
+        <div class="page-header">
+            <div class="electric-wave"></div>
+            <h1 class="main-title">
+                <i class="fas fa-bolt" style="color: var(--secondary); margin-left: 10px;"></i>
+                أسباب الانقطاع
+            </h1>
+            <p class="subtitle">
+                <i class="fas fa-clipboard-list"></i>
+                قائمة بالأسباب المعتمدة من الإدارة
+            </p>
         </div>
-      `;
-      return;
-    }
 
-    let html = '';
-    reasons.forEach((reason, index) => {
-      if (index === 1) {
-        html += `<div style="text-align:center; margin:20px 0; color:#666; font-size:14px;">——— أسباب سابقة ———</div>`;
-      }
-      
-      html += `
-        <div class="item">
-          <p><strong>السبب:</strong> ${reason.text || "—"}</p>
-          ${reason.details ? `<p style="margin-top:8px;"><strong>التفاصيل:</strong> ${reason.details}</p>` : ''}
-          ${reason.affected_areas ? `<p style="margin-top:8px;"><strong>المناطق المتأثرة:</strong> ${reason.affected_areas}</p>` : ''}
-          ${reason.estimated_time ? `<p style="margin-top:8px; color:#4ecdc4;"><strong>الوقت المتوقع للإصلاح:</strong> ${reason.estimated_time}</p>` : ''}
-          <small><strong>آخر تحديث:</strong> ${formatDate(reason.updated_at)}</small>
-          ${reason.status ? `<small style="color:${reason.status === 'تم الحل' ? '#2ecc71' : '#f39c12'}"><strong>الحالة:</strong> ${reason.status}</small>` : ''}
+        <!-- شريط الحالة -->
+        <div class="status-bar">
+            <div class="status-badge">
+                <i class="fas fa-list-ul"></i>
+                <span id="totalReasons">الأسباب: --</span>
+            </div>
+            <div class="status-badge">
+                <i class="fas fa-sync-alt"></i>
+                <span id="lastUpdateTime">آخر تحديث: --</span>
+            </div>
         </div>
-      `;
-    });
 
-    box.innerHTML = html;
+        <!-- قائمة الأسباب (تُبنى بالكامل عبر JavaScript) -->
+        <div class="reasons-container" id="reasonsBox"></div>
+    </div>
 
-  } catch (error) {
-    console.error("Error loading reasons:", error);
-    box.innerHTML = `
-      <div class="error-message">
-        <p>⚠️ خطأ في الاتصال بقاعدة البيانات</p>
-        <small>يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى</small>
-      </div>
-    `;
-  }
-}
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <a href="index2.html" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">الرئيسية</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+            <i class="fas fa-bell nav-icon"></i>
+            <span class="nav-label">التنبيهات</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-flag nav-icon"></i>
+            <span class="nav-label">البلاغات</span>
+        </a>
+        <a href="reasons.html" class="nav-item active">
+            <i class="fas fa-question-circle nav-icon"></i>
+            <span class="nav-label">الانقطاع</span>
+        </a>
+    </nav>
 
-// تحميل البيانات مرة واحدة عند فتح الصفحة فقط
-loadReasons();
+    <!-- ✅ السكريبت الآمن بالكامل – بدون innerHTML -->
+    <script type="module">
+        import { supabase } from './supabase.js';
 
-// ملاحظة: تم حذف دالة subscribeToRealtimeUpdates و setInterval لضمان عدم التحديث التلقائي.
-</script>
+        const reasonsBox = document.getElementById('reasonsBox');
+        const totalReasonsEl = document.getElementById('totalReasons');
+        const lastUpdateTimeEl = document.getElementById('lastUpdateTime');
 
+        // ---------- أدوات مساعدة ----------
+        function formatDate(dateString) {
+            if (!dateString) return "—";
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return "تاريخ غير صالح";
+                return date.toLocaleString("ar-EG", {
+                    year: "numeric", month: "long", day: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                });
+            } catch (e) {
+                return "—";
+            }
+        }
 
+        function createElement(tag, classes = '', attributes = {}) {
+            const el = document.createElement(tag);
+            if (classes) el.className = classes;
+            Object.entries(attributes).forEach(([key, val]) => el.setAttribute(key, val));
+            return el;
+        }
+
+        function clearBox() {
+            while (reasonsBox.firstChild) {
+                reasonsBox.removeChild(reasonsBox.firstChild);
+            }
+        }
+
+        // ---------- واجهات المستخدم ----------
+        function showLoading() {
+            clearBox();
+            const container = createElement('div', 'loading-spinner');
+            const spinner = createElement('div', 'spinner');
+            const text = createElement('p');
+            text.style.opacity = '0.8';
+            text.textContent = '⏳ جاري تحميل الأسباب...';
+            container.appendChild(spinner);
+            container.appendChild(text);
+            reasonsBox.appendChild(container);
+        }
+
+        function showEmpty() {
+            clearBox();
+            const emptyDiv = createElement('div', 'empty-state');
+            const icon = createElement('i', 'fas fa-check-circle');
+            const p = createElement('p');
+            p.textContent = 'لا توجد أسباب مسجلة حالياً';
+            const small = createElement('small');
+            small.textContent = 'كل الأمور على ما يرام، لم يتم تسجيل أي انقطاع حتى الآن';
+            emptyDiv.appendChild(icon);
+            emptyDiv.appendChild(p);
+            emptyDiv.appendChild(small);
+            reasonsBox.appendChild(emptyDiv);
+            totalReasonsEl.textContent = 'الأسباب: 0';
+            lastUpdateTimeEl.textContent = 'آخر تحديث: —';
+        }
+
+        function showError(message = 'خطأ في الاتصال بقاعدة البيانات') {
+            clearBox();
+            const errorDiv = createElement('div', 'error-state');
+            const icon = createElement('i', 'fas fa-exclamation-circle');
+            const p = createElement('p');
+            p.textContent = '⚠️ ' + message;
+            const small = createElement('small');
+            small.textContent = 'يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى';
+            errorDiv.appendChild(icon);
+            errorDiv.appendChild(p);
+            errorDiv.appendChild(small);
+            reasonsBox.appendChild(errorDiv);
+            totalReasonsEl.textContent = 'الأسباب: --';
+            lastUpdateTimeEl.textContent = 'آخر تحديث: --';
+        }
+
+        // ---------- بناء بطاقة سبب واحد ----------
+        function createReasonCard(reason) {
+            const isResolved = reason.status === 'تم الحل';
+            const card = createElement('div', `reason-card ${isResolved ? 'resolved' : 'pending'}`);
+
+            // --- الرأس ---
+            const header = createElement('div', 'reason-header');
+
+            const reasonText = createElement('span', 'reason-text');
+            const warningIcon = createElement('i', 'fas fa-exclamation-triangle');
+            warningIcon.style.cssText = 'color: var(--accent); margin-left: 8px;';
+            reasonText.appendChild(warningIcon);
+            reasonText.appendChild(document.createTextNode(' ' + (reason.text || 'سبب غير محدد')));
+            header.appendChild(reasonText);
+
+            const statusBadge = createElement('span', `reason-status ${isResolved ? 'status-resolved' : 'status-pending'}`);
+            const statusIcon = createElement('i', `fas ${isResolved ? 'fa-check-circle' : 'fa-spinner'}`);
+            statusBadge.appendChild(statusIcon);
+            statusBadge.appendChild(document.createTextNode(' ' + (reason.status || (isResolved ? 'تم الحل' : 'قيد المعالجة'))));
+            header.appendChild(statusBadge);
+
+            card.appendChild(header);
+
+            // --- التفاصيل ---
+            const details = createElement('div', 'reason-details');
+
+            if (reason.details) {
+                const detailRow = createElement('div', 'detail-row');
+                const icon = createElement('i', 'fas fa-align-left');
+                const span = createElement('span');
+                const strong = createElement('strong');
+                strong.textContent = 'التفاصيل:';
+                span.appendChild(strong);
+                span.appendChild(document.createTextNode(' ' + reason.details));
+                detailRow.appendChild(icon);
+                detailRow.appendChild(span);
+                details.appendChild(detailRow);
+            }
+
+            if (reason.affected_areas) {
+                const detailRow = createElement('div', 'detail-row');
+                const icon = createElement('i', 'fas fa-map-marker-alt');
+                const span = createElement('span');
+                const strong = createElement('strong');
+                strong.textContent = 'المناطق المتأثرة:';
+                span.appendChild(strong);
+                span.appendChild(document.createTextNode(' ' + reason.affected_areas));
+                detailRow.appendChild(icon);
+                detailRow.appendChild(span);
+                details.appendChild(detailRow);
+            }
+
+            if (reason.estimated_time) {
+                const detailRow = createElement('div', 'detail-row time-estimate');
+                const icon = createElement('i', 'fas fa-clock');
+                const span = createElement('span');
+                const strong = createElement('strong');
+                strong.textContent = 'الوقت المتوقع للإصلاح:';
+                span.appendChild(strong);
+                span.appendChild(document.createTextNode(' ' + reason.estimated_time));
+                detailRow.appendChild(icon);
+                detailRow.appendChild(span);
+                details.appendChild(detailRow);
+            }
+
+            card.appendChild(details);
+
+            // --- الفوتر ---
+            const footer = createElement('div', 'reason-footer');
+            const dateSpan = createElement('span');
+            const calIcon = createElement('i', 'far fa-calendar-alt');
+            dateSpan.appendChild(calIcon);
+            dateSpan.appendChild(document.createTextNode(' ' + formatDate(reason.updated_at)));
+            footer.appendChild(dateSpan);
+
+            if (!isResolved) {
+                const workingSpan = createElement('span');
+                workingSpan.style.color = 'var(--warning)';
+                const toolsIcon = createElement('i', 'fas fa-tools');
+                workingSpan.appendChild(toolsIcon);
+                workingSpan.appendChild(document.createTextNode(' جاري العمل...'));
+                footer.appendChild(workingSpan);
+            }
+            card.appendChild(footer);
+
+            return card;
+        }
+
+        // ---------- عرض الأسباب ----------
+        function renderReasons(reasons) {
+            clearBox();
+
+            if (!reasons || reasons.length === 0) {
+                showEmpty();
+                return;
+            }
+
+            totalReasonsEl.textContent = `الأسباب: ${reasons.length}`;
+            if (reasons[0]?.updated_at) {
+                lastUpdateTimeEl.textContent = `آخر تحديث: ${formatDate(reasons[0].updated_at)}`;
+            } else {
+                lastUpdateTimeEl.textContent = 'آخر تحديث: —';
+            }
+
+            reasons.forEach(reason => {
+                const card = createReasonCard(reason);
+                reasonsBox.appendChild(card);
+            });
+        }
+
+        // ---------- جلب البيانات ----------
+        async function loadReasons() {
+            showLoading();
+            try {
+                const { data: reasons, error } = await supabase
+                    .from('reasons')
+                    .select('*')
+                    .order('updated_at', { ascending: false });
+
+                if (error) throw error;
+                renderReasons(reasons);
+            } catch (error) {
+                console.error("Error loading reasons:", error);
+                showError();
+            }
+        }
+
+        // ---------- الاشتراك في التحديثات المباشرة ----------
+        function subscribeToRealtime() {
+            try {
+                const channel = supabase
+                    .channel('reasons-live')
+                    .on('postgres_changes', {
+                        event: '*',
+                        schema: 'public',
+                        table: 'reasons'
+                    }, () => {
+                        console.log('🔄 تحديث مباشر للأسباب...');
+                        loadReasons();
+                    })
+                    .subscribe();
+                window.reasonsChannel = channel;
+            } catch (e) {
+                console.warn("Realtime subscription failed, using polling instead.");
+            }
+        }
+
+        // ---------- البدء ----------
+        loadReasons();
+        subscribeToRealtime();
+
+        // تحديث احتياطي كل 45 ثانية
+        setInterval(loadReasons, 45000);
+    </script>
 </body>
 </html>
